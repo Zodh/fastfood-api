@@ -8,26 +8,33 @@
 		<version>3.3.1</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
+
 	<groupId>br.com.fiap</groupId>
 	<artifactId>fastfood-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>fastfood-api</name>
 	<description>Software Architecture Tech Challange Project</description>
+
 	<url/>
+
 	<licenses>
 		<license/>
 	</licenses>
+
 	<developers>
 		<developer/>
 	</developers>
+
 	<scm>
 		<connection/>
 		<developerConnection/>
 		<tag/>
 		<url/>
 	</scm>
+
 	<properties>
 		<java.version>21</java.version>
+		<maven.resources.plugin.version>3.1.0</maven.resources.plugin.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -90,6 +97,11 @@
 
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>${maven.resources.plugin.version}</version>
+			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
