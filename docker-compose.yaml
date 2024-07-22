@@ -1,0 +1,18 @@
+services:
+  fastfood-database:
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgrespw
+    ports:
+      - 5432:5432
+  fastfood-api:
+    depends_on:
+      - fastfood-database
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file: ./src/main/resources/dev-docker.env
+    ports:
+      - 8080:8080
+
