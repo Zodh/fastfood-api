@@ -60,6 +60,9 @@ public abstract class PersonEntity {
   @Column(name = "updated_at")
   protected LocalDateTime updated;
 
+  @Column(name = "active")
+  protected boolean active;
+
   @PrePersist
   protected void onCreate() {
     created = LocalDateTime.now();

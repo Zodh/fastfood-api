@@ -3,7 +3,7 @@ package br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.adapt
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.person.CustomerEntity;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.CustomerMapper;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.person.CustomerRepository;
-import br.com.fiap.fastfood.api.core.domain.entity.Customer;
+import br.com.fiap.fastfood.api.core.domain.model.person.Customer;
 import br.com.fiap.fastfood.api.core.domain.repository.CustomerRepositoryOutboundPort;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,8 +22,13 @@ public class CustomerRepositoryAdapterImpl implements CustomerRepositoryOutbound
   }
 
   @Override
-  public void register(Customer customer) {
-    CustomerEntity entity = mapper.toEntity(customer);
-    customerRepository.save(entity);
+  public Customer findById(Long identifier) {
+    return null;
+  }
+
+  @Override
+  public Customer save(Customer data) {
+    CustomerEntity entity = mapper.toEntity(data);
+    return mapper.toDomain(customerRepository.save(entity));
   }
 }

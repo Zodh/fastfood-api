@@ -1,9 +1,10 @@
-package br.com.fiap.fastfood.api.adapters.driver.controllers;
+package br.com.fiap.fastfood.api.adapters.driver.controller;
 
-import br.com.fiap.fastfood.api.adapters.driver.mapper.CustomerMapper;
+import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.CustomerMapper;
 import br.com.fiap.fastfood.api.adapters.driver.dto.CustomerDTO;
-import br.com.fiap.fastfood.api.core.application.aggregate.service.ServiceAggregateInboundPort;
-import br.com.fiap.fastfood.api.core.domain.entity.Customer;
+import br.com.fiap.fastfood.api.core.application.service.CustomerService;
+import br.com.fiap.fastfood.api.core.domain.model.person.Customer;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,15 +14,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/customers")
+@RequiredArgsConstructor
 public class CustomerController {
 
-  private ServiceAggregateInboundPort serviceAggregateInboundPort;
-  private CustomerMapper mapper;
+  private final CustomerService customerService;
+  private final CustomerMapper mapper;
 
   @PostMapping
   public ResponseEntity<Void> register(@RequestBody CustomerDTO customer) {
     Customer domainCustomer = mapper.toDomain(customer);
-    serviceAggregateInboundPort.register(domainCustomer);
+    customerService.register(domainCustomer);
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
