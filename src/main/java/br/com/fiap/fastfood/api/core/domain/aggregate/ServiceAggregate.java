@@ -33,6 +33,15 @@ public class ServiceAggregate {
     this.activationCodeService = activationCodeService;
   }
 
+  public ServiceAggregate(
+          Document document,
+          CustomerRepositoryPort customerRepository
+  ) {
+    this.customer = new Customer();
+    this.customer.setDocument(document);
+    this.customerRepository = customerRepository;
+  }
+
   public void register() {
     List<ErrorDetail> errorDetails = PersonValidator.validate(this.customer);
     if (!errorDetails.isEmpty()) {
@@ -78,4 +87,20 @@ public class ServiceAggregate {
     emailSender.send(verificationMessage, customer.getEmail().getValue(), "Conclua seu cadastro!");
   }
 
+  public Customer identify() {
+    if (!this.customer.getDocument().isValid()) {
+      ErrorDetail errorDetail = new ErrorDetail("person.document", "O documento não é válido!");
+      throw new DomainException(errorDetail);
+    }
+
+    Optional<Customer> identifiedCustomer = customerRepository.findByDocument(this.customer.getDocument());
+
+    if (identifiedCustomer.isEmpty()) {
+      ErrorDetail errorDetail = new ErrorDetail("person", "Não existe um cliente cadastrado com esse documento!");
+      throw new DomainException(errorDetail);
+    }
+
+    return identifiedCustomer.get();
+
+  }
 }
