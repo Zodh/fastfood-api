@@ -55,10 +55,13 @@ public abstract class PersonEntity {
   protected UserEntity user;
 
   @Column(name = "created_at")
-  private LocalDateTime created;
+  protected LocalDateTime created;
 
   @Column(name = "updated_at")
-  private LocalDateTime updated;
+  protected LocalDateTime updated;
+
+  @Column(name = "active")
+  protected boolean active;
 
   @PrePersist
   protected void onCreate() {
@@ -70,4 +73,11 @@ public abstract class PersonEntity {
     updated = LocalDateTime.now();
   }
 
+  public String getDocumentNumber() {
+    return documentNumber;
+  }
+
+  public void setDocumentNumber(String documentNumber) {
+    this.documentNumber = documentNumber;
+  }
 }

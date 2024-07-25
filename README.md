@@ -11,6 +11,10 @@ Atualmente existem as seguintes maneiras de se executar o projeto (do mais simpl
 1. execute o comando `mvn clean package`;
 2. na pasta do projeto, execute o comando: `docker-compose up`.
 
+OBS: precisa parametrizar a senha do envio de email na variável: FASTFOOD_MAIL_PASSWORD.
+
+---
+
 Caso queira atualizar a versão da aplicação com a que voce está, execute os seguintes comandos:
 
 (se o projeto estiver rodando, execute o seguinte comando: `docker-compose down`)
