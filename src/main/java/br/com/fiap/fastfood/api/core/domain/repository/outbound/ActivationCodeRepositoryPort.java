@@ -6,4 +6,6 @@ import java.util.UUID;
 
 public interface ActivationCodeRepositoryPort extends BaseRepository<ActivationCode, UUID> {
 
+  void deleteAllActivationCodeByCustomer(Long customerId);
+
 }

@@ -1,5 +1,7 @@
 package br.com.fiap.fastfood.api.core.domain.aggregate;
 
+import static java.util.Objects.isNull;
+
 import br.com.fiap.fastfood.api.core.domain.exception.DomainException;
 import br.com.fiap.fastfood.api.core.domain.exception.ErrorDetail;
 import br.com.fiap.fastfood.api.core.domain.model.person.Customer;
@@ -33,6 +35,12 @@ public class ServiceAggregate {
     this.activationCodeService = activationCodeService;
   }
 
+  public ServiceAggregate(String email, CustomerRepositoryPort customerRepository, ActivationCodeService activationCodeService, EmailSenderPort emailSender) {
+    this.customer = customerRepository.findByEmail(email).orElseThrow(() -> new DomainException(new ErrorDetail("customer", "Não foi encontrado um cliente com o e-mail informado!")));
+    this.activationCodeService = activationCodeService;
+    this.emailSender = emailSender;
+  }
+
   public void register() {
     List<ErrorDetail> errorDetails = PersonValidator.validate(this.customer);
     if (!errorDetails.isEmpty()) {
@@ -61,6 +69,13 @@ public class ServiceAggregate {
       ErrorDetail errorDetail = new ErrorDetail("person.document", "O documento já foi utilizado por outro cadastro!");
       throw new DomainException(errorDetail);
     }
+  }
+
+  public void resendVerificationLink() {
+    if (isNull(customer) || customer.isActive()) {
+      throw new DomainException(new ErrorDetail("customer.active", "Não é possível solicitar um código de ativação para um cliente ativo!"));
+    }
+    sendVerificationLink(customer);
   }
 
   private void sendVerificationLink(Customer customer) {

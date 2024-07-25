@@ -34,4 +34,8 @@ public class ActivationCodeRepositoryAdapterImpl implements ActivationCodeReposi
     repository.deleteById(identifier);
   }
 
+  @Override
+  public void deleteAllActivationCodeByCustomer(Long customerId) {
+    repository.deleteAllByCustomerId(customerId);
+  }
 }

@@ -52,7 +52,7 @@ public class ActivationCodeService {
       throw new DomainException(errorDetail);
     }
     customerRepository.activate(activationCode.getCustomer().getId());
-    activationCodeRepository.delete(code);
+    activationCodeRepository.deleteAllActivationCodeByCustomer(activationCode.getCustomer().getId());
   }
 
 }
