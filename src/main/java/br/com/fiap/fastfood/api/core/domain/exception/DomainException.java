@@ -13,4 +13,9 @@ public class DomainException extends RuntimeException {
     this.errors = errors;
   }
 
+  public DomainException(ErrorDetail errorDetail) {
+    super("Existe(m) erro(s) na requisição!");
+    this.errors = List.of(errorDetail);
+  }
+
 }

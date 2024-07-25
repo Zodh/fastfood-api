@@ -4,12 +4,12 @@ import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.person.Cus
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.CustomerMapper;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.person.CustomerRepository;
 import br.com.fiap.fastfood.api.core.domain.model.person.Customer;
-import br.com.fiap.fastfood.api.core.domain.repository.CustomerRepositoryOutboundPort;
+import br.com.fiap.fastfood.api.core.domain.repository.outbound.CustomerRepositoryPort;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CustomerRepositoryAdapterImpl implements CustomerRepositoryOutboundPort {
+public class CustomerRepositoryAdapterImpl implements CustomerRepositoryPort {
 
   private final CustomerRepository customerRepository;
   private final CustomerMapper mapper;
