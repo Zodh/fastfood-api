@@ -7,15 +7,16 @@ import br.com.fiap.fastfood.api.core.domain.ports.outbound.ActivationCodeLinkGen
 import br.com.fiap.fastfood.api.core.domain.repository.outbound.ActivationCodeRepositoryPort;
 import br.com.fiap.fastfood.api.core.domain.repository.outbound.CustomerRepositoryPort;
 import br.com.fiap.fastfood.api.core.domain.service.ActivationCodeService;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CustomerService {
 
-  private CustomerRepositoryPort customerRepositoryPort;
-  private EmailSenderPort emailSenderPort;
-  private ActivationCodeService activationCodeService;
+  private final CustomerRepositoryPort customerRepositoryPort;
+  private final EmailSenderPort emailSenderPort;
+  private final ActivationCodeService activationCodeService;
 
   @Autowired
   public CustomerService(
@@ -26,7 +27,7 @@ public class CustomerService {
   ) {
     this.customerRepositoryPort = customerRepositoryPort;
     this.emailSenderPort = emailSenderPort;
-    this.activationCodeService = new ActivationCodeService(activationCodeRepository, activationCodeLinkGeneratorPort);
+    this.activationCodeService = new ActivationCodeService(activationCodeRepository, activationCodeLinkGeneratorPort, customerRepositoryPort);
   }
 
   public void register(Customer customer) {
@@ -39,8 +40,8 @@ public class CustomerService {
     serviceAggregate.register();
   }
 
-  public void activate(Long customerId) {
-
+  public void activate(UUID code) {
+    activationCodeService.activate(code);
   }
 
 }

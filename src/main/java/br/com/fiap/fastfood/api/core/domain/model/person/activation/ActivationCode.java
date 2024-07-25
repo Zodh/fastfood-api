@@ -1,7 +1,5 @@
 package br.com.fiap.fastfood.api.core.domain.model.person.activation;
 
-import br.com.fiap.fastfood.api.core.domain.exception.DomainException;
-import br.com.fiap.fastfood.api.core.domain.exception.ErrorDetail;
 import br.com.fiap.fastfood.api.core.domain.model.person.Customer;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -18,9 +16,12 @@ public class ActivationCode {
   public ActivationCode(Customer customer, LocalDateTime expiration) {
     this.customer = customer;
     this.expiration = expiration;
-    if (Objects.isNull(customer) || customer.isActive()) {
-      ErrorDetail errorDetail = new ErrorDetail("person", "A pessoa não pode ser nula e deve estar inativa!");
-      throw new DomainException(errorDetail);
-    }
   }
+
+  public boolean isValid() {
+    return Objects.nonNull(customer)
+        && !this.customer.isActive()
+        && this.expiration.isAfter(LocalDateTime.now());
+  }
+
 }

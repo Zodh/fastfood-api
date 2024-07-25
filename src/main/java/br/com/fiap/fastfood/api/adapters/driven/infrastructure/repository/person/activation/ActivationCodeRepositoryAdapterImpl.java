@@ -4,6 +4,7 @@ import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.person.act
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.ActivationCodeMapper;
 import br.com.fiap.fastfood.api.core.domain.model.person.activation.ActivationCode;
 import br.com.fiap.fastfood.api.core.domain.repository.outbound.ActivationCodeRepositoryPort;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -16,8 +17,9 @@ public class ActivationCodeRepositoryAdapterImpl implements ActivationCodeReposi
   private final ActivationCodeMapper mapper;
 
   @Override
-  public ActivationCode findById(UUID identifier) {
-    return null;
+  public Optional<ActivationCode> findById(UUID identifier) {
+    Optional<ActivationCodeEntity> activationCodeOpt = repository.findById(identifier);
+    return activationCodeOpt.map(mapper::toDomain);
   }
 
   @Override
@@ -25,6 +27,11 @@ public class ActivationCodeRepositoryAdapterImpl implements ActivationCodeReposi
     ActivationCodeEntity entity = mapper.toEntity(data);
     ActivationCodeEntity persistedEntity = repository.save(entity);
     return mapper.toDomain(persistedEntity);
+  }
+
+  @Override
+  public void delete(UUID identifier) {
+    repository.deleteById(identifier);
   }
 
 }

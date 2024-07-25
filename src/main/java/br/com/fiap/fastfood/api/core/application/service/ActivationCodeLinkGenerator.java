@@ -17,7 +17,7 @@ public class ActivationCodeLinkGenerator implements ActivationCodeLinkGeneratorP
   @Override
   public String generate(ActivationCode activationCode) {
     try {
-      return InetAddress.getLocalHost().getHostAddress() + ":" + port + "/activate/" + activationCode.getKey().toString();
+      return InetAddress.getLocalHost().getHostAddress() + ":" + port + "/activation-code/" + activationCode.getKey().toString();
     } catch (UnknownHostException e) {
       throw new ApplicationException("Falha ao gerar o link de confirmação!", e.getMessage());
     }

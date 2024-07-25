@@ -4,10 +4,12 @@ import br.com.fiap.fastfood.api.core.domain.exception.DomainException;
 import br.com.fiap.fastfood.api.core.domain.exception.ErrorDetail;
 import br.com.fiap.fastfood.api.core.domain.model.person.Customer;
 import br.com.fiap.fastfood.api.core.domain.model.person.PersonValidator;
+import br.com.fiap.fastfood.api.core.domain.model.person.vo.Document;
 import br.com.fiap.fastfood.api.core.domain.ports.outbound.EmailSenderPort;
 import br.com.fiap.fastfood.api.core.domain.repository.outbound.CustomerRepositoryPort;
 import br.com.fiap.fastfood.api.core.domain.service.ActivationCodeService;
 import java.util.List;
+import java.util.Optional;
 import lombok.Data;
 
 @Data
@@ -36,18 +38,38 @@ public class ServiceAggregate {
     if (!errorDetails.isEmpty()) {
       throw new DomainException(errorDetails);
     }
+    validateEmailUsage();
+    validateDocumentNumberUsage();
     customer.setActive(false);
     Customer persistedCustomer = customerRepository.save(customer);
     sendVerificationLink(persistedCustomer);
+  }
+
+  private void validateEmailUsage() {
+    String email = customer.getEmail().getValue();
+    Optional<Customer> existingCustomer = customerRepository.findByEmail(email);
+    if (existingCustomer.isPresent()) {
+      ErrorDetail errorDetail = new ErrorDetail("person.email", "O email já foi utilizado por outro cadastro!");
+      throw new DomainException(errorDetail);
+    }
+  }
+
+  private void validateDocumentNumberUsage() {
+    Document document = customer.getDocument();
+    Optional<Customer> existingCustomer = customerRepository.findByDocument(document);
+    if (existingCustomer.isPresent()) {
+      ErrorDetail errorDetail = new ErrorDetail("person.document", "O documento já foi utilizado por outro cadastro!");
+      throw new DomainException(errorDetail);
+    }
   }
 
   private void sendVerificationLink(Customer customer) {
     String activationCode = activationCodeService.generate(customer);
     String verificationMessage = String.format(
         """
-        E aiii, %s!
+        E ai, %s!
         
-        Pronto para ter acesso a promoções e descontos exclusivos com a gente?
+        Pronto(a) para ter acesso a promoções e descontos exclusivos com a gente?
         
         Para isso, precisamos que ative seu cadastro clicando aqui: %s
         """,
