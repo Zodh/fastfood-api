@@ -41,4 +41,9 @@ public class MenuProductAggregate {
 
         return persistedProduct.get();
     }
+
+    public void register(MenuProduct menuProduct) {
+        // Criar validações
+        menuProductRepository.save(menuProduct);
+    }
 }

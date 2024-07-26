@@ -29,4 +29,9 @@ public class MenuProductService {
         MenuProductAggregate menuProductAggregate = new MenuProductAggregate(menuProductRepositoryPort);
         return menuProductAggregate.getById(id);
     }
+
+    public void register(MenuProduct menuProduct) {
+        MenuProductAggregate menuProductAggregate = new MenuProductAggregate(menuProductRepositoryPort);
+        menuProductAggregate.register(menuProduct);
+    }
 }

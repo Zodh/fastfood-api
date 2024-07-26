@@ -17,6 +17,8 @@ public interface MenuProductMapper {
     @Mapping(source = "entity.ingredients", target = "ingredients", qualifiedByName = "mapMenuProductList")
     MenuProduct toDomain(MenuProductEntity entity);
 
+    MenuProduct toDomain(MenuProductDTO dto);
+
     List<MenuProductDTO> toMenuProductDTO(List<MenuProduct> menuProduct);
 
     MenuProductDTO toMenuProductDTO(MenuProduct menuProduct);

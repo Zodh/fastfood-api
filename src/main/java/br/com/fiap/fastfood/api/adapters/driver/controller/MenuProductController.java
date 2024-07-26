@@ -39,7 +39,8 @@ public class MenuProductController {
 
     @PostMapping
     public ResponseEntity<Void> register(@RequestBody MenuProductDTO menuProductDTO) {
-
+        MenuProduct domain = mapper.toDomain(menuProductDTO);
+        menuProductService.register(domain);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
