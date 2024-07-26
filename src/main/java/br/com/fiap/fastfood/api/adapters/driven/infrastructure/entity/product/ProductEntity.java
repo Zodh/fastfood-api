@@ -1,6 +1,18 @@
 package br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.product;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,13 +41,18 @@ public abstract class ProductEntity {
   protected BigDecimal price;
 
   @Column(name = "preparation_time")
-  protected Long preparationTime;
+  protected Long preparationTimeInMillis;
 
   @Column(name = "quantity")
   protected int quantity;
 
   @Column(name = "cost")
   protected BigDecimal cost;
+
+  @NotNull
+  @NotEmpty
+  @Column(name = "code", unique = true)
+  protected String code;
 
   @Column(name = "created_at")
   private LocalDateTime created;

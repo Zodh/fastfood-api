@@ -21,4 +21,6 @@ public abstract class Product {
     protected BigDecimal cost;
     private LocalDateTime created;
     private LocalDateTime updated;
+    protected boolean isIngredient;
+    protected boolean isOptional;
 }
