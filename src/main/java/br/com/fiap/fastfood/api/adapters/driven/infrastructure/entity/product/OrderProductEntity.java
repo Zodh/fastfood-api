@@ -4,6 +4,7 @@ import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.order.Orde
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,7 @@ import lombok.NoArgsConstructor;
 public class OrderProductEntity extends ProductEntity {
 
   @ManyToOne
+  @NotNull
   private MenuProductEntity menuProduct;
 
   @ManyToOne
