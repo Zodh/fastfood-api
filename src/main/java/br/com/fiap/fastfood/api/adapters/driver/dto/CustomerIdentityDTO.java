@@ -6,7 +6,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder(access = AccessLevel.PUBLIC)
-public class IdentifyCustomerDTO {
+public class CustomerIdentityDTO {
 
     private Long id;
     private String name;

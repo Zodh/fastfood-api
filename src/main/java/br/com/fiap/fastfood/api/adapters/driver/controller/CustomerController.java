@@ -1,9 +1,9 @@
 package br.com.fiap.fastfood.api.adapters.driver.controller;
 
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.CustomerMapper;
-import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.IdentifyCustomerMapper;
+import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.CustomerIdentityMapper;
 import br.com.fiap.fastfood.api.adapters.driver.dto.CustomerDTO;
-import br.com.fiap.fastfood.api.adapters.driver.dto.IdentifyCustomerDTO;
+import br.com.fiap.fastfood.api.adapters.driver.dto.CustomerIdentityDTO;
 import br.com.fiap.fastfood.api.core.application.service.CustomerService;
 import br.com.fiap.fastfood.api.core.domain.model.person.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +17,10 @@ public class CustomerController {
 
     private final CustomerService customerService;
     private final CustomerMapper mapper;
-    private final IdentifyCustomerMapper identifyMapper;
+    private final CustomerIdentityMapper identifyMapper;
 
     @Autowired
-    public CustomerController(CustomerService customerService, CustomerMapper mapper, IdentifyCustomerMapper identifyMapper) {
+    public CustomerController(CustomerService customerService, CustomerMapper mapper, CustomerIdentityMapper identifyMapper) {
         this.customerService = customerService;
         this.mapper = mapper;
         this.identifyMapper = identifyMapper;
@@ -34,11 +34,11 @@ public class CustomerController {
     }
 
     @GetMapping("/{documentNumber}")
-    public ResponseEntity<IdentifyCustomerDTO> identify(@PathVariable String documentNumber) {
+    public ResponseEntity<CustomerIdentityDTO> identify(@PathVariable String documentNumber) {
         Customer identifiedCustomer = customerService.identify(documentNumber);
-        IdentifyCustomerDTO identifyCustomerDTO = identifyMapper.toIdentifyDTO(identifiedCustomer);
+        CustomerIdentityDTO customerIdentityDTO = identifyMapper.toIdentityDTO(identifiedCustomer);
 
-        return ResponseEntity.status(HttpStatus.OK).body(identifyCustomerDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(customerIdentityDTO);
     }
 
 }
