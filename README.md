@@ -13,17 +13,6 @@ Atualmente existem as seguintes maneiras de se executar o projeto (do mais simpl
 
 OBS: precisa parametrizar a senha do envio de email na variável: FASTFOOD_MAIL_PASSWORD.
 
----
-
-Caso queira atualizar a versão da aplicação com a que voce está, execute os seguintes comandos:
-
-(se o projeto estiver rodando, execute o seguinte comando: `docker-compose down`)
-
-1. execute o comando `mvn clean package`;
-2. na pasta do projeto, execute o comando `docker-compose build --pull`;
-3. na pasta do projeto, execute o comando `docker-compose up`
-
-### Aplicação configurada localmente (melhor para propósitos de DEBUG)
 
 1. execute o comando `mvn clean package`;
 2. execute o comando: `docker run -d -p 5432:5432 -e POSTGRES_PASSWORD=postgrespw postgres:latest`;
@@ -44,3 +33,8 @@ OBS: lembre-se de usar o `dev-local.env` como arquivo de variáveis de ambiente.
 3. na pasta do projeto, execute o comando: `mvn clean package`;
 4. na pasta do projeto, execute o comando `docker build --build-arg="DATABASE_URL_ARG=jdbc:postgresql://fastfood-db:5432/postgres" -t zodh/fastfood-api:1.0.0 .`;
 5. execute o comando `docker run -d -p 8080:8080 --net=minha-rede zodh/fastfood-api:1.0.0`.
+
+
+### Keycloak
+
+Para subir o keycloak, execute o comando: `docker run -p 9191:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin quay.io/keycloak/keycloak:22.0.1 start-dev`.
