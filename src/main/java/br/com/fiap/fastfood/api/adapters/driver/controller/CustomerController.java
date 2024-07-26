@@ -9,6 +9,7 @@ import br.com.fiap.fastfood.api.core.domain.model.person.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,6 +28,7 @@ public class CustomerController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> register(@RequestBody CustomerDTO customer) {
         Customer domain = mapper.toDomain(customer);
         customerService.register(domain);
@@ -34,6 +36,7 @@ public class CustomerController {
     }
 
     @GetMapping("/{documentNumber}")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<IdentifyCustomerDTO> identify(@PathVariable String documentNumber) {
         Customer identifiedCustomer = customerService.identify(documentNumber);
         IdentifyCustomerDTO identifyCustomerDTO = identifyMapper.toIdentifyDTO(identifiedCustomer);
