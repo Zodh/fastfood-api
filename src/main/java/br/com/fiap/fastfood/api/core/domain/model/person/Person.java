@@ -29,7 +29,7 @@ public abstract class Person {
       ErrorDetail errorDetail = new ErrorDetail("person.name", "Não foi possível recuperar o primeiro nome! O nome está vazio.");
       throw new DomainException(errorDetail);
     }
-    return name.substring(0, name.indexOf(' '));
+    return name.substring(0, StringUtils.containsWhitespace(name) ? name.indexOf(' ') : name.length());
   }
 
 }

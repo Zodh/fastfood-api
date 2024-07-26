@@ -53,4 +53,9 @@ public class CustomerService {
     );
     return serviceAggregate.identify();
   }
+  public void resendVerificationLink(String email) {
+    ServiceAggregate serviceAggregate = new ServiceAggregate(email, customerRepositoryPort, activationCodeService, emailSenderPort);
+    serviceAggregate.resendVerificationLink();
+  }
+
 }
