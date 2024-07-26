@@ -1,15 +1,17 @@
 package br.com.fiap.fastfood.api.core.application.service;
 
-import br.com.fiap.fastfood.api.core.domain.model.person.Customer;
 import br.com.fiap.fastfood.api.core.domain.aggregate.ServiceAggregate;
-import br.com.fiap.fastfood.api.core.domain.ports.outbound.EmailSenderPort;
+import br.com.fiap.fastfood.api.core.domain.model.person.Customer;
+import br.com.fiap.fastfood.api.core.domain.model.person.vo.Document;
 import br.com.fiap.fastfood.api.core.domain.ports.outbound.ActivationCodeLinkGeneratorPort;
+import br.com.fiap.fastfood.api.core.domain.ports.outbound.EmailSenderPort;
 import br.com.fiap.fastfood.api.core.domain.repository.outbound.ActivationCodeRepositoryPort;
 import br.com.fiap.fastfood.api.core.domain.repository.outbound.CustomerRepositoryPort;
 import br.com.fiap.fastfood.api.core.domain.service.ActivationCodeService;
-import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 public class CustomerService {
@@ -44,6 +46,13 @@ public class CustomerService {
     activationCodeService.activate(code);
   }
 
+  public Customer identify(String documentNumber) {
+    ServiceAggregate serviceAggregate = new ServiceAggregate(
+            new Document(documentNumber),
+            customerRepositoryPort
+    );
+    return serviceAggregate.identify();
+  }
   public void resendVerificationLink(String email) {
     ServiceAggregate serviceAggregate = new ServiceAggregate(email, customerRepositoryPort, activationCodeService, emailSenderPort);
     serviceAggregate.resendVerificationLink();
