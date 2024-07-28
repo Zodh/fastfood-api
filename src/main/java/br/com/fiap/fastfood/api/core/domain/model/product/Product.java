@@ -16,11 +16,11 @@ public abstract class Product {
     protected String name;
     protected String description;
     protected BigDecimal price;
-    protected Long preparationTime;
+    protected Long preparationTimeInMillis;
     protected int quantity;
     protected BigDecimal cost;
-    private LocalDateTime created;
-    private LocalDateTime updated;
-    protected boolean isIngredient;
-    protected boolean isOptional;
+    protected LocalDateTime created;
+    protected LocalDateTime updated;
+    protected boolean ingredient;
+    protected boolean optional;
 }

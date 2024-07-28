@@ -26,17 +26,25 @@ public class MenuProductRepositoryAdapterImpl implements MenuProductRepositoryPo
 
   @Override
   public Optional<MenuProduct> findById(Long identifier) {
-    return Optional.empty();
+    Optional<MenuProductEntity> menuProductEntityOpt = repository.findById(identifier);
+    return menuProductEntityOpt.map(mapper::toDomain);
   }
 
   @Override
   public MenuProduct save(MenuProduct data) {
-    return null;
+    MenuProductEntity entity = mapper.toEntity(data);
+    MenuProductEntity persistedMenuProduct = repository.save(entity);
+    return mapper.toDomain(persistedMenuProduct);
   }
 
   @Override
-  public void delete(Long identifier) {
-
+  public boolean delete(Long identifier) {
+    Optional<MenuProductEntity> menuProductEntityOpt = repository.findById(identifier);
+    if (menuProductEntityOpt.isEmpty()) {
+      return false;
+    }
+    repository.deleteById(identifier);
+    return true;
   }
 
   @Override

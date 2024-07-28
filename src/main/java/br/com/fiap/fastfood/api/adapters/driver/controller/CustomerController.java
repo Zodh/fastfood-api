@@ -2,8 +2,8 @@ package br.com.fiap.fastfood.api.adapters.driver.controller;
 
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.CustomerMapper;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.CustomerIdentityMapper;
-import br.com.fiap.fastfood.api.adapters.driver.dto.CustomerDTO;
-import br.com.fiap.fastfood.api.adapters.driver.dto.CustomerIdentityDTO;
+import br.com.fiap.fastfood.api.adapters.driver.dto.customer.CustomerDTO;
+import br.com.fiap.fastfood.api.adapters.driver.dto.customer.CustomerIdentityDTO;
 import br.com.fiap.fastfood.api.core.application.service.CustomerService;
 import br.com.fiap.fastfood.api.core.domain.model.person.Customer;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -22,6 +22,7 @@ public class ServiceAggregate {
   private CustomerRepositoryPort customerRepository;
   private EmailSenderPort emailSender;
   private ActivationCodeService activationCodeService;
+  private PersonValidator personValidator;
 
   public ServiceAggregate(
       Customer customer,
@@ -33,6 +34,7 @@ public class ServiceAggregate {
     this.customerRepository = customerRepository;
     this.emailSender = emailSender;
     this.activationCodeService = activationCodeService;
+    this.personValidator = new PersonValidator();
   }
 
   public ServiceAggregate(String email, CustomerRepositoryPort customerRepository, ActivationCodeService activationCodeService, EmailSenderPort emailSender) {
@@ -51,7 +53,7 @@ public class ServiceAggregate {
   }
 
   public void register() {
-    List<ErrorDetail> errorDetails = PersonValidator.validate(this.customer);
+    List<ErrorDetail> errorDetails = personValidator.validate(this.customer);
     if (!errorDetails.isEmpty()) {
       throw new DomainException(errorDetails);
     }

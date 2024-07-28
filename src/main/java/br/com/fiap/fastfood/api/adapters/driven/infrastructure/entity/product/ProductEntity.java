@@ -17,9 +17,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Data
@@ -49,10 +46,11 @@ public abstract class ProductEntity {
   @Column(name = "cost")
   protected BigDecimal cost;
 
-  @NotNull
-  @NotEmpty
-  @Column(name = "code", unique = true)
-  protected String code;
+  @Column(name = "ingredient")
+  private boolean ingredient;
+
+  @Column(name = "optional")
+  private boolean optional;
 
   @Column(name = "created_at")
   private LocalDateTime created;

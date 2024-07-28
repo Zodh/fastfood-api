@@ -1,4 +1,4 @@
-package br.com.fiap.fastfood.api.adapters.driver.dto;
+package br.com.fiap.fastfood.api.adapters.driver.dto.customer;
 
 import br.com.fiap.fastfood.api.core.domain.model.person.vo.DocumentType;
 import java.time.LocalDate;

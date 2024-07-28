@@ -1,4 +1,4 @@
-package br.com.fiap.fastfood.api.adapters.driver.dto;
+package br.com.fiap.fastfood.api.adapters.driver.dto.product;
 
 import lombok.*;
 
@@ -15,9 +15,12 @@ public class MenuProductDTO {
     private String name;
     private String description;
     private BigDecimal price;
-    private Long preparationTime;
+    private Long preparationTimeInMillis;
     private int quantity;
     private BigDecimal cost;
     private List<MenuProductDTO> optionals;
     private List<MenuProductDTO> ingredients;
+    private boolean optional;
+    private boolean ingredient;
+
 }

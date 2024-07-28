@@ -21,8 +21,7 @@ public class MenuProductService {
     }
 
     public List<MenuProduct> getAll() {
-        MenuProductAggregate menuProductAggregate = new MenuProductAggregate(menuProductRepositoryPort);
-        return menuProductAggregate.getAll();
+        return menuProductRepositoryPort.getAll();
     }
 
     public MenuProduct getById(Long id) {
@@ -31,7 +30,13 @@ public class MenuProductService {
     }
 
     public void register(MenuProduct menuProduct) {
-        MenuProductAggregate menuProductAggregate = new MenuProductAggregate(menuProductRepositoryPort);
-        menuProductAggregate.register(menuProduct);
+        MenuProductAggregate menuProductAggregate = new MenuProductAggregate(menuProduct, menuProductRepositoryPort);
+        menuProductAggregate.create();
     }
+
+    public void remove(Long id) {
+        MenuProductAggregate menuProductAggregate = new MenuProductAggregate(menuProductRepositoryPort);
+        menuProductAggregate.remove(id);
+    }
+
 }
