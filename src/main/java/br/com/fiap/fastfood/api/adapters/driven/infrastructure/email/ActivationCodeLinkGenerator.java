@@ -1,4 +1,4 @@
-package br.com.fiap.fastfood.api.core.application.service;
+package br.com.fiap.fastfood.api.adapters.driven.infrastructure.email;
 
 import br.com.fiap.fastfood.api.core.application.exception.ApplicationException;
 import br.com.fiap.fastfood.api.core.domain.model.person.activation.ActivationCode;

@@ -1,6 +1,6 @@
 package br.com.fiap.fastfood.api.adapters.driver.controller;
 
-import br.com.fiap.fastfood.api.core.application.service.CustomerService;
+import br.com.fiap.fastfood.api.core.application.service.CustomerServiceImpl;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,22 +16,22 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/activation-code")
 public class ActivationCodeController {
 
-  private final CustomerService customerService;
+  private final CustomerServiceImpl customerServiceImpl;
 
   @Autowired
-  public ActivationCodeController(CustomerService customerService) {
-    this.customerService = customerService;
+  public ActivationCodeController(CustomerServiceImpl customerServiceImpl) {
+    this.customerServiceImpl = customerServiceImpl;
   }
 
   @GetMapping(value = "/{code}")
   public ResponseEntity<Void> activate(@PathVariable UUID code) {
-    customerService.activate(code);
+    customerServiceImpl.activate(code);
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
   }
 
   @PostMapping(value = "/generate")
   public ResponseEntity<Void> generate(@RequestParam(value = "email") String email) {
-    customerService.resendVerificationLink(email);
+    customerServiceImpl.resendVerificationLink(email);
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
