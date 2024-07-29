@@ -4,8 +4,10 @@ import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.order.Orde
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -13,9 +15,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 public class OrderProductEntity extends ProductEntity {
 
   @ManyToOne
+  @NotNull
   private MenuProductEntity menuProduct;
 
   @ManyToOne

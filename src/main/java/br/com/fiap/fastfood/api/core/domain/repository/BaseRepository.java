@@ -6,6 +6,6 @@ public interface BaseRepository <T, K> {
 
   Optional<T> findById(K identifier);
   T save(T data);
-  void delete(K identifier);
+  boolean delete(K identifier);
 
 }

@@ -37,8 +37,13 @@ public class CustomerRepositoryAdapterImpl implements CustomerRepositoryPort {
   }
 
   @Override
-  public void delete(Long identifier) {
+  public boolean delete(Long identifier) {
+    Optional<CustomerEntity> customerEntityOpt = repository.findById(identifier);
+    if (customerEntityOpt.isEmpty()) {
+      return false;
+    }
     repository.deleteById(identifier);
+    return true;
   }
 
   @Override

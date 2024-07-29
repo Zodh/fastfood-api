@@ -3,16 +3,17 @@ package br.com.fiap.fastfood.api.core.domain.model.person;
 import static java.util.Objects.isNull;
 
 import br.com.fiap.fastfood.api.core.domain.exception.ErrorDetail;
+import br.com.fiap.fastfood.api.core.domain.model.Validator;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public class PersonValidator {
+public class PersonValidator implements Validator<Person> {
 
-  public static List<ErrorDetail> validate(Person person) {
+  @Override
+  public List<ErrorDetail> validate(Person person) {
     List<ErrorDetail> errors = new ArrayList<>();
     if (isNull(person)) {
       errors.add(new ErrorDetail("person", "A pessoa não pode ser nula!"));

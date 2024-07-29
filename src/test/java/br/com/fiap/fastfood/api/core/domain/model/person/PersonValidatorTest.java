@@ -13,6 +13,8 @@ import org.junit.jupiter.api.Test;
 
 class PersonValidatorTest {
 
+  private PersonValidator personValidator = new PersonValidator();
+
   @Test
   @DisplayName("Given Person With Invalid Min Age "
       + "When Validate "
@@ -21,7 +23,7 @@ class PersonValidatorTest {
     LocalDate nineYearsOld = LocalDate.now().minusYears(9);
     Person person = mockValidPerson();
     person.setBirthdate(nineYearsOld);
-    List<ErrorDetail> errors = PersonValidator.validate(person);
+    List<ErrorDetail> errors = personValidator.validate(person);
     assertThat(errors).isNotEmpty().hasSize(1).containsOnly(new ErrorDetail("person.birthdate", "A data de nascimento não é válida! A idade precisa ser entre 10 e 110."));
   }
 
@@ -33,7 +35,7 @@ class PersonValidatorTest {
     LocalDate nineYearsOld = LocalDate.now().minusYears(111);
     Person person = mockValidPerson();
     person.setBirthdate(nineYearsOld);
-    List<ErrorDetail> errors = PersonValidator.validate(person);
+    List<ErrorDetail> errors = personValidator.validate(person);
     assertThat(errors).isNotEmpty().hasSize(1).containsOnly(new ErrorDetail("person.birthdate", "A data de nascimento não é válida! A idade precisa ser entre 10 e 110."));
   }
 
@@ -42,7 +44,7 @@ class PersonValidatorTest {
       + "When Validate "
       + "Then Return Error")
   void nullPersonTest() {
-    List<ErrorDetail> errors = PersonValidator.validate(null);
+    List<ErrorDetail> errors = personValidator.validate(null);
     assertThat(errors).isNotEmpty().hasSize(1).containsOnly(new ErrorDetail("person", "A pessoa não pode ser nula!"));
   }
 
@@ -53,7 +55,7 @@ class PersonValidatorTest {
   void invalidDocumentTest() {
     Person person = mockValidPerson();
     person.setDocument(new Document("1982745"));
-    List<ErrorDetail> errors = PersonValidator.validate(person);
+    List<ErrorDetail> errors = personValidator.validate(person);
     assertThat(errors).isNotEmpty().hasSize(1).containsOnly(new ErrorDetail("person.document", "O documento não é válido! Precisa ter o formato XXX.XXX.XXX-XX."));
   }
 
@@ -64,7 +66,7 @@ class PersonValidatorTest {
   void invalidEmailTest() {
     Person person = mockValidPerson();
     person.setEmail(new Email("test@@test.com"));
-    List<ErrorDetail> errors = PersonValidator.validate(person);
+    List<ErrorDetail> errors = personValidator.validate(person);
     assertThat(errors).isNotEmpty().hasSize(1).containsOnly(new ErrorDetail("person.email", "O email não é válido! Precisa ter o formato algum.email@teste.com."));
   }
 
@@ -75,7 +77,7 @@ class PersonValidatorTest {
   void invalidPhoneTest() {
     Person person = mockValidPerson();
     person.setPhoneNumber(new PhoneNumber("1999205"));
-    List<ErrorDetail> errors = PersonValidator.validate(person);
+    List<ErrorDetail> errors = personValidator.validate(person);
     assertThat(errors).isNotEmpty().hasSize(1).containsOnly(new ErrorDetail("person.phoneNumber", "O telefone não é válido! Precisa ter o formato (XX) XXXXX-XXXX."));
   }
 
@@ -86,7 +88,7 @@ class PersonValidatorTest {
   void invalidNameMinLength() {
     Person person = mockValidPerson();
     person.setName("Lu");
-    List<ErrorDetail> errors = PersonValidator.validate(person);
+    List<ErrorDetail> errors = personValidator.validate(person);
     assertThat(errors).isNotEmpty().hasSize(1).containsOnly(new ErrorDetail("person.name", "O nome não é válido! Precisa conter entre 3 e 150 caracteres!"));
   }
 
@@ -97,7 +99,7 @@ class PersonValidatorTest {
   void invalidNameMaxLength() {
     Person person = mockValidPerson();
     person.setName("Lu".repeat(100));
-    List<ErrorDetail> errors = PersonValidator.validate(person);
+    List<ErrorDetail> errors = personValidator.validate(person);
     assertThat(errors).isNotEmpty().hasSize(1).containsOnly(new ErrorDetail("person.name", "O nome não é válido! Precisa conter entre 3 e 150 caracteres!"));
   }
 
@@ -107,7 +109,7 @@ class PersonValidatorTest {
       + "Then Return Empty")
   void validPersonTest() {
     Person person = mockValidPerson();
-    List<ErrorDetail> errors = PersonValidator.validate(person);
+    List<ErrorDetail> errors = personValidator.validate(person);
     assertThat(errors).isEmpty();
   }
 

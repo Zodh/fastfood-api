@@ -1,7 +1,7 @@
 package br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper;
 
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.person.CustomerEntity;
-import br.com.fiap.fastfood.api.adapters.driver.dto.CustomerDTO;
+import br.com.fiap.fastfood.api.adapters.driver.dto.customer.CustomerDTO;
 import br.com.fiap.fastfood.api.core.domain.model.person.Customer;
 import br.com.fiap.fastfood.api.core.domain.model.person.vo.Document;
 import br.com.fiap.fastfood.api.core.domain.model.person.vo.Email;

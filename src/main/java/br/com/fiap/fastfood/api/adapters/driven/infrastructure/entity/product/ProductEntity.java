@@ -7,14 +7,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -40,7 +38,7 @@ public abstract class ProductEntity {
   protected BigDecimal price;
 
   @Column(name = "preparation_time")
-  protected Long preparationTime;
+  protected Long preparationTimeInMillis;
 
   @Column(name = "quantity")
   protected int quantity;
@@ -48,23 +46,13 @@ public abstract class ProductEntity {
   @Column(name = "cost")
   protected BigDecimal cost;
 
-  @ManyToMany
-  @JoinTable(
-      name = "product_optional",
-      joinColumns = @JoinColumn(name = "product_id"),
-      inverseJoinColumns = @JoinColumn(name = "optional_id")
-  )
-  protected List<ProductEntity> optionals;
+  @Column(name = "ingredient")
+  private boolean ingredient;
 
-  @ManyToMany
-  @JoinTable(
-      name = "product_ingredient",
-      joinColumns = @JoinColumn(name = "product_id"),
-      inverseJoinColumns = @JoinColumn(name = "ingredient_id")
-  )
-  protected List<ProductEntity> ingredients;
+  @Column(name = "optional")
+  private boolean optional;
 
-  @Column(name = "created_at")
+  @Column(name = "created_at", updatable = false)
   private LocalDateTime created;
 
   @Column(name = "updated_at")

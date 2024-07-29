@@ -30,8 +30,13 @@ public class ActivationCodeRepositoryAdapterImpl implements ActivationCodeReposi
   }
 
   @Override
-  public void delete(UUID identifier) {
+  public boolean delete(UUID identifier) {
+    Optional<ActivationCodeEntity> activationCodeOpt = repository.findById(identifier);
+    if (activationCodeOpt.isEmpty()) {
+      return false;
+    }
     repository.deleteById(identifier);
+    return true;
   }
 
   @Override

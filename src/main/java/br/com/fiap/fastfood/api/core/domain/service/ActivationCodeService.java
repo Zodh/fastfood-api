@@ -2,6 +2,7 @@ package br.com.fiap.fastfood.api.core.domain.service;
 
 import br.com.fiap.fastfood.api.core.domain.exception.DomainException;
 import br.com.fiap.fastfood.api.core.domain.exception.ErrorDetail;
+import br.com.fiap.fastfood.api.core.domain.exception.NotFoundException;
 import br.com.fiap.fastfood.api.core.domain.model.person.Customer;
 import br.com.fiap.fastfood.api.core.domain.model.person.activation.ActivationCode;
 import br.com.fiap.fastfood.api.core.domain.ports.outbound.ActivationCodeLinkGeneratorPort;
@@ -43,8 +44,7 @@ public class ActivationCodeService {
     }
     Optional<ActivationCode> activationCodeOpt = activationCodeRepository.findById(code);
     if (activationCodeOpt.isEmpty()) {
-      ErrorDetail errorDetail = new ErrorDetail(ACTIVATION_CODE, "O código de ativação não foi encontrado!");
-      throw new DomainException(errorDetail);
+      throw new NotFoundException("O código de ativação não foi encontrado!");
     }
     ActivationCode activationCode = activationCodeOpt.get();
     if (!activationCode.isValid()) {
