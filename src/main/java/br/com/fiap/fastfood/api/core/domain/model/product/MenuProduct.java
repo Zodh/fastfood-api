@@ -50,9 +50,9 @@ public class MenuProduct extends Product{
     }
 
     private BigDecimal calculateCost() {
-        List<MenuProduct> ingredients = Optional.ofNullable(this.ingredients).orElse(Collections.emptyList());
-        List<MenuProduct> optionals = Optional.ofNullable(this.optionals).orElse(Collections.emptyList());
-        return Stream.concat(ingredients.stream(), optionals.stream())
+        List<MenuProduct> i = Optional.ofNullable(this.ingredients).orElse(Collections.emptyList());
+        List<MenuProduct> o = Optional.ofNullable(this.optionals).orElse(Collections.emptyList());
+        return Stream.concat(i.stream(), o.stream())
             .filter(mp -> Objects.nonNull(mp) && Objects.nonNull(mp.getCost()))
             .map(mp -> mp.getCost().multiply(BigDecimal.valueOf(mp.getQuantity())))
             .reduce(BigDecimal.ZERO, BigDecimal::add);

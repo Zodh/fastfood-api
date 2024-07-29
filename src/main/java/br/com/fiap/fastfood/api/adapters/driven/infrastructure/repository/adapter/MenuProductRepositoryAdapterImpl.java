@@ -5,6 +5,8 @@ import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.MenuProduc
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.product.MenuProductRepository;
 import br.com.fiap.fastfood.api.core.domain.model.product.MenuProduct;
 import br.com.fiap.fastfood.api.core.domain.repository.outbound.MenuProductRepositoryPort;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -57,6 +59,20 @@ public class MenuProductRepositoryAdapterImpl implements MenuProductRepositoryPo
   public void update(MenuProduct menuProduct) {
     MenuProductEntity entity = mapper.toEntity(menuProduct);
     repository.save(entity);
+  }
+
+  @Override
+  public List<Long> fetchProductsRelatedToProduct(Long productId) {
+    return Stream.concat(
+        repository.fetchProductsByIngredient(productId).stream(),
+        repository.fetchProductsByOptional(productId
+        ).stream()).distinct().collect(Collectors.toList());
+  }
+
+  @Override
+  public List<MenuProduct> findAllById(List<Long> ids) {
+    List<MenuProductEntity> products = repository.findAllById(ids);
+    return products.stream().map(mapper::toDomain).collect(Collectors.toList());
   }
 
 }

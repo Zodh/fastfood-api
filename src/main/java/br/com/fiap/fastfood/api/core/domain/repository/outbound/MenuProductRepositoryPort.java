@@ -9,4 +9,7 @@ public interface MenuProductRepositoryPort extends BaseRepository<MenuProduct, L
 
     List<MenuProduct> getAll();
     void update(MenuProduct menuProduct);
+    List<Long> fetchProductsRelatedToProduct(Long productId);
+    List<MenuProduct> findAllById(List<Long> ids);
+
 }

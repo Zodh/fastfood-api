@@ -55,8 +55,17 @@ public class MenuProductAggregate {
     }
 
     public void remove(Long id) {
-        MenuProduct found = getById(id);
-        menuProductRepository.delete(found.getId());
+        MenuProduct target = getById(id);
+        List<Long> productsThatUseTarget = menuProductRepository.fetchProductsRelatedToProduct(target.getId());
+        menuProductRepository.delete(target.getId());
+
+        // After remove target product, we need to check if other product used it as optional or ingredient.
+        List<MenuProduct> allProductsThatUsedRemovedProduct = menuProductRepository.findAllById(productsThatUseTarget);
+        allProductsThatUsedRemovedProduct.forEach(p -> {
+            p.setIngredients(p.getIngredients());
+            p.setOptionals(p.getOptionals());
+        });
+        allProductsThatUsedRemovedProduct.forEach(menuProductRepository::update);
     }
 
     public void update(Long id) {
