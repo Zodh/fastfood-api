@@ -47,8 +47,9 @@ public class MenuProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> update(@Valid @RequestBody MenuProductDTO menuProductDTO, @PathVariable Long id) {
-        // TODO: Criado em: 26/07/2024 ás 08:17:44.;
+    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody MenuProductDTO menuProductDTO) {
+        MenuProduct domain = mapper.toDomain(menuProductDTO);
+        menuProductService.update(id, domain);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 

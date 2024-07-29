@@ -15,6 +15,6 @@ public class MenuProductValidator implements Validator<MenuProduct> {
     if (!product.isIngredient() && !product.isOptional() && CollectionUtils.isEmpty(product.getIngredients())) {
       errors.add(new ErrorDetail("product.ingredients", "Se o produto não for um ingrediente ou um opcional, ele deve conter ingredientes!"));
     }
-    return List.of();
+    return errors;
   }
 }

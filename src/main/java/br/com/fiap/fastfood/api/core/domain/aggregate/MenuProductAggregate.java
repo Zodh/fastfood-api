@@ -39,14 +39,35 @@ public class MenuProductAggregate {
         if (!CollectionUtils.isEmpty(errors)) {
             throw new DomainException(errors);
         }
+        fetchItems();
         menuProductRepository.save(menuProduct);
     }
 
-    public void remove(Long id) {
-        Optional<MenuProduct> menuProductOpt = menuProductRepository.findById(menuProduct.getId());
-        if (menuProductOpt.isEmpty()) {
-            throw new NotFoundException(String.format("Não foi encontrado um produto com o identificador %d!", id));
+    private void fetchItems() {
+        if (!CollectionUtils.isEmpty(menuProduct.getIngredients())) {
+            List<MenuProduct> ingredients = menuProduct.getIngredients().stream().map(i -> getById(i.getId())).toList();
+            menuProduct.setIngredients(ingredients);
         }
-        menuProductRepository.delete(id);
+        if (!CollectionUtils.isEmpty(menuProduct.getOptionals())) {
+            List<MenuProduct> optionals = menuProduct.getIngredients().stream().map(i -> getById(i.getId())).toList();
+            menuProduct.setOptionals(optionals);
+        }
     }
+
+    public void remove(Long id) {
+        MenuProduct found = getById(id);
+        menuProductRepository.delete(found.getId());
+    }
+
+    public void update(Long id) {
+        MenuProduct current = getById(id);
+        menuProduct.setId(current.getId());
+        List<ErrorDetail> errors = menuProductValidator.validate(menuProduct);
+        if (!CollectionUtils.isEmpty(errors)) {
+            throw new DomainException(errors);
+        }
+        fetchItems();
+        menuProductRepository.update(menuProduct);
+    }
+
 }

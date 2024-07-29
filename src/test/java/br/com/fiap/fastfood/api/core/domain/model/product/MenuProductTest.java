@@ -25,8 +25,8 @@ class MenuProductTest {
     MenuProduct bread = new MenuProduct();
     bread.setName("Bread");
     bread.setQuantity(1);
-    bread.setCost(new BigDecimal("1.50"));
     bread.setIngredient(true);
+    bread.setCost(new BigDecimal("1.50"));
 
     assertThat(bread.getCost()).isEqualTo(new BigDecimal("1.50"));
   }

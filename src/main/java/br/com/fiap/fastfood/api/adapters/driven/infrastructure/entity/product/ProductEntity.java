@@ -52,7 +52,7 @@ public abstract class ProductEntity {
   @Column(name = "optional")
   private boolean optional;
 
-  @Column(name = "created_at")
+  @Column(name = "created_at", updatable = false)
   private LocalDateTime created;
 
   @Column(name = "updated_at")

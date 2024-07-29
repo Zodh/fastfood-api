@@ -8,4 +8,5 @@ import java.util.List;
 public interface MenuProductRepositoryPort extends BaseRepository<MenuProduct, Long> {
 
     List<MenuProduct> getAll();
+    void update(MenuProduct menuProduct);
 }

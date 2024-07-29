@@ -52,4 +52,11 @@ public class MenuProductRepositoryAdapterImpl implements MenuProductRepositoryPo
     List<MenuProductEntity> entityProducts = repository.findAll();
     return entityProducts.stream().map(mapper::toDomain).toList();
   }
+
+  @Override
+  public void update(MenuProduct menuProduct) {
+    MenuProductEntity entity = mapper.toEntity(menuProduct);
+    repository.save(entity);
+  }
+
 }

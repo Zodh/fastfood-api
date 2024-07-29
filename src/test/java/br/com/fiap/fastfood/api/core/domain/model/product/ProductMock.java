@@ -16,26 +16,26 @@ public class ProductMock {
     MenuProduct ketchup = new MenuProduct();
     ketchup.setName("Ketchup");
     ketchup.setQuantity(1);
-    ketchup.setCost(new BigDecimal("0.05"));
     ketchup.setIngredient(true);
+    ketchup.setCost(new BigDecimal("0.05"));
 
     MenuProduct cheese = new MenuProduct();
     cheese.setName("Cheese");
     cheese.setQuantity(2);
-    cheese.setCost(new BigDecimal("0.25"));
     cheese.setIngredient(true);
+    cheese.setCost(new BigDecimal("0.25"));
 
     MenuProduct hamburger = new MenuProduct();
     hamburger.setName("Hamburger");
     hamburger.setQuantity(1);
-    hamburger.setCost(new BigDecimal("2.50"));
     hamburger.setIngredient(true);
+    hamburger.setCost(new BigDecimal("2.50"));
 
     MenuProduct bread = new MenuProduct();
     bread.setName("Bread");
     bread.setQuantity(1);
-    bread.setCost(new BigDecimal("1.50"));
     bread.setIngredient(true);
+    bread.setCost(new BigDecimal("1.50"));
 
     menuProduct.setIngredients(List.of(
         ketchup,

@@ -39,4 +39,9 @@ public class MenuProductService {
         menuProductAggregate.remove(id);
     }
 
+    public void update(Long id, MenuProduct menuProduct) {
+        MenuProductAggregate menuProductAggregate = new MenuProductAggregate(menuProduct, menuProductRepositoryPort);
+        menuProductAggregate.update(id);
+    }
+
 }
