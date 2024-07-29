@@ -7,6 +7,7 @@ import br.com.fiap.fastfood.api.core.domain.model.product.MenuProduct;
 import br.com.fiap.fastfood.api.core.domain.model.product.MenuProductValidator;
 import br.com.fiap.fastfood.api.core.domain.repository.outbound.MenuProductRepositoryPort;
 import java.util.List;
+import java.util.Objects;
 import lombok.Data;
 
 import java.util.Optional;
@@ -44,11 +45,11 @@ public class MenuProductAggregate {
     }
 
     private void fetchItems() {
-        if (!CollectionUtils.isEmpty(menuProduct.getIngredients())) {
+        if (Objects.nonNull(menuProduct) && !CollectionUtils.isEmpty(menuProduct.getIngredients())) {
             List<MenuProduct> ingredients = menuProduct.getIngredients().stream().map(i -> getById(i.getId())).toList();
             menuProduct.setIngredients(ingredients);
         }
-        if (!CollectionUtils.isEmpty(menuProduct.getOptionals())) {
+        if (Objects.nonNull(menuProduct) && !CollectionUtils.isEmpty(menuProduct.getOptionals())) {
             List<MenuProduct> optionals = menuProduct.getIngredients().stream().map(i -> getById(i.getId())).toList();
             menuProduct.setOptionals(optionals);
         }
