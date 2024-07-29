@@ -4,10 +4,12 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.List;
+import lombok.EqualsAndHashCode;
 
 @Entity
 @Table(name = "menu_product")
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class MenuProductEntity extends ProductEntity {
 
     @ManyToMany
