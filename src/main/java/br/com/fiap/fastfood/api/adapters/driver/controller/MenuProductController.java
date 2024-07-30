@@ -3,7 +3,7 @@ package br.com.fiap.fastfood.api.adapters.driver.controller;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.MenuProductMapper;
 import br.com.fiap.fastfood.api.adapters.driver.dto.product.MenuProductDTO;
 import br.com.fiap.fastfood.api.adapters.driver.dto.product.MenuProductResponseDTO;
-import br.com.fiap.fastfood.api.core.application.service.MenuProductServiceImpl;
+import br.com.fiap.fastfood.api.core.application.service.MenuProductServicePortImpl;
 import br.com.fiap.fastfood.api.core.domain.model.product.MenuProduct;
 import br.com.fiap.fastfood.api.core.domain.ports.inbound.MenuProductServicePort;
 import jakarta.validation.Valid;
@@ -23,7 +23,7 @@ public class MenuProductController {
 
     @Autowired
     public MenuProductController(
-        MenuProductServiceImpl menuProductServiceInboundPortImpl, MenuProductMapper mapper) {
+        MenuProductServicePortImpl menuProductServiceInboundPortImpl, MenuProductMapper mapper) {
         this.menuProductServicePort = menuProductServiceInboundPortImpl;
         this.mapper = mapper;
     }

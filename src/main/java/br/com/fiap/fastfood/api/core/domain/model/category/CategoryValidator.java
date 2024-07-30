@@ -25,11 +25,9 @@ public class CategoryValidator implements Validator<Category> {
         if (StringUtils.hasText(category.getDescription()) && category.getDescription().length() > 100) {
             errors.add(new ErrorDetail("category.description", "A descrição da categoria não é obrigatória, mas se preenchida deve conter até 100 caracteres!"));
         }
-
-        // TODO ver se lista de produtos é obrigatoria para criar categoria
-//        if (CollectionUtils.isEmpty(category.getProducts())) {
-//            errors.add(new ErrorDetail("category.products", "A categoria deve conter produtos!"));
-//        }
+        if (CollectionUtils.isEmpty(category.getProducts())) {
+            errors.add(new ErrorDetail("category.products", "A categoria deve conter pelo menos um produto!"));
+        }
         return errors;
     }
 }

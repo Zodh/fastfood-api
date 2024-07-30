@@ -4,6 +4,7 @@ import br.com.fiap.fastfood.api.core.domain.aggregate.CategoryAggregate;
 import br.com.fiap.fastfood.api.core.domain.model.category.Category;
 import br.com.fiap.fastfood.api.core.domain.ports.inbound.CategoryServicePort;
 import br.com.fiap.fastfood.api.core.domain.repository.outbound.CategoryRepositoryPort;
+import br.com.fiap.fastfood.api.core.domain.repository.outbound.MenuProductRepositoryPort;
 import br.com.fiap.fastfood.api.core.domain.service.CategoryService;
 import br.com.fiap.fastfood.api.core.domain.service.MenuProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,16 +13,16 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class CategoryServiceImpl implements CategoryServicePort {
+public class CategoryServicePortImpl implements CategoryServicePort {
 
   private final CategoryService categoryService;
   private final MenuProductService menuProductService;
   private final CategoryRepositoryPort categoryRepositoryPort;
 
   @Autowired
-  public CategoryServiceImpl(CategoryService categoryService, MenuProductService menuProductService, CategoryRepositoryPort categoryRepositoryPort) {
-    this.categoryService = categoryService;
-      this.menuProductService = menuProductService;
+  public CategoryServicePortImpl(MenuProductRepositoryPort menuProductRepositoryPort, CategoryRepositoryPort categoryRepositoryPort) {
+      this.categoryService = new CategoryService(categoryRepositoryPort);
+      this.menuProductService = new MenuProductService(menuProductRepositoryPort);
       this.categoryRepositoryPort = categoryRepositoryPort;
   }
 
@@ -42,7 +43,7 @@ public class CategoryServiceImpl implements CategoryServicePort {
 
   @Override
   public void create(Category category) {
-    CategoryAggregate categoryAggregate = new CategoryAggregate(category, categoryRepositoryPort, categoryService);
+    CategoryAggregate categoryAggregate = new CategoryAggregate(category, categoryRepositoryPort, categoryService, menuProductService);
     categoryAggregate.create();
   }
 

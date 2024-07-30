@@ -3,7 +3,7 @@ package br.com.fiap.fastfood.api.adapters.driver.controller;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.CategoryMapper;
 import br.com.fiap.fastfood.api.adapters.driver.dto.category.CategoryDTO;
 import br.com.fiap.fastfood.api.adapters.driver.dto.category.CategoryResponseDTO;
-import br.com.fiap.fastfood.api.core.application.service.CategoryServiceImpl;
+import br.com.fiap.fastfood.api.core.application.service.CategoryServicePortImpl;
 import br.com.fiap.fastfood.api.core.domain.model.category.Category;
 import br.com.fiap.fastfood.api.core.domain.ports.inbound.CategoryServicePort;
 import jakarta.validation.Valid;
@@ -23,7 +23,7 @@ public class CategoryController {
 
     @Autowired
     public CategoryController(
-            CategoryServiceImpl categoryServiceInboundPortImpl, CategoryMapper mapper) {
+            CategoryServicePortImpl categoryServiceInboundPortImpl, CategoryMapper mapper) {
         this.categoryServicePort = categoryServiceInboundPortImpl;
         this.mapper = mapper;
     }

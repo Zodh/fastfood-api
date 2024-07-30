@@ -29,7 +29,7 @@ public class CategoryEntity {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
-  @Column(name = "name")
+  @Column(name = "name", unique = true)
   private String name;
 
   @Column(name = "description")
@@ -46,7 +46,7 @@ public class CategoryEntity {
   )
   private List<MenuProductEntity> categoryProducts;
 
-  @Column(name = "created_at")
+  @Column(name = "created_at", updatable = false)
   private LocalDateTime created;
 
   @Column(name = "updated_at")

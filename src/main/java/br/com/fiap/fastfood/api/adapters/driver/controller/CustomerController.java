@@ -4,7 +4,7 @@ import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.CustomerMa
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.CustomerIdentityMapper;
 import br.com.fiap.fastfood.api.adapters.driver.dto.customer.CustomerDTO;
 import br.com.fiap.fastfood.api.adapters.driver.dto.customer.CustomerIdentityDTO;
-import br.com.fiap.fastfood.api.core.application.service.CustomerServiceImpl;
+import br.com.fiap.fastfood.api.core.application.service.CustomerServicePortImpl;
 import br.com.fiap.fastfood.api.core.domain.model.person.Customer;
 import br.com.fiap.fastfood.api.core.domain.ports.inbound.CustomerServicePort;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +21,8 @@ public class CustomerController {
     private final CustomerIdentityMapper identifyMapper;
 
     @Autowired
-    public CustomerController(CustomerServiceImpl customerServiceImpl, CustomerMapper mapper, CustomerIdentityMapper identifyMapper) {
-        this.customerServicePort = customerServiceImpl;
+    public CustomerController(CustomerServicePortImpl customerServicePortImpl, CustomerMapper mapper, CustomerIdentityMapper identifyMapper) {
+        this.customerServicePort = customerServicePortImpl;
         this.mapper = mapper;
         this.identifyMapper = identifyMapper;
     }

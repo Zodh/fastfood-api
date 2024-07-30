@@ -15,14 +15,14 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 @Service
-public class CustomerServiceImpl implements CustomerServicePort {
+public class CustomerServicePortImpl implements CustomerServicePort {
 
   private final CustomerRepositoryPort customerRepositoryPort;
   private final EmailSenderPort emailSenderPort;
   private final ActivationCodeService activationCodeService;
 
   @Autowired
-  public CustomerServiceImpl(
+  public CustomerServicePortImpl(
       CustomerRepositoryPort customerRepositoryPort,
       EmailSenderPort emailSenderPort,
       ActivationCodeRepositoryPort activationCodeRepository,

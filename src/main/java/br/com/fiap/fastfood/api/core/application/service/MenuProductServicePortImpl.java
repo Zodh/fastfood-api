@@ -11,18 +11,17 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class MenuProductServiceImpl implements MenuProductServicePort {
+public class MenuProductServicePortImpl implements MenuProductServicePort {
 
     private final MenuProductRepositoryPort menuProductRepositoryPort;
     private final MenuProductService menuProductService;
 
     @Autowired
-    public MenuProductServiceImpl(
-            MenuProductRepositoryPort menuProductRepositoryPort,
-        MenuProductService menuProductService
+    public MenuProductServicePortImpl(
+            MenuProductRepositoryPort menuProductRepositoryPort
     ) {
         this.menuProductRepositoryPort = menuProductRepositoryPort;
-        this.menuProductService = menuProductService;
+        this.menuProductService = new MenuProductService(menuProductRepositoryPort);
     }
 
     @Override
