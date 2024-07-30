@@ -3,6 +3,7 @@ package br.com.fiap.fastfood.api.core.application.service;
 import br.com.fiap.fastfood.api.core.domain.aggregate.ServiceAggregate;
 import br.com.fiap.fastfood.api.core.domain.model.person.Customer;
 import br.com.fiap.fastfood.api.core.domain.model.person.vo.Document;
+import br.com.fiap.fastfood.api.core.domain.ports.inbound.CustomerServicePort;
 import br.com.fiap.fastfood.api.core.domain.ports.outbound.ActivationCodeLinkGeneratorPort;
 import br.com.fiap.fastfood.api.core.domain.ports.outbound.EmailSenderPort;
 import br.com.fiap.fastfood.api.core.domain.repository.outbound.ActivationCodeRepositoryPort;
@@ -14,14 +15,14 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 @Service
-public class CustomerService {
+public class CustomerServicePortImpl implements CustomerServicePort {
 
   private final CustomerRepositoryPort customerRepositoryPort;
   private final EmailSenderPort emailSenderPort;
   private final ActivationCodeService activationCodeService;
 
   @Autowired
-  public CustomerService(
+  public CustomerServicePortImpl(
       CustomerRepositoryPort customerRepositoryPort,
       EmailSenderPort emailSenderPort,
       ActivationCodeRepositoryPort activationCodeRepository,
@@ -42,10 +43,12 @@ public class CustomerService {
     serviceAggregate.register();
   }
 
+  @Override
   public void activate(UUID code) {
     activationCodeService.activate(code);
   }
 
+  @Override
   public Customer identify(String documentNumber) {
     ServiceAggregate serviceAggregate = new ServiceAggregate(
             new Document(documentNumber),
@@ -53,6 +56,8 @@ public class CustomerService {
     );
     return serviceAggregate.identify();
   }
+
+  @Override
   public void resendVerificationLink(String email) {
     ServiceAggregate serviceAggregate = new ServiceAggregate(email, customerRepositoryPort, activationCodeService, emailSenderPort);
     serviceAggregate.resendVerificationLink();

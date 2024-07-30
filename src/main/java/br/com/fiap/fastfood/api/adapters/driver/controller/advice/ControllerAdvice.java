@@ -4,6 +4,7 @@ import br.com.fiap.fastfood.api.adapters.driver.dto.ErrorDetailDTO;
 import br.com.fiap.fastfood.api.adapters.driver.dto.ErrorResponseDTO;
 import br.com.fiap.fastfood.api.core.domain.exception.DomainException;
 import br.com.fiap.fastfood.api.core.domain.exception.NotFoundException;
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +32,13 @@ public class ControllerAdvice extends ResponseEntityExceptionHandler {
     String message = notFoundException.getMessage();
     ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(message, Collections.emptyList());
     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponseDTO);
+  }
+
+  @ExceptionHandler(SQLException.class)
+  public ResponseEntity<ErrorResponseDTO> handleSqlException(SQLException exception) {
+    String message = exception.getMessage();
+    ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(message, Collections.emptyList());
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponseDTO);
   }
 
 }
