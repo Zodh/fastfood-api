@@ -31,6 +31,12 @@ public class CategoryRepositoryAdapterImpl implements CategoryRepositoryPort {
   }
 
   @Override
+  public Optional<Category> findByName(String name) {
+    Optional<CategoryEntity> categoryEntityOpt = repository.findByName(name);
+    return categoryEntityOpt.map(mapper::toDomain);
+  }
+
+  @Override
   public Category save(Category data) {
     CategoryEntity entity = mapper.toEntity(data);
     CategoryEntity persistedCategory = repository.save(entity);
@@ -41,6 +47,11 @@ public class CategoryRepositoryAdapterImpl implements CategoryRepositoryPort {
   public void update(Category category) {
     CategoryEntity entity = mapper.toEntity(category);
     repository.save(entity);
+  }
+
+  @Override
+  public List<Long> fetchProductsRelatedToCategory(Long categoryId) {
+    return repository.fetchProductsByCategory(categoryId);
   }
 
   @Override

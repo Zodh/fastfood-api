@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/category")
+@RequestMapping("/categories")
 public class CategoryController {
 
     private final CategoryServicePort categoryServicePort;
@@ -36,9 +36,15 @@ public class CategoryController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<CategoryDTO> getById(@PathVariable Long id) {
-        Category category = categoryServicePort.getById(id);
+    @GetMapping("/{identifier}")
+    public ResponseEntity<CategoryDTO> getByIdOrName(@PathVariable String identifier) {
+        Category category;
+        try {
+            Long id = Long.parseLong(identifier);
+            category = categoryServicePort.getById(id);
+        } catch (NumberFormatException e) {
+            category = categoryServicePort.getByName(identifier);
+        }
         CategoryDTO categoryDTO = mapper.toCategoryDTO(category);
         return ResponseEntity.status(HttpStatus.CREATED).body(categoryDTO);
     }

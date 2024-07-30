@@ -27,9 +27,9 @@ public class CategoryValidator implements Validator<Category> {
         }
 
         // TODO ver se lista de produtos é obrigatoria para criar categoria
-        if (CollectionUtils.isEmpty(category.getProducts())) {
-            errors.add(new ErrorDetail("category.products", "A categoria deve conter produtos!"));
-        }
+//        if (CollectionUtils.isEmpty(category.getProducts())) {
+//            errors.add(new ErrorDetail("category.products", "A categoria deve conter produtos!"));
+//        }
         return errors;
     }
 }

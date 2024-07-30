@@ -24,4 +24,9 @@ public class CategoryService {
         return persistedCategory.orElseThrow(() -> new NotFoundException(String.format("Não foi encontrado nenhuma categoria com o id %d", id)));
     }
 
+    public Category getByName(String name) {
+        Optional<Category> persistedCategory = categoryRepositoryPort.findByName(name);
+        return persistedCategory.orElseThrow(() -> new NotFoundException(String.format("Não foi encontrado nenhuma categoria com o nome %s", name)));
+    }
+
 }

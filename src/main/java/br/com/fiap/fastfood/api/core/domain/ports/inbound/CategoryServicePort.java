@@ -7,6 +7,7 @@ public interface CategoryServicePort {
 
   List<Category> getAll();
   Category getById(Long id);
+  Category getByName(String name);
   void create(Category category);
   void update(Long id, Category category);
   void remove(Long id);
