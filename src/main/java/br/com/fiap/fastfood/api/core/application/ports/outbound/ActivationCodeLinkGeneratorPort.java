@@ -1,4 +1,4 @@
-package br.com.fiap.fastfood.api.core.domain.ports.outbound;
+package br.com.fiap.fastfood.api.core.application.ports.outbound;
 
 import br.com.fiap.fastfood.api.core.domain.model.person.activation.ActivationCode;
 

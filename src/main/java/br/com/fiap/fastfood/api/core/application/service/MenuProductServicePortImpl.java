@@ -1,55 +1,95 @@
 package br.com.fiap.fastfood.api.core.application.service;
 
+import br.com.fiap.fastfood.api.core.application.exception.NotFoundException;
+import br.com.fiap.fastfood.api.core.application.ports.repository.MenuProductRepositoryPort;
 import br.com.fiap.fastfood.api.core.domain.aggregate.MenuProductAggregate;
 import br.com.fiap.fastfood.api.core.domain.model.product.MenuProduct;
+import br.com.fiap.fastfood.api.core.domain.model.product.MenuProductValidator;
 import br.com.fiap.fastfood.api.core.domain.ports.inbound.MenuProductServicePort;
-import br.com.fiap.fastfood.api.core.domain.repository.outbound.MenuProductRepositoryPort;
-import br.com.fiap.fastfood.api.core.domain.service.MenuProductService;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
+import org.springframework.util.CollectionUtils;
 
 @Service
 public class MenuProductServicePortImpl implements MenuProductServicePort {
 
-    private final MenuProductRepositoryPort menuProductRepositoryPort;
-    private final MenuProductService menuProductService;
+  private final MenuProductRepositoryPort repository;
+  private final MenuProductValidator validator;
 
-    @Autowired
-    public MenuProductServicePortImpl(
-            MenuProductRepositoryPort menuProductRepositoryPort
-    ) {
-        this.menuProductRepositoryPort = menuProductRepositoryPort;
-        this.menuProductService = new MenuProductService(menuProductRepositoryPort);
-    }
+  @Autowired
+  public MenuProductServicePortImpl(
+      MenuProductRepositoryPort repository
+  ) {
+    this.repository = repository;
+    this.validator = new MenuProductValidator();
+  }
 
-    @Override
-    public List<MenuProduct> getAll() {
-        return menuProductService.getAll();
-    }
+  @Override
+  public List<MenuProduct> getAll() {
+    return repository.getAll();
+  }
 
-    @Override
-    public MenuProduct getById(Long id) {
-        return menuProductService.getById(id);
-    }
+  @Override
+  public MenuProduct getById(Long id) {
+    Optional<MenuProduct> persistedProduct = repository.findById(id);
+    return persistedProduct.orElseThrow(() -> new NotFoundException(
+        String.format("Não foi encontrado nenhum produto com o id %d", id)));
+  }
 
-    @Override
-    public void register(MenuProduct menuProduct) {
-        MenuProductAggregate menuProductAggregate = new MenuProductAggregate(menuProduct, menuProductRepositoryPort, menuProductService);
-        menuProductAggregate.create();
-    }
+  @Override
+  public void register(MenuProduct menuProduct) {
+    fetchIngredients(menuProduct);
+    fetchOptionals(menuProduct);
+    MenuProductAggregate menuProductAggregate = new MenuProductAggregate(menuProduct, validator);
+    menuProductAggregate.create();
+    repository.save(menuProduct);
+  }
 
-    @Override
-    public void remove(Long id) {
-        MenuProductAggregate menuProductAggregate = new MenuProductAggregate(menuProductRepositoryPort, menuProductService);
-        menuProductAggregate.remove(id);
-    }
+  @Override
+  public void remove(Long id) {
+    MenuProduct target = this.getById(id);
+    List<Long> productsThatUseTarget = repository.fetchProductsRelatedToProduct(target.getId());
+    boolean removed = repository.delete(target.getId());
 
-    @Override
-    public void update(Long id, MenuProduct menuProduct) {
-        MenuProductAggregate menuProductAggregate = new MenuProductAggregate(menuProduct, menuProductRepositoryPort, menuProductService);
-        menuProductAggregate.update(id);
+    // After remove target product, we need to check if other product used it as optional or ingredient.
+    if (removed) {
+      List<MenuProduct> allProductsThatUsedRemovedProduct = repository.findAllById(
+          productsThatUseTarget);
+      allProductsThatUsedRemovedProduct.forEach(p -> {
+        p.setIngredients(p.getIngredients());
+        p.setOptionals(p.getOptionals());
+      });
+      allProductsThatUsedRemovedProduct.forEach(repository::update);
     }
+  }
+
+  @Override
+  public void update(Long id, MenuProduct menuProduct) {
+    MenuProduct current = this.getById(id);
+    fetchOptionals(menuProduct);
+    fetchIngredients(menuProduct);
+    MenuProductAggregate menuProductAggregate = new MenuProductAggregate(menuProduct, validator);
+    menuProductAggregate.update(current);
+    repository.update(menuProduct);
+  }
+
+  private void fetchOptionals(MenuProduct menuProduct) {
+    if (Objects.nonNull(menuProduct) && !CollectionUtils.isEmpty(menuProduct.getOptionals())) {
+      List<MenuProduct> optionals = menuProduct.getIngredients().stream()
+          .map(i -> this.getById(i.getId())).toList();
+      menuProduct.setOptionals(optionals);
+    }
+  }
+
+  private void fetchIngredients(MenuProduct menuProduct) {
+    if (Objects.nonNull(menuProduct) && !CollectionUtils.isEmpty(menuProduct.getIngredients())) {
+      List<MenuProduct> ingredients = menuProduct.getIngredients().stream()
+          .map(i -> this.getById(i.getId())).toList();
+      menuProduct.setIngredients(ingredients);
+    }
+  }
 
 }

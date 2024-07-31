@@ -28,6 +28,9 @@ public class CategoryValidator implements Validator<Category> {
         if (CollectionUtils.isEmpty(category.getProducts())) {
             errors.add(new ErrorDetail("category.products", "A categoria deve conter pelo menos um produto!"));
         }
+        if (!CollectionUtils.isEmpty(category.getProducts()) && category.getProducts().stream().anyMatch(mp -> Objects.isNull(mp.getPrice()))) {
+            errors.add(new ErrorDetail("category.products", "Não é permitido adicionar produtos sem preço!"));
+        }
         return errors;
     }
 }

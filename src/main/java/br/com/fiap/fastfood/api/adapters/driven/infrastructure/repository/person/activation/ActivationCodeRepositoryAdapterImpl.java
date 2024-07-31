@@ -3,7 +3,7 @@ package br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.perso
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.person.activation.ActivationCodeEntity;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.ActivationCodeMapper;
 import br.com.fiap.fastfood.api.core.domain.model.person.activation.ActivationCode;
-import br.com.fiap.fastfood.api.core.domain.repository.outbound.ActivationCodeRepositoryPort;
+import br.com.fiap.fastfood.api.core.application.ports.repository.ActivationCodeRepositoryPort;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;

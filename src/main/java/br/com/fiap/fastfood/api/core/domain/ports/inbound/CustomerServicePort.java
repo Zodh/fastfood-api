@@ -6,11 +6,8 @@ import java.util.UUID;
 public interface CustomerServicePort {
 
   void register(Customer customer);
-
   void activate(UUID code);
-
   Customer identify(String documentNumber);
-
-  void resendVerificationLink(String email);
+  void resendActivationCode(String email);
 
 }

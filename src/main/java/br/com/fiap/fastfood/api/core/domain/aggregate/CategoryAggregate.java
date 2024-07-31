@@ -4,68 +4,45 @@ import br.com.fiap.fastfood.api.core.domain.exception.DomainException;
 import br.com.fiap.fastfood.api.core.domain.exception.ErrorDetail;
 import br.com.fiap.fastfood.api.core.domain.model.category.Category;
 import br.com.fiap.fastfood.api.core.domain.model.category.CategoryValidator;
-import br.com.fiap.fastfood.api.core.domain.model.product.MenuProduct;
-import br.com.fiap.fastfood.api.core.domain.repository.outbound.CategoryRepositoryPort;
-import br.com.fiap.fastfood.api.core.domain.service.CategoryService;
-import br.com.fiap.fastfood.api.core.domain.service.MenuProductService;
+import java.util.List;
 import lombok.Data;
 import org.springframework.util.CollectionUtils;
-
-import java.util.List;
-import java.util.Objects;
 
 @Data
 public class CategoryAggregate {
 
-    private Category category;
+  private Category categoryRoot;
+  private CategoryValidator categoryValidator;
 
-    private CategoryRepositoryPort categoryRepository;
-    private CategoryValidator categoryValidator;
-    private CategoryService categoryService;
-    private MenuProductService menuProductService;
+  public CategoryAggregate(Category root) {
+    this.categoryRoot = root;
+  }
 
-    public CategoryAggregate(CategoryRepositoryPort categoryRepositoryPort, CategoryService categoryService) {
-        this.categoryRepository = categoryRepositoryPort;
-        this.categoryService = categoryService;
+  public CategoryAggregate(Category categoryRoot, CategoryValidator categoryValidator) {
+    this.categoryRoot = categoryRoot;
+    this.categoryValidator = categoryValidator;
+  }
+
+  public void create() {
+    List<ErrorDetail> errors = categoryValidator.validate(categoryRoot);
+    if (!CollectionUtils.isEmpty(errors)) {
+      throw new DomainException(errors);
     }
+  }
 
-    public CategoryAggregate(Category category, CategoryRepositoryPort categoryRepositoryPort, CategoryService categoryService, MenuProductService menuProductService) {
-        this.category = category;
-        this.categoryRepository = categoryRepositoryPort;
-        this.categoryValidator = new CategoryValidator();
-        this.categoryService = categoryService;
-        this.menuProductService = menuProductService;
+  public void update(Category current) {
+    categoryRoot.setId(current.getId());
+    List<ErrorDetail> errors = categoryValidator.validate(categoryRoot);
+    if (!CollectionUtils.isEmpty(errors)) {
+      throw new DomainException(errors);
     }
+  }
 
-    public void create() {
-        List<ErrorDetail> errors = categoryValidator.validate(category);
-        if (!CollectionUtils.isEmpty(errors)) {
-            throw new DomainException(errors);
-        }
-        fetchProducts();
-        categoryRepository.save(category);
+  public void remove() {
+    if (this.categoryRoot.isEnabled()) {
+      throw new DomainException(
+          new ErrorDetail("category", "Não é possível remover uma categoria ativa!"));
     }
+  }
 
-    public void update(Long id) {
-        Category current = categoryService.getById(id);
-        category.setId(current.getId());
-        List<ErrorDetail> errors = categoryValidator.validate(category);
-        if (!CollectionUtils.isEmpty(errors)) {
-            throw new DomainException(errors);
-        }
-        fetchProducts();
-        categoryRepository.update(category);
-    }
-
-    public void remove(Long id) {
-        Category target = categoryService.getById(id);
-        categoryRepository.delete(target.getId());
-    }
-
-    private void fetchProducts() {
-        if (Objects.nonNull(category) && !CollectionUtils.isEmpty(category.getProducts())) {
-            List<MenuProduct> products = category.getProducts().stream().map(menuProduct -> menuProductService.getById(menuProduct.getId())).toList();
-            category.setProducts(products);
-        }
-    }
 }

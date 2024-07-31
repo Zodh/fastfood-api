@@ -1,13 +1,13 @@
-package br.com.fiap.fastfood.api.core.domain.service;
+package br.com.fiap.fastfood.api.core.application.service;
 
+import br.com.fiap.fastfood.api.core.application.exception.NotFoundException;
+import br.com.fiap.fastfood.api.core.application.ports.outbound.ActivationCodeLinkGeneratorPort;
+import br.com.fiap.fastfood.api.core.application.ports.repository.ActivationCodeRepositoryPort;
+import br.com.fiap.fastfood.api.core.application.ports.repository.CustomerRepositoryPort;
 import br.com.fiap.fastfood.api.core.domain.exception.DomainException;
 import br.com.fiap.fastfood.api.core.domain.exception.ErrorDetail;
-import br.com.fiap.fastfood.api.core.domain.exception.NotFoundException;
 import br.com.fiap.fastfood.api.core.domain.model.person.Customer;
 import br.com.fiap.fastfood.api.core.domain.model.person.activation.ActivationCode;
-import br.com.fiap.fastfood.api.core.domain.ports.outbound.ActivationCodeLinkGeneratorPort;
-import br.com.fiap.fastfood.api.core.domain.repository.outbound.ActivationCodeRepositoryPort;
-import br.com.fiap.fastfood.api.core.domain.repository.outbound.CustomerRepositoryPort;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
@@ -21,16 +21,19 @@ public class ActivationCodeService {
   private final ActivationCodeLinkGeneratorPort linkGenerator;
   private final CustomerRepositoryPort customerRepository;
 
-  public ActivationCodeService(ActivationCodeRepositoryPort activationCodeRepository, ActivationCodeLinkGeneratorPort linkGenerator, CustomerRepositoryPort customerRepository) {
+  public ActivationCodeService(ActivationCodeRepositoryPort activationCodeRepository,
+      ActivationCodeLinkGeneratorPort linkGenerator, CustomerRepositoryPort customerRepository) {
     this.activationCodeRepository = activationCodeRepository;
     this.linkGenerator = linkGenerator;
     this.customerRepository = customerRepository;
   }
 
   public String generate(Customer customer) {
-    ActivationCode activationCode = new ActivationCode(customer, LocalDateTime.now().plusMinutes(EXPIRATION_TIME_IN_MINUTES));
+    ActivationCode activationCode = new ActivationCode(customer,
+        LocalDateTime.now().plusMinutes(EXPIRATION_TIME_IN_MINUTES));
     if (!activationCode.isValid()) {
-      ErrorDetail errorDetail = new ErrorDetail("activationCode.person", "A pessoa não pode ser nula e deve estar inativa!");
+      ErrorDetail errorDetail = new ErrorDetail("activationCode.person",
+          "A pessoa não pode ser nula e deve estar inativa!");
       throw new DomainException(errorDetail);
     }
     ActivationCode persistedActivationCode = activationCodeRepository.save(activationCode);
@@ -39,7 +42,8 @@ public class ActivationCodeService {
 
   public void activate(UUID code) {
     if (Objects.isNull(code)) {
-      ErrorDetail errorDetail = new ErrorDetail(ACTIVATION_CODE, "O código de ativação é inválido!");
+      ErrorDetail errorDetail = new ErrorDetail(ACTIVATION_CODE,
+          "O código de ativação é inválido!");
       throw new DomainException(errorDetail);
     }
     Optional<ActivationCode> activationCodeOpt = activationCodeRepository.findById(code);
@@ -48,11 +52,13 @@ public class ActivationCodeService {
     }
     ActivationCode activationCode = activationCodeOpt.get();
     if (!activationCode.isValid()) {
-      ErrorDetail errorDetail = new ErrorDetail(ACTIVATION_CODE, "O código de ativação não é mais válido!");
+      ErrorDetail errorDetail = new ErrorDetail(ACTIVATION_CODE,
+          "O código de ativação não é mais válido!");
       throw new DomainException(errorDetail);
     }
     customerRepository.activate(activationCode.getCustomer().getId());
-    activationCodeRepository.deleteAllActivationCodeByCustomer(activationCode.getCustomer().getId());
+    activationCodeRepository.deleteAllActivationCodeByCustomer(
+        activationCode.getCustomer().getId());
   }
 
 }

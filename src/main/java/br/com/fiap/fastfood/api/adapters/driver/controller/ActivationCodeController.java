@@ -31,7 +31,7 @@ public class ActivationCodeController {
 
   @PostMapping(value = "/generate")
   public ResponseEntity<Void> generate(@RequestParam(value = "email") String email) {
-    customerServicePortImpl.resendVerificationLink(email);
+    customerServicePortImpl.resendActivationCode(email);
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 

@@ -1,4 +1,4 @@
-package br.com.fiap.fastfood.api.core.domain.repository;
+package br.com.fiap.fastfood.api.core.application.ports;
 
 import java.util.Optional;
 

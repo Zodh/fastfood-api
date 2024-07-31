@@ -4,7 +4,7 @@ import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.category.C
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.CategoryMapper;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.category.CategoryRepository;
 import br.com.fiap.fastfood.api.core.domain.model.category.Category;
-import br.com.fiap.fastfood.api.core.domain.repository.outbound.CategoryRepositoryPort;
+import br.com.fiap.fastfood.api.core.application.ports.repository.CategoryRepositoryPort;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

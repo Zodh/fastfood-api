@@ -33,10 +33,6 @@ public class MenuProduct extends Product{
         }
     }
 
-    public void setOptionals(List<MenuProduct> optionals) {
-        this.optionals = optionals;
-    }
-
     @Override
     public void setCost(BigDecimal cost) {
         if (this.ingredient || this.optional) {

@@ -1,7 +1,7 @@
-package br.com.fiap.fastfood.api.core.domain.repository.outbound;
+package br.com.fiap.fastfood.api.core.application.ports.repository;
 
+import br.com.fiap.fastfood.api.core.application.ports.BaseRepository;
 import br.com.fiap.fastfood.api.core.domain.model.product.MenuProduct;
-import br.com.fiap.fastfood.api.core.domain.repository.BaseRepository;
 
 import java.util.List;
 

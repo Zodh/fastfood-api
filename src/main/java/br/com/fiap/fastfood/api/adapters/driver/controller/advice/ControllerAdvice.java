@@ -3,7 +3,7 @@ package br.com.fiap.fastfood.api.adapters.driver.controller.advice;
 import br.com.fiap.fastfood.api.adapters.driver.dto.ErrorDetailDTO;
 import br.com.fiap.fastfood.api.adapters.driver.dto.ErrorResponseDTO;
 import br.com.fiap.fastfood.api.core.domain.exception.DomainException;
-import br.com.fiap.fastfood.api.core.domain.exception.NotFoundException;
+import br.com.fiap.fastfood.api.core.application.exception.NotFoundException;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
@@ -22,7 +22,7 @@ public class ControllerAdvice extends ResponseEntityExceptionHandler {
     String message = domainException.getMessage();
     List<ErrorDetailDTO> errors = Optional.ofNullable(domainException.getErrors()).orElse(
             Collections.emptyList()).stream()
-        .map(errorDetail -> new ErrorDetailDTO(errorDetail.getField(), errorDetail.getMessage()))
+        .map(errorDetail -> new ErrorDetailDTO(errorDetail.field(), errorDetail.message()))
         .toList();
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponseDTO(message, errors));
   }
