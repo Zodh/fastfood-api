@@ -3,6 +3,7 @@ package br.com.fiap.fastfood.api.core.domain.model.category;
 import br.com.fiap.fastfood.api.core.domain.exception.DomainException;
 import br.com.fiap.fastfood.api.core.domain.exception.ErrorDetail;
 import br.com.fiap.fastfood.api.core.domain.model.Validator;
+import java.math.BigDecimal;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -28,7 +29,8 @@ public class CategoryValidator implements Validator<Category> {
         if (CollectionUtils.isEmpty(category.getProducts())) {
             errors.add(new ErrorDetail("category.products", "A categoria deve conter pelo menos um produto!"));
         }
-        if (!CollectionUtils.isEmpty(category.getProducts()) && category.getProducts().stream().anyMatch(mp -> Objects.isNull(mp.getPrice()))) {
+        if (!CollectionUtils.isEmpty(category.getProducts()) && category.getProducts().stream().anyMatch(mp -> Objects.isNull(mp.getPrice()) || mp.getPrice().compareTo(
+            BigDecimal.ZERO) <= 0)) {
             errors.add(new ErrorDetail("category.products", "Não é permitido adicionar produtos sem preço!"));
         }
         return errors;
