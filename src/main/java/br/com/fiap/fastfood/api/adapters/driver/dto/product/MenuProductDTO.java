@@ -18,7 +18,6 @@ public class MenuProductDTO {
     private Long preparationTimeInMillis;
     private int quantity;
     private BigDecimal cost;
-    private List<MenuProductDTO> optionals;
     private List<MenuProductDTO> ingredients;
     private boolean optional;
     private boolean ingredient;

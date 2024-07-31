@@ -42,7 +42,6 @@ public class MenuProductServicePortImpl implements MenuProductServicePort {
   @Override
   public void register(MenuProduct menuProduct) {
     fetchIngredients(menuProduct);
-    fetchOptionals(menuProduct);
     MenuProductAggregate menuProductAggregate = new MenuProductAggregate(menuProduct, validator);
     menuProductAggregate.create();
     repository.save(menuProduct);
@@ -60,7 +59,6 @@ public class MenuProductServicePortImpl implements MenuProductServicePort {
           productsThatUseTarget);
       allProductsThatUsedRemovedProduct.forEach(p -> {
         p.setIngredients(p.getIngredients());
-        p.setOptionals(p.getOptionals());
       });
       allProductsThatUsedRemovedProduct.forEach(repository::update);
     }
@@ -69,19 +67,10 @@ public class MenuProductServicePortImpl implements MenuProductServicePort {
   @Override
   public void update(Long id, MenuProduct menuProduct) {
     MenuProduct current = this.getById(id);
-    fetchOptionals(menuProduct);
     fetchIngredients(menuProduct);
     MenuProductAggregate menuProductAggregate = new MenuProductAggregate(menuProduct, validator);
     menuProductAggregate.update(current);
     repository.update(menuProduct);
-  }
-
-  private void fetchOptionals(MenuProduct menuProduct) {
-    if (Objects.nonNull(menuProduct) && !CollectionUtils.isEmpty(menuProduct.getOptionals())) {
-      List<MenuProduct> optionals = menuProduct.getIngredients().stream()
-          .map(i -> this.getById(i.getId())).toList();
-      menuProduct.setOptionals(optionals);
-    }
   }
 
   private void fetchIngredients(MenuProduct menuProduct) {

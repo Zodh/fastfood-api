@@ -13,9 +13,8 @@ import org.springframework.util.CollectionUtils;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class MenuProduct extends Product{
+public class MenuProduct extends Product {
 
-    protected List<MenuProduct> optionals;
     protected List<MenuProduct> ingredients;
 
     @Override

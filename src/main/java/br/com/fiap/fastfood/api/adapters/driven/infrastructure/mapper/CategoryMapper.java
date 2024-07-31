@@ -18,7 +18,6 @@ public interface CategoryMapper {
   @Mapping(source = "entity.categoryProducts", target = "products", qualifiedByName = "mapListToDomain")
   Category toDomain(CategoryEntity entity);
 
-  @Mapping(source = "entity.optionals", target = "optionals", qualifiedByName = "mapListToDomain")
   @Mapping(source = "entity.ingredients", target = "ingredients", qualifiedByName = "mapListToDomain")
   MenuProduct toDomain(MenuProductEntity entity);
 
@@ -39,7 +38,6 @@ public interface CategoryMapper {
   @Mapping(source = "domain.products", target = "categoryProducts", qualifiedByName = "mapListToEntity")
   CategoryEntity toEntity(Category domain);
 
-  @Mapping(source = "domain.optionals", target = "optionals", qualifiedByName = "mapListToEntity")
   @Mapping(source = "domain.ingredients", target = "ingredients", qualifiedByName = "mapListToEntity")
   MenuProductEntity toEntity(MenuProduct domain);
 

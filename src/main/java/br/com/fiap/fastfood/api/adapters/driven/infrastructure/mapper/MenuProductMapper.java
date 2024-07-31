@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 @Mapper(unmappedSourcePolicy = ReportingPolicy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface MenuProductMapper {
 
-    @Mapping(source = "entity.optionals", target = "optionals", qualifiedByName = "mapListToDomain")
     @Mapping(source = "entity.ingredients", target = "ingredients", qualifiedByName = "mapListToDomain")
     MenuProduct toDomain(MenuProductEntity entity);
 
@@ -31,7 +30,6 @@ public interface MenuProductMapper {
         return menuProductEntities.stream().map(this::toDomain).collect(Collectors.toList());
     }
 
-    @Mapping(source = "domain.optionals", target = "optionals", qualifiedByName = "mapListToEntity")
     @Mapping(source = "domain.ingredients", target = "ingredients", qualifiedByName = "mapListToEntity")
     MenuProductEntity toEntity(MenuProduct domain);
 
