@@ -22,10 +22,4 @@ public class OrderProductEntity extends ProductEntity {
   @NotNull
   private MenuProductEntity menuProduct;
 
-  @ManyToOne
-  private CampaignProductEntity campaignProduct;
-
-  @ManyToOne
-  private OrderEntity order;
-
 }
