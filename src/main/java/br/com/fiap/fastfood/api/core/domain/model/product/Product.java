@@ -1,15 +1,19 @@
 package br.com.fiap.fastfood.api.core.domain.model.product;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import lombok.experimental.SuperBuilder;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@SuperBuilder
 public abstract class Product {
 
     protected Long id;
@@ -23,4 +27,5 @@ public abstract class Product {
     protected LocalDateTime updated;
     protected boolean ingredient;
     protected boolean optional;
+
 }

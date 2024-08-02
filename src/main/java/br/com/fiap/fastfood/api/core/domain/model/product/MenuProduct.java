@@ -5,14 +5,24 @@ import java.util.Collections;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.util.List;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 import org.springframework.util.CollectionUtils;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
+@SuperBuilder
+@AllArgsConstructor
+@NoArgsConstructor
 public class MenuProduct extends Product {
 
     protected List<MenuProduct> ingredients;
