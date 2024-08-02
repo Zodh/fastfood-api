@@ -29,7 +29,8 @@ public class OrderProductServicePortImpl implements OrderProductServicePort {
         this.menuProductServicePort = menuProductServicePort;
     }
 
-    public void create(OrderProduct orderProduct) {
+    @Override
+    public OrderProduct create(OrderProduct orderProduct) {
         if (Objects.isNull(orderProduct) || Objects.isNull(orderProduct.getMenuProduct()) || orderProduct.getMenuProduct().getId() <= 0) {
             throw new DomainException(new ErrorDetail("product",
                 "O produto do menu escolhido deve ser informado!"));
@@ -45,38 +46,43 @@ public class OrderProductServicePortImpl implements OrderProductServicePort {
         }
         orderProduct.calculateCost();
         orderProduct.calculatePrice();
-        orderProductRepository.save(orderProduct);
+        return orderProductRepository.save(orderProduct);
     }
 
     @Override
-    public void includeOptional(Long orderProductId, OrderProduct optional) {
+    public OrderProduct includeOptional(Long orderProductId, OrderProduct optional) {
         OrderProduct orderProduct = getById(orderProductId);
         List<ErrorDetail> errors = orderProductValidator.validate(optional);
         if (!CollectionUtils.isEmpty(errors)) {
             throw new DomainException(errors);
         }
+        orderProduct.includeOptional(optional);
         optional.calculateCost();
         optional.calculatePrice();
-        orderProduct.includeOptional(optional);
         orderProductRepository.save(orderProduct);
+        return orderProduct;
     }
 
     @Override
-    public void removeOptional(Long orderProductId, Long optionalId) {
+    public OrderProduct removeOptional(Long orderProductId, Long optionalId) {
         OrderProduct orderProduct = getById(orderProductId);
         OrderProduct optional = orderProduct.findOptionalById(optionalId);
         orderProductRepository.delete(optional.getId());
+        OrderProduct updatedWithoutCalculate = getById(orderProductId);
+        updatedWithoutCalculate.calculatePrice();
+        updatedWithoutCalculate.calculateCost();
+        return orderProductRepository.save(updatedWithoutCalculate);
     }
 
     @Override
-    public void updateShouldRemove(Long orderProductId, Long ingredientId, boolean shouldRemove) {
+    public OrderProduct updateShouldRemove(Long orderProductId, Long ingredientId, boolean shouldRemove) {
         OrderProduct orderProduct = getById(orderProductId);
         OrderProduct ingredient = orderProduct.findIngredientById(ingredientId);
         ingredient.setShouldRemove(shouldRemove);
         orderProduct.calculateCost();
         orderProduct.calculatePrice();
         // TODO: validar atualização em cascata de ingredientes. Criado em: 02/08/2024 ás 05:31:34.
-        orderProductRepository.save(orderProduct);
+        return orderProductRepository.save(orderProduct);
     }
 
     @Override
