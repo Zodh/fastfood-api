@@ -23,6 +23,7 @@ class OrderProductTest {
 
     OrderProduct orderHyperBurger = OrderProduct.builder().menuProduct(hyperBurger).build();
     orderHyperBurger.cloneMenuProduct();
+    orderHyperBurger.calculatePrice();
     assertThat(orderHyperBurger.getPrice()).isEqualTo(hyperBurger.getPrice());
   }
 
@@ -46,6 +47,7 @@ class OrderProductTest {
     optOrderHamburger.setQuantity(2);
     List<OrderProduct> optionals = List.of(optOrderHamburger);
     orderHyperBurger.setOptionals(optionals);
+    orderHyperBurger.calculatePrice();
 
     assertThat(orderHyperBurger.getPrice()).isEqualTo(hyperBurger.getPrice().add(new BigDecimal("5.0")));
   }
@@ -65,6 +67,8 @@ class OrderProductTest {
 
     OrderProduct orderHyperBurger = OrderProduct.builder().menuProduct(hyperBurger).build();
     orderHyperBurger.cloneMenuProduct();
+    orderHyperBurger.calculateCost();
+
     assertThat(orderHyperBurger.getCost()).isEqualTo(new BigDecimal("1.05"));
   }
 
@@ -86,6 +90,8 @@ class OrderProductTest {
 
     OrderProduct orderProductHamburger = orderHyperBurger.getIngredients().stream().filter(i -> i.getName().equalsIgnoreCase("Hamburger")).toList().getFirst();
     orderProductHamburger.setShouldRemove(true);
+
+    orderHyperBurger.calculateCost();
 
     assertThat(orderHyperBurger.getCost()).isEqualTo(new BigDecimal("0.55"));
   }
