@@ -4,6 +4,7 @@ import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.invoice.In
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.person.CollaboratorEntity;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.person.CustomerEntity;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.product.OrderProductEntity;
+import br.com.fiap.fastfood.api.core.domain.model.order.OrderStateEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -36,7 +37,7 @@ public class OrderEntity {
 
   @Enumerated(EnumType.STRING)
   @Column(name = "status")
-  private OrderStatusEnum status;
+  private OrderStateEnum status;
 
   @Column(name = "price")
   private BigDecimal price;

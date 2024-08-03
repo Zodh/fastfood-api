@@ -4,9 +4,13 @@ import static java.util.Objects.isNull;
 
 import br.com.fiap.fastfood.api.core.domain.exception.DomainException;
 import br.com.fiap.fastfood.api.core.domain.exception.ErrorDetail;
+import br.com.fiap.fastfood.api.core.domain.model.order.Order;
+import br.com.fiap.fastfood.api.core.domain.model.order.state.impl.OrderInCreationState;
+import br.com.fiap.fastfood.api.core.domain.model.person.Collaborator;
 import br.com.fiap.fastfood.api.core.domain.model.person.Customer;
 import br.com.fiap.fastfood.api.core.domain.model.person.PersonValidator;
 import br.com.fiap.fastfood.api.core.domain.ports.outbound.EmailSenderPort;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Data;
 
@@ -87,4 +91,15 @@ public class ServiceAggregate {
     }
 
   }
+
+  public Order createOrder(Collaborator collaborator) {
+    Order order = new Order();
+    order.changeState(new OrderInCreationState(order));
+    order.getState().setCollaborator(collaborator);
+    order.getState().setCustomer(this.root);
+    order.calculatePrice();
+    order.setCreatedAt(LocalDateTime.now());
+    return order;
+  }
+
 }
