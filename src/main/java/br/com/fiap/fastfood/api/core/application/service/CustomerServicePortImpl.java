@@ -1,5 +1,6 @@
 package br.com.fiap.fastfood.api.core.application.service;
 
+import br.com.fiap.fastfood.api.core.application.exception.NotFoundException;
 import br.com.fiap.fastfood.api.core.application.ports.outbound.ActivationCodeLinkGeneratorPort;
 import br.com.fiap.fastfood.api.core.application.ports.repository.ActivationCodeRepositoryPort;
 import br.com.fiap.fastfood.api.core.application.ports.repository.CustomerRepositoryPort;
@@ -9,7 +10,6 @@ import br.com.fiap.fastfood.api.core.domain.model.person.PersonValidator;
 import br.com.fiap.fastfood.api.core.domain.model.person.vo.Document;
 import br.com.fiap.fastfood.api.core.domain.ports.inbound.CustomerServicePort;
 import br.com.fiap.fastfood.api.core.domain.ports.outbound.EmailSenderPort;
-import com.github.dockerjava.api.exception.NotFoundException;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -79,6 +79,16 @@ public class CustomerServicePortImpl implements CustomerServicePort {
     serviceAggregate.canResendActivationCode();
     String activationCode = activationCodeService.generate(customer);
     serviceAggregate.sendActivationCode(customer, activationCode);
+  }
+
+  @Override
+  public Customer getById(Long id) {
+    return repository.findById(id).orElseThrow(() -> new NotFoundException(String.format("Não foi encontrado um cliente com o identificador %d!", id)));
+  }
+
+  @Override
+  public Customer getByDocument(Document document) {
+    return repository.findByDocument(document).orElseThrow(() -> new NotFoundException(String.format("Não foi encontrado um cliente com o documento %s!", document)));
   }
 
 }

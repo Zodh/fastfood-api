@@ -15,19 +15,16 @@ import java.util.Optional;
 import lombok.Getter;
 import lombok.Setter;
 
+@Setter
 @Getter
 public class Order {
 
   private Long id;
   private OrderState state;
-  @Setter
   private List<OrderProduct> products;
-  @Setter
   private Collaborator collaborator;
-  @Setter
   private Customer customer;
   private BigDecimal price;
-  @Setter
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
 
