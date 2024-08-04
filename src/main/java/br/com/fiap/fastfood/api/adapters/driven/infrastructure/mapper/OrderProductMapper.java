@@ -2,6 +2,8 @@ package br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper;
 
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.product.MenuProductEntity;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.product.OrderProductEntity;
+import br.com.fiap.fastfood.api.adapters.driver.dto.product.MenuProductDTO;
+import br.com.fiap.fastfood.api.adapters.driver.dto.product.OrderProductDTO;
 import br.com.fiap.fastfood.api.core.domain.model.product.MenuProduct;
 import br.com.fiap.fastfood.api.core.domain.model.product.OrderProduct;
 import java.util.Collections;
@@ -16,6 +18,22 @@ import org.mapstruct.ReportingPolicy;
 
 @Mapper(unmappedSourcePolicy = ReportingPolicy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface OrderProductMapper {
+
+  @Mapping(source = "orderProduct.optionals", target = "optionals", qualifiedByName = "mapDomainToDtoList")
+  @Mapping(source = "orderProduct.ingredients", target = "ingredients", qualifiedByName = "mapDomainToDtoList")
+  @Mapping(source = "orderProduct.menuProduct", target = "menuProduct", qualifiedByName = "mapDomainToMenuProduct")
+  OrderProductDTO toDto(OrderProduct orderProduct);
+
+  @Named("mapDomainToMenuProduct")
+  default MenuProductDTO mapDomainToMenuProduct(MenuProduct menuProduct) {
+    MenuProductMapper menuProductMapper = new MenuProductMapperImpl();
+    return menuProductMapper.toMenuProductDTO(menuProduct);
+  }
+
+  @Named("mapDomainToDtoList")
+  default List<OrderProductDTO> mapDomainToDtoList(List<OrderProduct> orderProducts) {
+    return Optional.ofNullable(orderProducts).orElse(Collections.emptyList()).stream().map(this::toDto).toList();
+  }
 
   @Mapping(source = "entity.ingredients", target = "ingredients", qualifiedByName = "mapListToDomain")
   @Mapping(source = "entity.optionals", target = "optionals", qualifiedByName = "mapListToDomain")

@@ -4,6 +4,7 @@ import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.invoice.In
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.person.CollaboratorEntity;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.person.CustomerEntity;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.product.OrderProductEntity;
+import br.com.fiap.fastfood.api.core.domain.model.order.OrderStateEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -36,22 +37,22 @@ public class OrderEntity {
 
   @Enumerated(EnumType.STRING)
   @Column(name = "status")
-  private OrderStatusEnum status;
+  private OrderStateEnum state;
 
   @Column(name = "price")
   private BigDecimal price;
 
   @OneToMany(mappedBy = "order")
-  private List<OrderProductEntity> orderProducts;
+  private List<OrderProductEntity> products;
 
-  @Column(name = "created_at")
-  private LocalDateTime created;
+  @Column(name = "created_at", updatable = false)
+  private LocalDateTime createdAt;
 
   @Column(name = "updated_at")
-  private LocalDateTime updated;
+  private LocalDateTime updatedAt;
 
   @ManyToOne
-  private CollaboratorEntity cashier;
+  private CollaboratorEntity collaborator;
 
   @ManyToOne
   private CustomerEntity customer;
@@ -61,12 +62,12 @@ public class OrderEntity {
 
   @PrePersist
   protected void onCreate() {
-    created = LocalDateTime.now();
+    createdAt = LocalDateTime.now();
   }
 
   @PreUpdate
   protected void onUpdate() {
-    updated = LocalDateTime.now();
+    updatedAt = LocalDateTime.now();
   }
 
 }

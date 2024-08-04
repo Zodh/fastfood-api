@@ -46,4 +46,10 @@ public interface CustomerMapper {
     return new PhoneNumber(phoneNumber);
   }
 
+  @Mapping(source = "customer.document.value", target = "documentNumber")
+  @Mapping(source = "customer.document.type", target = "documentType")
+  @Mapping(source = "customer.phoneNumber.value", target = "phoneNumber")
+  @Mapping(source = "customer.email.value", target = "email")
+  CustomerDTO toDto(Customer customer);
+
 }
