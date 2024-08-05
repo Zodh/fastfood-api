@@ -30,8 +30,8 @@ public class InvoiceEntity {
   private Long id;
 
   @Enumerated(EnumType.STRING)
-  @Column(name = "status")
-  private InvoiceStatus status;
+  @Column(name = "state")
+  private InvoiceStatus state;
 
   @Column(name = "price")
   private BigDecimal price;

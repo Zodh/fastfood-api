@@ -2,6 +2,7 @@ package br.com.fiap.fastfood.api.core.domain.model.order;
 
 import br.com.fiap.fastfood.api.core.domain.exception.DomainException;
 import br.com.fiap.fastfood.api.core.domain.exception.ErrorDetail;
+import br.com.fiap.fastfood.api.core.domain.model.invoice.Invoice;
 import br.com.fiap.fastfood.api.core.domain.model.order.state.OrderState;
 import br.com.fiap.fastfood.api.core.domain.model.person.Collaborator;
 import br.com.fiap.fastfood.api.core.domain.model.person.Customer;
@@ -25,6 +26,7 @@ public class Order {
   private Collaborator collaborator;
   private Customer customer;
   private BigDecimal price;
+  private List<Invoice> invoices;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
 
