@@ -26,8 +26,8 @@ public class InvoiceRepositoryAdapterImpl implements InvoiceRepositoryPort {
     public Optional<Invoice> findById(Long identifier) {
         Optional<InvoiceEntity> entity = repository.findById(identifier);
         Optional<Invoice> domain = entity.map(mapper::toDomain);
-        domain.ifPresent(val ->
-                val.setState(mapper.mapStateImpl(entity.get().getState(), domain.get()))
+        domain.ifPresent(invoice ->
+                invoice.setState(mapper.mapStateImpl(entity.get().getState(), domain.get()))
         );
 
         return domain;

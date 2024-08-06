@@ -3,21 +3,18 @@ package br.com.fiap.fastfood.api.core.domain.aggregate;
 import br.com.fiap.fastfood.api.core.domain.model.invoice.Invoice;
 import br.com.fiap.fastfood.api.core.domain.model.invoice.state.impl.InvoicePendingState;
 import br.com.fiap.fastfood.api.core.domain.model.order.Order;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class InvoiceAggregate {
 
     private Invoice invoice;
-
-    public InvoiceAggregate() {
-    }
-
-    public InvoiceAggregate(Invoice invoice) {
-        this.invoice = invoice;
-    }
 
     public Invoice createInvoice(Order order) {
         Invoice invoice = new Invoice();

@@ -12,5 +12,4 @@ public interface OrderServicePort {
   Order getById(Long orderId);
   Order removeOrderProduct(Long orderId, Long orderProductId);
 
-  Order getById(Long id);
 }
