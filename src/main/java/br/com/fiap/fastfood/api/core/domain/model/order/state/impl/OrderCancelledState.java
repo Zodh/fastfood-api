@@ -14,7 +14,7 @@ public class OrderCancelledState extends OrderState {
   }
 
   @Override
-  protected void includeOrderProduct(OrderProduct orderProduct) {
+  public void includeOrderProduct(OrderProduct orderProduct) {
     throw new OrderOperationNotAllowedException();
   }
 

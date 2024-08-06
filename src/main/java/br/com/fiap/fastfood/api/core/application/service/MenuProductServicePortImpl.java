@@ -73,6 +73,11 @@ public class MenuProductServicePortImpl implements MenuProductServicePort {
     repository.update(menuProduct);
   }
 
+  @Override
+  public List<MenuProduct> findAllById(List<Long> ids) {
+    return repository.findAllById(ids);
+  }
+
   private void fetchIngredients(MenuProduct menuProduct) {
     if (Objects.nonNull(menuProduct) && !CollectionUtils.isEmpty(menuProduct.getIngredients())) {
       List<MenuProduct> ingredients = menuProduct.getIngredients().stream()

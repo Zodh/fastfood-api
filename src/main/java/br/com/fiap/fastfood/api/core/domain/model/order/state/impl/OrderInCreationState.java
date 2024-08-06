@@ -21,7 +21,7 @@ public class OrderInCreationState extends OrderState {
   }
 
   @Override
-  protected void includeOrderProduct(OrderProduct orderProduct) {
+  public void includeOrderProduct(OrderProduct orderProduct) {
     if (Objects.isNull(this.order.getProducts())) {
       this.order.setProducts(new ArrayList<>());
     }

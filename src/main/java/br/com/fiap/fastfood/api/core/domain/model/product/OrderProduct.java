@@ -42,22 +42,28 @@ public class OrderProduct extends Product {
                 .filter(op -> Objects.nonNull(op) && Objects.nonNull(op.getCost()))
                 .map(op -> op.getCost().multiply(BigDecimal.valueOf(op.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-        this.cost = ingredientCost.add(optionalsCost);
+        if (quantity == 0) {
+            quantity = 1;
+        }
+        this.cost = ingredientCost.add(optionalsCost).multiply(BigDecimal.valueOf(quantity));
     }
 
     public void calculatePrice() {
-        BigDecimal basePrice = menuProduct.getPrice();
+        BigDecimal basePrice = Optional.ofNullable(menuProduct.getPrice()).orElse(BigDecimal.ZERO);
         BigDecimal optionalsPrice = Optional.ofNullable(optionals).orElse(Collections.emptyList()).stream()
             .filter(opt -> Objects.nonNull(opt) && Objects.nonNull(opt.getPrice()))
             .map(op -> op.getPrice().multiply(new BigDecimal(op.getQuantity())))
             .reduce(BigDecimal.ZERO, BigDecimal::add);
-        this.price = basePrice.add(optionalsPrice).multiply(BigDecimal.valueOf(quantity));
+        if (quantity == 0) {
+            quantity = 1;
+        }
+      this.price = basePrice.add(optionalsPrice).multiply(BigDecimal.valueOf(quantity));
     }
 
     @Override
     public BigDecimal getPrice() {
         if (Objects.isNull(this.price)) {
-            return menuProduct.getPrice();
+            return Optional.ofNullable(this.menuProduct.getPrice()).orElse(BigDecimal.ZERO);
         }
         return this.price;
     }
@@ -68,7 +74,7 @@ public class OrderProduct extends Product {
         this.preparationTimeInMillis = menuProduct.getPreparationTimeInMillis();
         this.ingredient = menuProduct.isIngredient();
         this.optional = menuProduct.isOptional();
-        this.quantity = this.quantity > 0 ? this.quantity :menuProduct.getQuantity();
+        this.quantity = this.quantity > 0 ? this.quantity : menuProduct.getQuantity();
         if (menuProduct.isIngredient() || menuProduct.isOptional()) {
             this.price = menuProduct.getPrice();
             this.cost = menuProduct.getCost();

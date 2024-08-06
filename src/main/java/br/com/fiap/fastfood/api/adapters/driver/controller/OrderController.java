@@ -6,16 +6,23 @@ import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.CustomerMa
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.CustomerMapperImpl;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.OrderMapper;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.OrderMapperImpl;
+import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.OrderProductMapper;
+import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.OrderProductMapperImpl;
 import br.com.fiap.fastfood.api.adapters.driver.dto.order.CreateOrderRequestDTO;
 import br.com.fiap.fastfood.api.adapters.driver.dto.order.OrderDTO;
+import br.com.fiap.fastfood.api.adapters.driver.dto.product.OrderProductDTO;
 import br.com.fiap.fastfood.api.core.domain.model.order.Order;
 import br.com.fiap.fastfood.api.core.domain.model.person.Collaborator;
 import br.com.fiap.fastfood.api.core.domain.model.person.Customer;
+import br.com.fiap.fastfood.api.core.domain.model.product.OrderProduct;
 import br.com.fiap.fastfood.api.core.domain.ports.inbound.OrderServicePort;
 import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +36,7 @@ public class OrderController {
   private final CustomerMapper customerMapper;
   private final CollaboratorMapper collaboratorMapper;
   private final OrderMapper orderMapper;
+  private final OrderProductMapper orderProductMapper;
 
   @Autowired
   public OrderController(OrderServicePort orderServicePort) {
@@ -36,6 +44,7 @@ public class OrderController {
     this.customerMapper = new CustomerMapperImpl();
     this.collaboratorMapper = new CollaboratorMapperImpl();
     this.orderMapper = new OrderMapperImpl();
+    this.orderProductMapper = new OrderProductMapperImpl();
   }
 
   @PostMapping
@@ -49,6 +58,22 @@ public class OrderController {
     Order order = orderServicePort.create(customer, collaborator);
     OrderDTO orderDTO = orderMapper.toDto(order);
     return ResponseEntity.status(HttpStatus.OK).body(orderDTO);
+  }
+
+  @PostMapping("/{id}/products")
+  public ResponseEntity<OrderDTO> includeOrderProduct(@PathVariable Long id, @RequestBody
+      OrderProductDTO orderProductDTO) {
+    OrderProduct orderProduct = orderProductMapper.toDomain(orderProductDTO);
+    Order order = orderServicePort.includeOrderProduct(id, orderProduct);
+    OrderDTO result = orderMapper.toDto(order);
+    return ResponseEntity.status(HttpStatus.CREATED).body(result);
+  }
+
+  @DeleteMapping("/{id}/products/{orderProductId}")
+  public ResponseEntity<OrderDTO> removeOrderProduct(@PathVariable Long id, @PathVariable Long orderProductId) {
+    Order order = orderServicePort.removeOrderProduct(id, orderProductId);
+    OrderDTO result = orderMapper.toDto(order);
+    return ResponseEntity.status(HttpStatus.OK).body(result);
   }
 
 }
