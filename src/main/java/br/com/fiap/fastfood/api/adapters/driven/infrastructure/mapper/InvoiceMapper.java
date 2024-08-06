@@ -1,7 +1,8 @@
 package br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper;
 
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.invoice.InvoiceEntity;
-import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.invoice.InvoiceStatus;
+import br.com.fiap.fastfood.api.adapters.driver.dto.invoice.InvoiceDTO;
+import br.com.fiap.fastfood.api.core.domain.model.invoice.state.InvoiceStateEnum;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.invoice.InvoiceVendorEntity;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.order.OrderEntity;
 import br.com.fiap.fastfood.api.core.domain.exception.InvoiceStateException;
@@ -30,40 +31,47 @@ public interface InvoiceMapper {
     @Mapping(source = "entity.order", target = "order", qualifiedByName = "mapOrderToDomain")
     Invoice toDomain(InvoiceEntity entity);
 
+    @Mapping(source = "invoice.state", target = "state", qualifiedByName = "mapState")
+    InvoiceDTO toDto(Invoice invoice);
+
     @Mapping(target = "state", ignore = true)
     List<Invoice> toDomain(List<InvoiceEntity> entity);
 
-    default InvoiceState mapStateImpl(InvoiceStatus state, Invoice invoice) {
+    default void mapStateImpl(InvoiceStateEnum state, Invoice invoice) {
         switch (state) {
             case EXPIRED -> {
-                return new InvoiceExpiredState(invoice);
+                invoice.setState(new InvoiceExpiredState(invoice));
+                return;
             }
             case PENDING -> {
-                return new InvoicePendingState(invoice);
+                invoice.setState(new InvoicePendingState(invoice));
+                return;
             }
             case PAID -> {
-                return new InvoicePaidState(invoice);
+                invoice.setState(new InvoicePaidState(invoice));
+                return;
             }
             case CANCELLED -> {
-                return new InvoiceCancelledState(invoice);
+                invoice.setState(new InvoiceCancelledState(invoice));
+                return;
             }
         }
         throw new InvoiceStateException("A operação não pode ser executada no status atual do pedido!");
     }
 
     @Named("mapState")
-    default InvoiceStatus mapState(InvoiceState invoiceState) {
+    default InvoiceStateEnum mapState(InvoiceState invoiceState) {
         if (invoiceState instanceof InvoicePendingState) {
-            return InvoiceStatus.PENDING;
+            return InvoiceStateEnum.PENDING;
         }
         if (invoiceState instanceof InvoiceExpiredState) {
-            return InvoiceStatus.EXPIRED;
+            return InvoiceStateEnum.EXPIRED;
         }
         if (invoiceState instanceof InvoicePaidState) {
-            return InvoiceStatus.PAID;
+            return InvoiceStateEnum.PAID;
         }
         if (invoiceState instanceof InvoiceCancelledState) {
-            return InvoiceStatus.CANCELLED;
+            return InvoiceStateEnum.CANCELLED;
         }
         throw new InvoiceStateException("A operação não pode ser executada no status atual do pedido!");
     }

@@ -40,6 +40,22 @@ public interface OrderProductMapper {
   @Mapping(source = "entity.menuProduct", target = "menuProduct", qualifiedByName = "mapMenuProductToDomain")
   OrderProduct toDomain(OrderProductEntity entity);
 
+  @Mapping(source = "dto.ingredients", target = "ingredients", qualifiedByName = "mapDtoListToDomain")
+  @Mapping(source = "dto.optionals", target = "optionals", qualifiedByName = "mapDtoListToDomain")
+  @Mapping(source = "dto.menuProduct", target = "menuProduct", qualifiedByName = "mapDtoMenuProductToDomain")
+  OrderProduct toDomain(OrderProductDTO dto);
+
+  @Named("mapDtoListToDomain")
+  default List<OrderProduct> mapDtoListToDomain(List<OrderProductDTO> dtoList) {
+    return Optional.ofNullable(dtoList).orElse(Collections.emptyList()).stream().map(this::toDomain).collect(Collectors.toList());
+  }
+
+  @Named("mapDtoMenuProductToDomain")
+  default MenuProduct mapDtoMenuProductToDomain(MenuProductDTO menuProductDTO) {
+    MenuProductMapper menuProductMapper = new MenuProductMapperImpl();
+    return menuProductMapper.toDomain(menuProductDTO);
+  }
+
   @Named("mapListToDomain")
   default List<OrderProduct> mapListToDomain(List<OrderProductEntity> orderProductEntities) {
     return Optional.ofNullable(orderProductEntities).orElse(Collections.emptyList()).stream().map(this::toDomain).collect(

@@ -2,6 +2,9 @@
 
 Este projeto é o trabalho feito pelo time 15 para solucionar o desafio técnico do tech challenge. O projeto se consiste em um conjunto de APIs desenvolvidas usando as técnicas ensinadas durante o curso.
 
+## Organização de tarefas do time:
+[Trello - Tech Challenge 8SOAT FIAP / Team 15](https://trello.com/b/RRTCdSx4/8soat-time-15)
+
 ## Buildando e rodando o projeto
 
 Atualmente existem as seguintes maneiras de se executar o projeto (do mais simples ao mais difícil):

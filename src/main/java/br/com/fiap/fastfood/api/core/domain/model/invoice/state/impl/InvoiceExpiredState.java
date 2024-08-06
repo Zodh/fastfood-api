@@ -1,9 +1,10 @@
 package br.com.fiap.fastfood.api.core.domain.model.invoice.state.impl;
 
-import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.invoice.InvoiceStatus;
+import br.com.fiap.fastfood.api.core.domain.model.invoice.state.InvoiceStateEnum;
 import br.com.fiap.fastfood.api.core.domain.exception.InvoiceStateException;
 import br.com.fiap.fastfood.api.core.domain.model.invoice.Invoice;
 import br.com.fiap.fastfood.api.core.domain.model.invoice.state.InvoiceState;
+import java.math.BigDecimal;
 
 public class InvoiceExpiredState extends InvoiceState {
 
@@ -12,8 +13,8 @@ public class InvoiceExpiredState extends InvoiceState {
     }
 
     @Override
-    public InvoiceStatus getDescription() {
-        return InvoiceStatus.EXPIRED;
+    public InvoiceStateEnum getDescription() {
+        return InvoiceStateEnum.EXPIRED;
     }
 
     @Override
@@ -32,5 +33,10 @@ public class InvoiceExpiredState extends InvoiceState {
     public void expireInvoice() {
         throw new InvoiceStateException(
                 String.format("A fatura não pode estar expirada com status '%s'.", getDescription()));
+    }
+
+    @Override
+    public void setPrice(BigDecimal price) {
+        throw new InvoiceStateException(String.format("Não é possível alterar o valor da fatura quando ela já está %s!", getDescription()));
     }
 }

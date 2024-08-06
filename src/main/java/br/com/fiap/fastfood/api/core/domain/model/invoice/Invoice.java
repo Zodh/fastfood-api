@@ -20,19 +20,12 @@ import java.util.Objects;
 public class Invoice {
 
     private Long id;
-
     private InvoiceState state;
-
     private BigDecimal price;
-
     private Long externalInvoiceId;
-
-    private LocalDateTime created;
-
-    private LocalDateTime updated;
-
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
     private InvoiceVendor vendor;
-
     private Order order;
 
     public void changeState(InvoiceState state) {
@@ -42,11 +35,4 @@ public class Invoice {
         this.state = state;
     }
 
-    public void cancel() {
-        this.getState().cancelInvoice();
-    }
-
-    public void expire() {
-        this.getState().expireInvoice();
-    }
 }

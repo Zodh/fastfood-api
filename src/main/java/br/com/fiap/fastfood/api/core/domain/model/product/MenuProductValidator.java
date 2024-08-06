@@ -3,6 +3,7 @@ package br.com.fiap.fastfood.api.core.domain.model.product;
 import br.com.fiap.fastfood.api.core.domain.exception.ErrorDetail;
 import br.com.fiap.fastfood.api.core.domain.model.Validator;
 import java.util.List;
+import java.util.Objects;
 import org.springframework.util.CollectionUtils;
 
 public class MenuProductValidator implements Validator<MenuProduct> {

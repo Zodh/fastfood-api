@@ -4,6 +4,7 @@ import br.com.fiap.fastfood.api.core.application.exception.NotFoundException;
 import br.com.fiap.fastfood.api.core.domain.exception.DomainException;
 import br.com.fiap.fastfood.api.core.domain.exception.ErrorDetail;
 import br.com.fiap.fastfood.api.core.domain.model.invoice.Invoice;
+import br.com.fiap.fastfood.api.core.domain.model.invoice.state.impl.InvoicePaidState;
 import br.com.fiap.fastfood.api.core.domain.model.invoice.state.impl.InvoicePendingState;
 import br.com.fiap.fastfood.api.core.domain.model.order.state.OrderState;
 import br.com.fiap.fastfood.api.core.domain.model.person.Collaborator;
@@ -17,6 +18,7 @@ import java.util.Objects;
 import java.util.Optional;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.util.CollectionUtils;
 
 @Setter
 @Getter
@@ -53,6 +55,10 @@ public class Order {
             .filter(current -> current.getState() instanceof InvoicePendingState)
             .findFirst()
             .orElseThrow(() -> new NotFoundException("Não foi encontrada nenhuma cobrança ativa para esse pedido!"));
+  }
+
+  public boolean hasInvoice() {
+    return !CollectionUtils.isEmpty(this.invoices) && this.invoices.stream().anyMatch(i -> i.getState() instanceof InvoicePendingState);
   }
 
 }

@@ -19,6 +19,9 @@ public class OrderProductValidator implements Validator<OrderProduct> {
       errors.add(new ErrorDetail("product.ingredients",
           "O produto do pedido deve conter ao menos um ingrediente!"));
     }
+    if (object.getIngredients().stream().anyMatch(i -> Objects.isNull(i.getMenuProduct().getId()) || i.getMenuProduct().getId() <= 0)) {
+      errors.add(new ErrorDetail("product.ingredients", "Existem ingredientes inválidos! O identificador do ingrediente é obrigatório!"));
+    }
     Set<Long> orderProductIngredientIds = object.getIngredients()
         .stream()
         .filter(ingredient -> Objects.nonNull(ingredient) && Objects.nonNull(
@@ -33,6 +36,9 @@ public class OrderProductValidator implements Validator<OrderProduct> {
     if (!menuProductIngredientIds.containsAll(orderProductIngredientIds)) {
       errors.add(new ErrorDetail("product.ingredients",
           "Todos os ingredientes do produto do pedido devem estar contidos no produto do menu!"));
+    }
+    if (!CollectionUtils.isEmpty(object.getOptionals()) && object.getOptionals().stream().anyMatch(optional -> Objects.isNull(optional) || Objects.isNull(optional.getMenuProduct()) || Objects.isNull(optional.getMenuProduct().getId()) || optional.getMenuProduct().getId() <= 0)) {
+      errors.add(new ErrorDetail("product.optionals", "Os opcionais devem se basear em algum produto do menu válido!"));
     }
     return errors;
   }

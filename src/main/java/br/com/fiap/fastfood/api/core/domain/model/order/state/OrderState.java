@@ -14,7 +14,7 @@ public abstract class OrderState {
     this.order = order;
   }
 
-  protected abstract void includeOrderProduct(OrderProduct orderProduct);
+  public abstract void includeOrderProduct(OrderProduct orderProduct);
   public abstract void removeOrderProduct(Long orderProductId);
   public abstract void confirmOrder(); // Neste momento, o pedido será cobrado.
   public abstract void cancelOrder();

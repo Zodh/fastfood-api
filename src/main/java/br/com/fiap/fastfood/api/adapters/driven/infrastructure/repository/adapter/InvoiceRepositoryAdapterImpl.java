@@ -5,10 +5,14 @@ import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.InvoiceMap
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.invoice.InvoiceRepository;
 import br.com.fiap.fastfood.api.core.application.ports.repository.InvoiceRepositoryPort;
 import br.com.fiap.fastfood.api.core.domain.model.invoice.Invoice;
+import br.com.fiap.fastfood.api.core.domain.model.invoice.state.InvoiceState;
+import java.util.Collections;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
+import org.springframework.util.CollectionUtils;
 
 @Component
 public class InvoiceRepositoryAdapterImpl implements InvoiceRepositoryPort {
@@ -26,10 +30,9 @@ public class InvoiceRepositoryAdapterImpl implements InvoiceRepositoryPort {
     public Optional<Invoice> findById(Long identifier) {
         Optional<InvoiceEntity> entity = repository.findById(identifier);
         Optional<Invoice> domain = entity.map(mapper::toDomain);
-        domain.ifPresent(val ->
-                val.setState(mapper.mapStateImpl(entity.get().getState(), domain.get()))
+        domain.ifPresent(invoice ->
+                mapper.mapStateImpl(entity.get().getState(), domain.get())
         );
-
         return domain;
     }
 
@@ -38,7 +41,7 @@ public class InvoiceRepositoryAdapterImpl implements InvoiceRepositoryPort {
         InvoiceEntity entity = mapper.toEntity(invoice);
         InvoiceEntity persistedEntity = repository.save(entity);
         Invoice toDomain = mapper.toDomain(persistedEntity);
-        toDomain.setState(mapper.mapStateImpl(persistedEntity.getState(), toDomain));
+        mapper.mapStateImpl(persistedEntity.getState(), toDomain);
         return toDomain;
     }
 
@@ -49,7 +52,23 @@ public class InvoiceRepositoryAdapterImpl implements InvoiceRepositoryPort {
     }
 
     @Override
-    public void expireOldInvoices() {
-        repository.expireOldInvoices();
+    public void expireOldInvoices(int timeInMinutes) {
+        repository.expireOldInvoices(timeInMinutes);
     }
+
+    @Override
+    public void cancelPendingInvoicesByOrder(Long orderId) {
+        repository.cancelPendingInvoicesByOrder(orderId);
+    }
+
+    @Override
+    public List<Invoice> findByOrderId(Long orderId) {
+        List<InvoiceEntity> invoiceEntities = repository.findByOrderId(orderId);
+        return Optional.ofNullable(invoiceEntities).orElse(Collections.emptyList()).stream().map(invoiceEntity -> {
+            Invoice invoice = mapper.toDomain(invoiceEntity);
+            mapper.mapStateImpl(invoiceEntity.getState(), invoice);
+            return invoice;
+        }).toList();
+    }
+
 }
