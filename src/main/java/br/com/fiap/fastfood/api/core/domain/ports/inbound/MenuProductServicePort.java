@@ -10,5 +10,6 @@ public interface MenuProductServicePort {
   void register(MenuProduct menuProduct);
   void remove(Long id);
   void update(Long id, MenuProduct menuProduct);
+  List<MenuProduct> findAllById(List<Long> ids);
 
 }

@@ -1,16 +1,24 @@
 package br.com.fiap.fastfood.api.core.application.service;
 
+import br.com.fiap.fastfood.api.core.application.exception.ApplicationException;
 import br.com.fiap.fastfood.api.core.application.exception.NotFoundException;
 import br.com.fiap.fastfood.api.core.application.ports.repository.OrderProductRepositoryPort;
 import br.com.fiap.fastfood.api.core.domain.exception.DomainException;
 import br.com.fiap.fastfood.api.core.domain.exception.ErrorDetail;
+import br.com.fiap.fastfood.api.core.domain.model.order.Order;
 import br.com.fiap.fastfood.api.core.domain.model.product.MenuProduct;
 import br.com.fiap.fastfood.api.core.domain.model.product.OrderProduct;
 import br.com.fiap.fastfood.api.core.domain.model.product.OrderProductValidator;
+import br.com.fiap.fastfood.api.core.domain.model.product.Product;
 import br.com.fiap.fastfood.api.core.domain.ports.inbound.MenuProductServicePort;
 import br.com.fiap.fastfood.api.core.domain.ports.inbound.OrderProductServicePort;
+import br.com.fiap.fastfood.api.core.domain.ports.inbound.OrderServicePort;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -30,35 +38,28 @@ public class OrderProductServicePortImpl implements OrderProductServicePort {
     }
 
     @Override
-    public OrderProduct create(OrderProduct orderProduct) {
-        if (Objects.isNull(orderProduct) || Objects.isNull(orderProduct.getMenuProduct()) || orderProduct.getMenuProduct().getId() <= 0) {
-            throw new DomainException(new ErrorDetail("product",
-                "O produto do menu escolhido deve ser informado!"));
+    public OrderProduct create(Order order, OrderProduct orderProduct) {
+        OrderProduct validOrderProduct = validateAndDetail(orderProduct);
+        validOrderProduct.setIngredients(validOrderProduct.getIngredients().stream().map(ingredient -> orderProductRepository.save(null, ingredient)).collect(Collectors.toList()));
+        if (!CollectionUtils.isEmpty(validOrderProduct.getOptionals())) {
+            validOrderProduct.setOptionals(validOrderProduct.getOptionals().stream().map(optional -> orderProductRepository.save(null, optional)).collect(Collectors.toList()));
         }
-
-        MenuProduct menuProduct = menuProductServicePort.getById(orderProduct.getMenuProduct().getId());
-        orderProduct.setMenuProduct(menuProduct);
-
-        orderProduct.cloneMenuProduct();
-        List<ErrorDetail> errors = orderProductValidator.validate(orderProduct);
-        if (!CollectionUtils.isEmpty(errors)) {
-            throw new DomainException(errors);
-        }
-        orderProduct.calculateCost();
-        orderProduct.calculatePrice();
-        return orderProductRepository.save(orderProduct);
+        return orderProductRepository.save(order, validOrderProduct);
     }
 
     @Override
     public OrderProduct includeOptional(Long orderProductId, OrderProduct optional) {
         OrderProduct orderProduct = getById(orderProductId);
-        List<ErrorDetail> errors = orderProductValidator.validate(optional);
-        if (!CollectionUtils.isEmpty(errors)) {
-            throw new DomainException(errors);
+        OrderProduct validOptional = validateAndDetail(optional);
+        if (!validOptional.isOptional()) {
+            throw new DomainException(new ErrorDetail("optional", "O produto selecionado não é um opcional!"));
         }
-        orderProduct.includeOptional(optional);
-        optional.calculateCost();
-        optional.calculatePrice();
+        orderProduct.includeOptional(validOptional);
+        validOptional.calculateCost();
+        validOptional.calculatePrice();
+
+        orderProduct.calculateCost();
+        orderProduct.calculatePrice();
         orderProductRepository.save(orderProduct);
         return orderProduct;
     }
@@ -88,7 +89,21 @@ public class OrderProductServicePortImpl implements OrderProductServicePort {
     @Override
     public void delete(Long id) {
         OrderProduct orderProduct = getById(id);
-        orderProductRepository.delete(orderProduct.getId());
+        List<Long> allOrderProductIdsToDelete = new ArrayList<>();
+        allOrderProductIdsToDelete.add(id);
+        if (!CollectionUtils.isEmpty(orderProduct.getIngredients())) {
+            List<Long> ingredients = orderProduct.getIngredients().stream().filter(i -> Objects.nonNull(i) && Objects.nonNull(i.getId())).map(
+                Product::getId).toList();
+            orderProductRepository.deleteIngredients(ingredients);
+            allOrderProductIdsToDelete.addAll(ingredients);
+        }
+        if (!CollectionUtils.isEmpty(orderProduct.getOptionals())) {
+            List<Long> optionals = orderProduct.getOptionals().stream().filter(o -> Objects.nonNull(o) && Objects.nonNull(o.getId())).map(
+                Product::getId).toList();
+            orderProductRepository.deleteOptionals(optionals);
+            allOrderProductIdsToDelete.addAll(optionals);
+        }
+        orderProductRepository.deleteAllById(allOrderProductIdsToDelete);
     }
 
     @Override
@@ -98,4 +113,49 @@ public class OrderProductServicePortImpl implements OrderProductServicePort {
                 String.format("Não foi encontrado nenhum produto do pedido com o identificador %d!",
                     id)));
     }
+
+    @Override
+    public OrderProduct validateAndDetail(OrderProduct orderProduct) {
+        findMenuProductAndClone(orderProduct);
+
+        List<ErrorDetail> errors = orderProductValidator.validate(orderProduct);
+        if (!CollectionUtils.isEmpty(errors)) {
+            throw new DomainException(errors);
+        }
+
+        fetchOptionalsData(orderProduct);
+
+        orderProduct.cloneMenuProduct();
+        orderProduct.calculateCost();
+        orderProduct.calculatePrice();
+        return orderProduct;
+    }
+
+    private void findMenuProductAndClone(OrderProduct orderProduct) {
+        if (Objects.isNull(orderProduct) || Objects.isNull(
+            orderProduct.getMenuProduct()) || orderProduct.getMenuProduct().getId() <= 0) {
+            throw new DomainException(new ErrorDetail("product",
+                "O produto do menu escolhido deve ser informado!"));
+        }
+
+        MenuProduct menuProduct = menuProductServicePort.getById(orderProduct.getMenuProduct().getId());
+        orderProduct.setMenuProduct(menuProduct);
+
+        orderProduct.cloneMenuProduct();
+    }
+
+    private void fetchOptionalsData(OrderProduct orderProduct) {
+        if (!CollectionUtils.isEmpty(orderProduct.getOptionals())) {
+            List<Long> ids = orderProduct.getOptionals().stream().map(op -> op.getMenuProduct().getId()).toList();
+            Map<Long, MenuProduct> optionalsById = menuProductServicePort.findAllById(ids).stream().collect(Collectors.toMap(
+                Product::getId, Function.identity()));
+            orderProduct.getOptionals().forEach(op -> {
+                op.setMenuProduct(optionalsById.get(op.getMenuProduct().getId()));
+                op.cloneMenuProduct();
+                op.calculateCost();
+                op.calculatePrice();
+            });
+        }
+    }
+
 }

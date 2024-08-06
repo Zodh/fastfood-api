@@ -28,7 +28,6 @@ public class OrderProductEntity extends ProductEntity {
   private MenuProductEntity menuProduct;
 
   @ManyToOne
-  @NotNull
   private OrderEntity order;
 
   @ManyToMany
