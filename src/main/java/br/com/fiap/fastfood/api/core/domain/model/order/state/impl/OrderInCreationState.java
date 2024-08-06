@@ -41,6 +41,9 @@ public class OrderInCreationState extends OrderState {
 
   @Override
   public void confirmOrder() {
+    if (CollectionUtils.isEmpty(this.order.getProducts())) {
+      throw new DomainException(new ErrorDetail("order.products", "Os produtos do pedido não podem ser vazios!"));
+    }
     this.order.changeState(new OrderAwaitingPaymentState(this.order));
   }
 

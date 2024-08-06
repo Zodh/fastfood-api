@@ -1,6 +1,7 @@
 package br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.invoice;
 
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.order.OrderEntity;
+import br.com.fiap.fastfood.api.core.domain.model.invoice.state.InvoiceStateEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -30,8 +31,8 @@ public class InvoiceEntity {
   private Long id;
 
   @Enumerated(EnumType.STRING)
-  @Column(name = "state")
-  private InvoiceStatus state;
+  @Column(name = "current_state")
+  private InvoiceStateEnum state;
 
   @Column(name = "price")
   private BigDecimal price;
@@ -40,10 +41,10 @@ public class InvoiceEntity {
   private Long externalInvoiceId;
 
   @Column(name = "created_at")
-  private LocalDateTime created;
+  private LocalDateTime createdAt;
 
   @Column(name = "updated_at")
-  private LocalDateTime updated;
+  private LocalDateTime updatedAt;
 
   @ManyToOne
   private InvoiceVendorEntity vendor;
@@ -53,12 +54,12 @@ public class InvoiceEntity {
 
   @PrePersist
   protected void onCreate() {
-    created = LocalDateTime.now();
+    createdAt = LocalDateTime.now();
   }
 
   @PreUpdate
   protected void onUpdate() {
-    updated = LocalDateTime.now();
+    updatedAt = LocalDateTime.now();
   }
 
 }

@@ -1,6 +1,7 @@
 package br.com.fiap.fastfood.api.core.application.service;
 
-import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.person.CollaboratorRepository;
+import br.com.fiap.fastfood.api.core.application.event.PaymentEvent;
+import br.com.fiap.fastfood.api.core.application.event.PaymentOperationEnum;
 import br.com.fiap.fastfood.api.core.application.exception.ApplicationException;
 import br.com.fiap.fastfood.api.core.application.exception.NotFoundException;
 import br.com.fiap.fastfood.api.core.application.ports.repository.OrderRepositoryPort;
@@ -16,8 +17,8 @@ import br.com.fiap.fastfood.api.core.domain.ports.inbound.OrderServicePort;
 import java.util.Objects;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 @Service
 public class OrderServicePortImpl implements OrderServicePort {
@@ -25,12 +26,14 @@ public class OrderServicePortImpl implements OrderServicePort {
   private final OrderRepositoryPort orderRepositoryPort;
   private final CustomerServicePort customerServicePort;
   private final OrderProductServicePort orderProductServicePort;
+  private final ApplicationEventPublisher eventPublisher;
 
   @Autowired
-  public OrderServicePortImpl(OrderRepositoryPort orderRepositoryPort, CustomerServicePort customerServicePort, OrderProductServicePort orderProductServicePort) {
+  public OrderServicePortImpl(OrderRepositoryPort orderRepositoryPort, CustomerServicePort customerServicePort, OrderProductServicePort orderProductServicePort, ApplicationEventPublisher eventPublisher) {
     this.orderRepositoryPort = orderRepositoryPort;
     this.customerServicePort = customerServicePort;
     this.orderProductServicePort = orderProductServicePort;
+    this.eventPublisher = eventPublisher;
   }
 
   @Override
@@ -63,6 +66,32 @@ public class OrderServicePortImpl implements OrderServicePort {
     aggregate.removeOrderProduct(orderProductId);
     orderProductServicePort.delete(orderProductId);
     return orderRepositoryPort.save(order);
+  }
+
+  @Override
+  public Order cancel(Long orderId) {
+    Order order = getById(orderId);
+    OrderAggregate aggregate = new OrderAggregate(order);
+    aggregate.cancelOrder();
+    Order cancelledOrder = save(order);
+    eventPublisher.publishEvent(new PaymentEvent(this, cancelledOrder, PaymentOperationEnum.CANCEL));
+    return cancelledOrder;
+  }
+
+  @Override
+  public Order confirm(Long orderId) {
+    Order order = getById(orderId);
+    OrderAggregate aggregate = new OrderAggregate(order);
+    aggregate.confirmOrder();
+    Order confirmedOrder = save(order);
+    eventPublisher.publishEvent(new PaymentEvent(this, confirmedOrder, PaymentOperationEnum.GENERATE));
+    return confirmedOrder;
+  }
+
+  private Order save(Order order) {
+    Order confirmedOrder = orderRepositoryPort.save(order);
+    confirmedOrder.setInvoices(order.getInvoices());
+    return confirmedOrder;
   }
 
   private @Nullable Customer fetchCustomerData(Customer customer) {

@@ -1,8 +1,10 @@
 package br.com.fiap.fastfood.api.core.domain.model.invoice.state.impl;
 
-import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.invoice.InvoiceStatus;
+import br.com.fiap.fastfood.api.core.domain.model.invoice.state.InvoiceStateEnum;
 import br.com.fiap.fastfood.api.core.domain.model.invoice.Invoice;
 import br.com.fiap.fastfood.api.core.domain.model.invoice.state.InvoiceState;
+import java.math.BigDecimal;
+import java.util.Objects;
 
 public class InvoicePendingState extends InvoiceState {
 
@@ -11,8 +13,8 @@ public class InvoicePendingState extends InvoiceState {
     }
 
     @Override
-    public InvoiceStatus getDescription() {
-        return InvoiceStatus.PENDING;
+    public InvoiceStateEnum getDescription() {
+        return InvoiceStateEnum.PENDING;
     }
 
     @Override
@@ -28,5 +30,13 @@ public class InvoicePendingState extends InvoiceState {
     @Override
     public void expireInvoice() {
         this.invoice.changeState(new InvoiceExpiredState(this.invoice));
+    }
+
+    @Override
+    public void setPrice(BigDecimal price) {
+        if (Objects.isNull(price)) {
+            this.invoice.setPrice(BigDecimal.ZERO);
+        }
+        this.invoice.setPrice(price);
     }
 }
