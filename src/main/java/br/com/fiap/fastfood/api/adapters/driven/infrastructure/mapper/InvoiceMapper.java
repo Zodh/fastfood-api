@@ -6,9 +6,12 @@ import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.invoice.In
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.order.OrderEntity;
 import br.com.fiap.fastfood.api.core.domain.exception.InvoiceStateException;
 import br.com.fiap.fastfood.api.core.domain.model.invoice.Invoice;
-import br.com.fiap.fastfood.api.core.domain.model.invoice.InvoiceState;
+import br.com.fiap.fastfood.api.core.domain.model.invoice.state.InvoiceState;
 import br.com.fiap.fastfood.api.core.domain.model.invoice.InvoiceVendor;
-import br.com.fiap.fastfood.api.core.domain.model.invoice.state.*;
+import br.com.fiap.fastfood.api.core.domain.model.invoice.state.impl.InvoiceCancelledState;
+import br.com.fiap.fastfood.api.core.domain.model.invoice.state.impl.InvoiceExpiredState;
+import br.com.fiap.fastfood.api.core.domain.model.invoice.state.impl.InvoicePaidState;
+import br.com.fiap.fastfood.api.core.domain.model.invoice.state.impl.InvoicePendingState;
 import br.com.fiap.fastfood.api.core.domain.model.order.Order;
 import org.mapstruct.*;
 

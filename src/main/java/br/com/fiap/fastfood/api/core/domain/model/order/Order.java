@@ -1,8 +1,10 @@
 package br.com.fiap.fastfood.api.core.domain.model.order;
 
+import br.com.fiap.fastfood.api.core.application.exception.NotFoundException;
 import br.com.fiap.fastfood.api.core.domain.exception.DomainException;
 import br.com.fiap.fastfood.api.core.domain.exception.ErrorDetail;
 import br.com.fiap.fastfood.api.core.domain.model.invoice.Invoice;
+import br.com.fiap.fastfood.api.core.domain.model.invoice.state.impl.InvoicePendingState;
 import br.com.fiap.fastfood.api.core.domain.model.order.state.OrderState;
 import br.com.fiap.fastfood.api.core.domain.model.person.Collaborator;
 import br.com.fiap.fastfood.api.core.domain.model.person.Customer;
@@ -44,6 +46,13 @@ public class Order {
         .filter(op -> Objects.nonNull(op) && Objects.nonNull(op.getPrice()))
         .map(OrderProduct::getPrice)
         .reduce(BigDecimal.ZERO, BigDecimal::add);
+  }
+
+  public Invoice getInvoice() {
+    return Optional.ofNullable(invoices).orElse(Collections.emptyList()).stream()
+            .filter(current -> current.getState() instanceof InvoicePendingState)
+            .findFirst()
+            .orElseThrow(() -> new NotFoundException("Não foi encontrada nenhuma cobrança ativa para esse pedido!"));
   }
 
 }

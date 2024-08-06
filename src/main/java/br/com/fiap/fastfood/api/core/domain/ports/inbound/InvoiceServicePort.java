@@ -6,7 +6,7 @@ import br.com.fiap.fastfood.api.core.domain.model.order.Order;
 public interface InvoiceServicePort {
 
     Invoice create(Order order);
-    Invoice pay(Long orderId, Long invoiceId);
+    Invoice executeFakeCheckout(Long orderId);
     Invoice cancel(Long id);
 
 }

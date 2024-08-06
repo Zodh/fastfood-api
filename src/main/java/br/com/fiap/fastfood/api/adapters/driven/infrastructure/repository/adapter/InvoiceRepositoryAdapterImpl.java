@@ -8,7 +8,6 @@ import br.com.fiap.fastfood.api.core.domain.model.invoice.Invoice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -50,8 +49,7 @@ public class InvoiceRepositoryAdapterImpl implements InvoiceRepositoryPort {
     }
 
     @Override
-    public List<Invoice> fetchInvoicesByStatus(String status) {
-        List<InvoiceEntity> entities = repository.fetchInvoicesByStatus(status);
-        return mapper.toDomain(entities);
+    public void expireOldInvoices() {
+        repository.expireOldInvoices();
     }
 }

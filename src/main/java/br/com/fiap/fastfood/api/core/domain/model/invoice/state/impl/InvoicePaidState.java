@@ -1,29 +1,23 @@
-package br.com.fiap.fastfood.api.core.domain.model.invoice.state;
+package br.com.fiap.fastfood.api.core.domain.model.invoice.state.impl;
 
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.invoice.InvoiceStatus;
 import br.com.fiap.fastfood.api.core.domain.exception.InvoiceStateException;
 import br.com.fiap.fastfood.api.core.domain.model.invoice.Invoice;
-import br.com.fiap.fastfood.api.core.domain.model.invoice.InvoiceState;
+import br.com.fiap.fastfood.api.core.domain.model.invoice.state.InvoiceState;
 
-public class InvoiceExpiredState extends InvoiceState {
+public class InvoicePaidState extends InvoiceState {
 
-    public InvoiceExpiredState(Invoice invoice) {
+    public InvoicePaidState(Invoice invoice) {
         super(invoice);
     }
 
     @Override
     public InvoiceStatus getDescription() {
-        return InvoiceStatus.CANCELLED;
+        return InvoiceStatus.PAID;
     }
 
     @Override
     public void payInvoice() {
-        throw new InvoiceStateException(
-                String.format("Não é possível pagar uma fatura com status '%s'.", getDescription()));
-    }
-
-    @Override
-    public void paidInvoice() {
         throw new InvoiceStateException(
                 String.format("Não é possível pagar uma fatura com status '%s'.", getDescription()));
     }
@@ -35,13 +29,8 @@ public class InvoiceExpiredState extends InvoiceState {
     }
 
     @Override
-    public void pendingInvoice() {
+    public void expireInvoice() {
         throw new InvoiceStateException(
-                String.format("Não é possível pendenciar uma fatura com status '%s'.", getDescription()));
-    }
-
-    @Override
-    public void expiredInvoice() {
-        this.invoice.changeState(new InvoiceExpiredState(this.invoice));
+                String.format("Não é possível expirar uma fatura com status '%s'.", getDescription()));
     }
 }

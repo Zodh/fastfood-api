@@ -1,9 +1,8 @@
-package br.com.fiap.fastfood.api.core.domain.model.invoice.state;
+package br.com.fiap.fastfood.api.core.domain.model.invoice.state.impl;
 
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.invoice.InvoiceStatus;
-import br.com.fiap.fastfood.api.core.domain.exception.InvoiceStateException;
 import br.com.fiap.fastfood.api.core.domain.model.invoice.Invoice;
-import br.com.fiap.fastfood.api.core.domain.model.invoice.InvoiceState;
+import br.com.fiap.fastfood.api.core.domain.model.invoice.state.InvoiceState;
 
 public class InvoicePendingState extends InvoiceState {
 
@@ -22,23 +21,12 @@ public class InvoicePendingState extends InvoiceState {
     }
 
     @Override
-    public void paidInvoice() {
-        throw new InvoiceStateException(
-                String.format("Não é possível a fatura estar paga com status '%s'.", getDescription()));
-    }
-
-    @Override
     public void cancelInvoice() {
         this.invoice.changeState(new InvoiceCancelledState(this.invoice));
     }
 
     @Override
-    public void pendingInvoice() {
-        this.invoice.changeState(new InvoicePendingState(this.invoice));
-    }
-
-    @Override
-    public void expiredInvoice() {
+    public void expireInvoice() {
         this.invoice.changeState(new InvoiceExpiredState(this.invoice));
     }
 }

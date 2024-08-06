@@ -19,9 +19,9 @@ public class InvoiceController {
         this.invoiceServicePort = invoiceServicePort;
     }
 
-    @PostMapping("/orders/{orderId}/invoices/{invoiceId}/pay")
-    public ResponseEntity<Void> pay(@PathVariable Long orderId, @PathVariable Long invoiceId) {
-        invoiceServicePort.pay(orderId, invoiceId);
+    @PostMapping("/orders/{orderId}/pay")
+    public ResponseEntity<Void> executeFakeCheckout(@PathVariable Long orderId) {
+        invoiceServicePort.executeFakeCheckout(orderId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }
