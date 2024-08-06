@@ -8,4 +8,5 @@ public interface OrderServicePort {
 
   Order create(Customer customer, Collaborator collaborator);
 
+  Order getById(Long id);
 }

@@ -11,6 +11,8 @@ import br.com.fiap.fastfood.api.core.domain.model.person.Customer;
 import br.com.fiap.fastfood.api.core.domain.ports.inbound.CustomerServicePort;
 import br.com.fiap.fastfood.api.core.domain.ports.inbound.OrderServicePort;
 import java.util.Objects;
+import java.util.Optional;
+
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +35,13 @@ public class OrderServicePortImpl implements OrderServicePort {
     ServiceAggregate serviceAggregate = new ServiceAggregate(customer);
     Order order = serviceAggregate.createOrder(collaborator);
     return orderRepositoryPort.save(order);
+  }
+
+  @Override
+  public Order getById(Long id) {
+    Optional<Order> persistedOrder = orderRepositoryPort.findById(id);
+    return persistedOrder.orElseThrow(() -> new NotFoundException(
+            String.format("Não foi encontrado nenhum pedido com o id %d", id)));
   }
 
   private @Nullable Customer fetchCustomerData(Customer customer) {
