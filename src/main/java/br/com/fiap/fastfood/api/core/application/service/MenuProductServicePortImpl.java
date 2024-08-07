@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -28,8 +30,8 @@ public class MenuProductServicePortImpl implements MenuProductServicePort {
   }
 
   @Override
-  public List<MenuProduct> getAll() {
-    return repository.getAll();
+  public Page<MenuProduct> getAll(Pageable pageable) {
+    return repository.getAll(pageable);
   }
 
   @Override
