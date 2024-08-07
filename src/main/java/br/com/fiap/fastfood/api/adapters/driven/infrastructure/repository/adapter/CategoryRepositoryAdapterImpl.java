@@ -3,13 +3,17 @@ package br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.adapt
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.category.CategoryEntity;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.CategoryMapper;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.category.CategoryRepository;
-import br.com.fiap.fastfood.api.core.domain.model.category.Category;
 import br.com.fiap.fastfood.api.core.application.ports.repository.CategoryRepositoryPort;
+import br.com.fiap.fastfood.api.core.domain.model.category.Category;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 public class CategoryRepositoryAdapterImpl implements CategoryRepositoryPort {
@@ -65,8 +69,11 @@ public class CategoryRepositoryAdapterImpl implements CategoryRepositoryPort {
   }
 
   @Override
-  public List<Category> getAll() {
-    List<CategoryEntity> entityCategories = repository.findAll();
-    return entityCategories.stream().map(mapper::toDomain).toList();
+  public Page<Category> getAll(Pageable pageable) {
+    Page<CategoryEntity> entityCategories = repository.findAll(pageable);
+    List<Category> domainCategories = entityCategories.stream()
+            .map(mapper::toDomain)
+            .collect(Collectors.toList());
+    return new PageImpl<>(domainCategories, pageable, entityCategories.getTotalElements());
   }
 }
