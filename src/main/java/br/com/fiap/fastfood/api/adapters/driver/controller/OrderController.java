@@ -23,7 +23,7 @@ import br.com.fiap.fastfood.api.adapters.driver.dto.order.CreateOrderRequestDTO;
 import br.com.fiap.fastfood.api.adapters.driver.dto.order.OrderDTO;
 import br.com.fiap.fastfood.api.adapters.driver.dto.order.PaidOrderResponseDTO;
 import br.com.fiap.fastfood.api.adapters.driver.dto.product.OrderProductDTO;
-import br.com.fiap.fastfood.api.core.application.policy.OrderInvoicePolicyPortImpl;
+import br.com.fiap.fastfood.api.core.application.policy.OrderInvoicePolicyImpl;
 import br.com.fiap.fastfood.api.core.application.service.CustomerServicePortImpl;
 import br.com.fiap.fastfood.api.core.application.service.InvoiceServicePortImpl;
 import br.com.fiap.fastfood.api.core.application.service.MenuProductServicePortImpl;
@@ -38,7 +38,6 @@ import br.com.fiap.fastfood.api.core.application.port.inbound.service.InvoiceSer
 import br.com.fiap.fastfood.api.core.application.port.inbound.service.OrderServicePort;
 import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -55,12 +54,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class OrderController {
 
   private final OrderServicePort orderServicePort;
-  private final CustomerMapper customerMapper;
-  private final CollaboratorMapper collaboratorMapper;
   private final OrderMapper orderMapper;
-  private final OrderProductMapper orderProductMapper;
   private final InvoiceServicePort invoiceServicePort;
   private final InvoiceMapper invoiceMapper;
+
+  private final CustomerMapper customerMapper;
+  private final CollaboratorMapper collaboratorMapper;
+  private final OrderProductMapper orderProductMapper;
 
   @Autowired
   public OrderController(
@@ -73,12 +73,19 @@ public class OrderController {
       MenuProductRepositoryAdapterImpl menuProductRepositoryAdapter,
       InvoiceRepositoryAdapterImpl invoiceRepositoryAdapter
   ) {
-    CustomerServicePortImpl customerServicePortImpl = new CustomerServicePortImpl(customerRepositoryAdapter, emailSenderAdapter, activationCodeRepositoryAdapter, activationCodeLinkGenerator);
-    MenuProductServicePortImpl menuProductServicePortImpl = new MenuProductServicePortImpl(menuProductRepositoryAdapter);
-    OrderProductServicePortImpl orderProductServicePort = new OrderProductServicePortImpl(orderProductRepositoryAdapter, menuProductServicePortImpl);
-    OrderInvoicePolicyPortImpl orderInvoicePolicyPort = new OrderInvoicePolicyPortImpl(invoiceRepositoryAdapter, orderRepositoryAdapter);
-    this.orderServicePort = new OrderServicePortImpl(orderRepositoryAdapter, customerServicePortImpl, orderProductServicePort, orderInvoicePolicyPort);
-    this.invoiceServicePort = new InvoiceServicePortImpl(invoiceRepositoryAdapter, orderInvoicePolicyPort);
+    CustomerServicePortImpl customerServicePortImpl = new CustomerServicePortImpl(
+        customerRepositoryAdapter, emailSenderAdapter, activationCodeRepositoryAdapter,
+        activationCodeLinkGenerator);
+    MenuProductServicePortImpl menuProductServicePortImpl = new MenuProductServicePortImpl(
+        menuProductRepositoryAdapter);
+    OrderProductServicePortImpl orderProductServicePort = new OrderProductServicePortImpl(
+        orderProductRepositoryAdapter, menuProductServicePortImpl);
+    OrderInvoicePolicyImpl orderInvoicePolicyPort = new OrderInvoicePolicyImpl(
+        invoiceRepositoryAdapter, orderRepositoryAdapter);
+    this.orderServicePort = new OrderServicePortImpl(orderRepositoryAdapter,
+        customerServicePortImpl, orderProductServicePort, orderInvoicePolicyPort);
+    this.invoiceServicePort = new InvoiceServicePortImpl(invoiceRepositoryAdapter,
+        orderInvoicePolicyPort);
     this.customerMapper = new CustomerMapperImpl();
     this.collaboratorMapper = new CollaboratorMapperImpl();
     this.orderMapper = new OrderMapperImpl();

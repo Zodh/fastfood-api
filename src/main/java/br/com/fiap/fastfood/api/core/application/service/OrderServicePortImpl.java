@@ -1,6 +1,6 @@
 package br.com.fiap.fastfood.api.core.application.service;
 
-import br.com.fiap.fastfood.api.core.application.port.inbound.policy.OrderInvoicePolicyPort;
+import br.com.fiap.fastfood.api.core.application.policy.OrderInvoicePolicy;
 import br.com.fiap.fastfood.api.core.application.exception.ApplicationException;
 import br.com.fiap.fastfood.api.core.application.exception.NotFoundException;
 import br.com.fiap.fastfood.api.core.application.port.repository.OrderRepositoryPort;
@@ -20,13 +20,13 @@ public class OrderServicePortImpl implements OrderServicePort {
   private final OrderRepositoryPort orderRepositoryPort;
   private final CustomerServicePort customerServicePort;
   private final OrderProductServicePort orderProductServicePort;
-  private final OrderInvoicePolicyPort orderInvoicePolicyPort;
+  private final OrderInvoicePolicy orderInvoicePolicy;
 
-  public OrderServicePortImpl(OrderRepositoryPort orderRepositoryPort, CustomerServicePort customerServicePort, OrderProductServicePort orderProductServicePort, OrderInvoicePolicyPort orderInvoicePolicyPort) {
+  public OrderServicePortImpl(OrderRepositoryPort orderRepositoryPort, CustomerServicePort customerServicePort, OrderProductServicePort orderProductServicePort, OrderInvoicePolicy orderInvoicePolicy) {
     this.orderRepositoryPort = orderRepositoryPort;
     this.customerServicePort = customerServicePort;
     this.orderProductServicePort = orderProductServicePort;
-    this.orderInvoicePolicyPort = orderInvoicePolicyPort;
+    this.orderInvoicePolicy = orderInvoicePolicy;
   }
 
   @Override
@@ -67,7 +67,7 @@ public class OrderServicePortImpl implements OrderServicePort {
     OrderAggregate aggregate = new OrderAggregate(order);
     aggregate.cancelOrder();
     Order cancelledOrder = save(order);
-    orderInvoicePolicyPort.cancelInvoiceByOrder(cancelledOrder);
+    orderInvoicePolicy.cancelInvoiceByOrder(cancelledOrder);
   }
 
   @Override
@@ -76,7 +76,7 @@ public class OrderServicePortImpl implements OrderServicePort {
     OrderAggregate aggregate = new OrderAggregate(order);
     aggregate.confirmOrder();
     Order confirmedOrder = save(order);
-    orderInvoicePolicyPort.generateInvoiceByOrder(confirmedOrder);
+    orderInvoicePolicy.generateInvoiceByOrder(confirmedOrder);
     return confirmedOrder;
   }
 
@@ -104,6 +104,7 @@ public class OrderServicePortImpl implements OrderServicePort {
     aggregate.setReadyToCollection();
     orderRepositoryPort.save(order);
     // Politica de follow up.
+    // Send notification.
   }
 
   @Override

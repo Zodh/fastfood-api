@@ -1,8 +1,8 @@
-package br.com.fiap.fastfood.api.core.application.port.inbound.policy;
+package br.com.fiap.fastfood.api.core.application.policy;
 
 import br.com.fiap.fastfood.api.core.domain.model.order.Order;
 
-public interface OrderInvoicePolicyPort {
+public interface OrderInvoicePolicy {
 
   void cancelInvoiceByOrder(Order order);
   void generateInvoiceByOrder(Order order);

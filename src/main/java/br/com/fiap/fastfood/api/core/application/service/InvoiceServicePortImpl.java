@@ -1,6 +1,6 @@
 package br.com.fiap.fastfood.api.core.application.service;
 
-import br.com.fiap.fastfood.api.core.application.port.inbound.policy.OrderInvoicePolicyPort;
+import br.com.fiap.fastfood.api.core.application.policy.OrderInvoicePolicy;
 import br.com.fiap.fastfood.api.core.application.port.repository.InvoiceRepositoryPort;
 import br.com.fiap.fastfood.api.core.domain.aggregate.InvoiceAggregate;
 import br.com.fiap.fastfood.api.core.domain.model.invoice.Invoice;
@@ -11,11 +11,11 @@ import java.util.List;
 public class InvoiceServicePortImpl implements InvoiceServicePort {
 
     private final InvoiceRepositoryPort repository;
-    private final OrderInvoicePolicyPort orderInvoicePolicyPort;
+    private final OrderInvoicePolicy orderInvoicePolicy;
 
-    public InvoiceServicePortImpl(InvoiceRepositoryPort repository, OrderInvoicePolicyPort orderInvoicePolicyPort) {
+    public InvoiceServicePortImpl(InvoiceRepositoryPort repository, OrderInvoicePolicy orderInvoicePolicy) {
         this.repository = repository;
-        this.orderInvoicePolicyPort = orderInvoicePolicyPort;
+        this.orderInvoicePolicy = orderInvoicePolicy;
     }
 
     @Override
@@ -23,7 +23,7 @@ public class InvoiceServicePortImpl implements InvoiceServicePort {
         InvoiceAggregate invoiceAggregate = new InvoiceAggregate(order.getInvoice());
         Invoice invoice = invoiceAggregate.pay();
         Invoice result = repository.save(invoice);
-        orderInvoicePolicyPort.payOrderInvoice(order);
+        orderInvoicePolicy.payOrderInvoice(order);
         return result;
     }
 

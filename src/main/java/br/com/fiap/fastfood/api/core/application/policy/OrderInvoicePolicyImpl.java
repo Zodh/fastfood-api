@@ -1,6 +1,5 @@
 package br.com.fiap.fastfood.api.core.application.policy;
 
-import br.com.fiap.fastfood.api.core.application.port.inbound.policy.OrderInvoicePolicyPort;
 import br.com.fiap.fastfood.api.core.application.port.repository.InvoiceRepositoryPort;
 import br.com.fiap.fastfood.api.core.application.port.repository.OrderRepositoryPort;
 import br.com.fiap.fastfood.api.core.domain.aggregate.InvoiceAggregate;
@@ -9,12 +8,12 @@ import br.com.fiap.fastfood.api.core.domain.model.invoice.Invoice;
 import br.com.fiap.fastfood.api.core.domain.model.order.Order;
 import java.util.Objects;
 
-public class OrderInvoicePolicyPortImpl implements OrderInvoicePolicyPort {
+public class OrderInvoicePolicyImpl implements OrderInvoicePolicy {
 
   private final InvoiceRepositoryPort invoiceRepositoryPort;
   private final OrderRepositoryPort orderRepositoryPort;
 
-  public OrderInvoicePolicyPortImpl(InvoiceRepositoryPort invoiceRepositoryPort, OrderRepositoryPort orderRepositoryPort) {
+  public OrderInvoicePolicyImpl(InvoiceRepositoryPort invoiceRepositoryPort, OrderRepositoryPort orderRepositoryPort) {
     this.invoiceRepositoryPort = invoiceRepositoryPort;
     this.orderRepositoryPort = orderRepositoryPort;
   }
