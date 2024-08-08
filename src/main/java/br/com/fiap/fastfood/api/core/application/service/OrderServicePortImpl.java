@@ -1,40 +1,32 @@
 package br.com.fiap.fastfood.api.core.application.service;
 
-import br.com.fiap.fastfood.api.core.application.event.follow.up.FollowUpEvent;
-import br.com.fiap.fastfood.api.core.application.event.payment.PaymentEvent;
-import br.com.fiap.fastfood.api.core.application.event.payment.PaymentOperationEnum;
+import br.com.fiap.fastfood.api.core.application.port.inbound.policy.OrderInvoicePolicyPort;
 import br.com.fiap.fastfood.api.core.application.exception.ApplicationException;
 import br.com.fiap.fastfood.api.core.application.exception.NotFoundException;
-import br.com.fiap.fastfood.api.core.application.ports.repository.OrderRepositoryPort;
+import br.com.fiap.fastfood.api.core.application.port.repository.OrderRepositoryPort;
 import br.com.fiap.fastfood.api.core.domain.aggregate.OrderAggregate;
 import br.com.fiap.fastfood.api.core.domain.aggregate.ServiceAggregate;
 import br.com.fiap.fastfood.api.core.domain.model.order.Order;
 import br.com.fiap.fastfood.api.core.domain.model.person.Collaborator;
 import br.com.fiap.fastfood.api.core.domain.model.person.Customer;
 import br.com.fiap.fastfood.api.core.domain.model.product.OrderProduct;
-import br.com.fiap.fastfood.api.core.domain.ports.inbound.CustomerServicePort;
-import br.com.fiap.fastfood.api.core.domain.ports.inbound.OrderProductServicePort;
-import br.com.fiap.fastfood.api.core.domain.ports.inbound.OrderServicePort;
+import br.com.fiap.fastfood.api.core.application.port.inbound.service.CustomerServicePort;
+import br.com.fiap.fastfood.api.core.application.port.inbound.service.OrderProductServicePort;
+import br.com.fiap.fastfood.api.core.application.port.inbound.service.OrderServicePort;
 import java.util.Objects;
-import org.jetbrains.annotations.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.stereotype.Service;
 
-@Service
 public class OrderServicePortImpl implements OrderServicePort {
 
   private final OrderRepositoryPort orderRepositoryPort;
   private final CustomerServicePort customerServicePort;
   private final OrderProductServicePort orderProductServicePort;
-  private final ApplicationEventPublisher eventPublisher;
+  private final OrderInvoicePolicyPort orderInvoicePolicyPort;
 
-  @Autowired
-  public OrderServicePortImpl(OrderRepositoryPort orderRepositoryPort, CustomerServicePort customerServicePort, OrderProductServicePort orderProductServicePort, ApplicationEventPublisher eventPublisher) {
+  public OrderServicePortImpl(OrderRepositoryPort orderRepositoryPort, CustomerServicePort customerServicePort, OrderProductServicePort orderProductServicePort, OrderInvoicePolicyPort orderInvoicePolicyPort) {
     this.orderRepositoryPort = orderRepositoryPort;
     this.customerServicePort = customerServicePort;
     this.orderProductServicePort = orderProductServicePort;
-    this.eventPublisher = eventPublisher;
+    this.orderInvoicePolicyPort = orderInvoicePolicyPort;
   }
 
   @Override
@@ -70,13 +62,12 @@ public class OrderServicePortImpl implements OrderServicePort {
   }
 
   @Override
-  public Order cancel(Long orderId) {
+  public void cancel(Long orderId) {
     Order order = getById(orderId);
     OrderAggregate aggregate = new OrderAggregate(order);
     aggregate.cancelOrder();
     Order cancelledOrder = save(order);
-    eventPublisher.publishEvent(new PaymentEvent(this, cancelledOrder, PaymentOperationEnum.CANCEL));
-    return cancelledOrder;
+    orderInvoicePolicyPort.cancelInvoiceByOrder(cancelledOrder);
   }
 
   @Override
@@ -85,7 +76,7 @@ public class OrderServicePortImpl implements OrderServicePort {
     OrderAggregate aggregate = new OrderAggregate(order);
     aggregate.confirmOrder();
     Order confirmedOrder = save(order);
-    eventPublisher.publishEvent(new PaymentEvent(this, confirmedOrder, PaymentOperationEnum.GENERATE));
+    orderInvoicePolicyPort.generateInvoiceByOrder(confirmedOrder);
     return confirmedOrder;
   }
 
@@ -94,8 +85,7 @@ public class OrderServicePortImpl implements OrderServicePort {
     Order order = getById(orderId);
     OrderAggregate aggregate = new OrderAggregate(order);
     aggregate.turnReadyToPrepare();
-    Order confirmedOrder = save(order);
-    eventPublisher.publishEvent(new PaymentEvent(this, confirmedOrder, PaymentOperationEnum.GENERATE));
+    save(order);
   }
 
   @Override
@@ -104,8 +94,7 @@ public class OrderServicePortImpl implements OrderServicePort {
     OrderAggregate aggregate = new OrderAggregate(order);
     aggregate.initializePreparation();
     orderRepositoryPort.save(order);
-    FollowUpEvent followUpEvent = new FollowUpEvent(this, order);
-    eventPublisher.publishEvent(followUpEvent);
+    // Politica de follow up.
   }
 
   @Override
@@ -114,8 +103,7 @@ public class OrderServicePortImpl implements OrderServicePort {
     OrderAggregate aggregate = new OrderAggregate(order);
     aggregate.setReadyToCollection();
     orderRepositoryPort.save(order);
-    FollowUpEvent followUpEvent = new FollowUpEvent(this, order);
-    eventPublisher.publishEvent(followUpEvent);
+    // Politica de follow up.
   }
 
   @Override
@@ -124,8 +112,7 @@ public class OrderServicePortImpl implements OrderServicePort {
     OrderAggregate aggregate = new OrderAggregate(order);
     aggregate.finishOrder();
     orderRepositoryPort.save(order);
-    FollowUpEvent followUpEvent = new FollowUpEvent(this, order);
-    eventPublisher.publishEvent(followUpEvent);
+    // Politica de follow up.
   }
 
   private Order save(Order order) {
@@ -134,7 +121,7 @@ public class OrderServicePortImpl implements OrderServicePort {
     return confirmedOrder;
   }
 
-  private @Nullable Customer fetchCustomerData(Customer customer) {
+  private Customer fetchCustomerData(Customer customer) {
     if (Objects.nonNull(customer)) {
       if (Objects.isNull(customer.getId()) && Objects.isNull(customer.getDocument())) {
         throw new ApplicationException("O identificador ou o documento do cliente precisa ser informado para constar no pedido!", "Cliente sem identificadores válidos!");

@@ -1,12 +1,16 @@
 package br.com.fiap.fastfood.api.adapters.driver.controller;
 
+import br.com.fiap.fastfood.api.adapters.driven.infrastructure.email.ActivationCodeLinkGenerator;
+import br.com.fiap.fastfood.api.adapters.driven.infrastructure.email.EmailSender;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.CustomerIdentityMapper;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.CustomerMapper;
+import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.adapter.CustomerRepositoryAdapterImpl;
+import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.person.activation.ActivationCodeRepositoryAdapterImpl;
 import br.com.fiap.fastfood.api.adapters.driver.dto.customer.CustomerDTO;
 import br.com.fiap.fastfood.api.adapters.driver.dto.customer.CustomerIdentityDTO;
 import br.com.fiap.fastfood.api.core.application.service.CustomerServicePortImpl;
 import br.com.fiap.fastfood.api.core.domain.model.person.Customer;
-import br.com.fiap.fastfood.api.core.domain.ports.inbound.CustomerServicePort;
+import br.com.fiap.fastfood.api.core.application.port.inbound.service.CustomerServicePort;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,9 +30,12 @@ public class CustomerController {
   private final CustomerIdentityMapper identifyMapper;
 
   @Autowired
-  public CustomerController(CustomerServicePortImpl customerServicePortImpl, CustomerMapper mapper,
+  public CustomerController(CustomerRepositoryAdapterImpl customerRepositoryAdapter,
+      EmailSender emailSender, ActivationCodeRepositoryAdapterImpl activationCodeRepositoryAdapter,
+      ActivationCodeLinkGenerator activationCodeLinkGenerator, CustomerMapper mapper,
       CustomerIdentityMapper identifyMapper) {
-    this.customerServicePort = customerServicePortImpl;
+    this.customerServicePort = new CustomerServicePortImpl(customerRepositoryAdapter, emailSender,
+        activationCodeRepositoryAdapter, activationCodeLinkGenerator);
     this.mapper = mapper;
     this.identifyMapper = identifyMapper;
   }

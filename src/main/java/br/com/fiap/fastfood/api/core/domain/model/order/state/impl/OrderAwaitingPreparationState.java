@@ -66,6 +66,6 @@ public class OrderAwaitingPreparationState extends OrderState {
 
   @Override
   public OrderStateEnum getDescription() {
-    return OrderStateEnum.AWAITING_PREPARATION;
+    return OrderStateEnum.RECEIVED;
   }
 }

@@ -1,26 +1,22 @@
 package br.com.fiap.fastfood.api.core.application.service;
 
 import br.com.fiap.fastfood.api.core.application.exception.NotFoundException;
-import br.com.fiap.fastfood.api.core.application.ports.repository.CategoryRepositoryPort;
+import br.com.fiap.fastfood.api.core.application.port.repository.CategoryRepositoryPort;
 import br.com.fiap.fastfood.api.core.domain.aggregate.CategoryAggregate;
 import br.com.fiap.fastfood.api.core.domain.model.category.Category;
 import br.com.fiap.fastfood.api.core.domain.model.category.CategoryValidator;
 import br.com.fiap.fastfood.api.core.domain.model.product.MenuProduct;
-import br.com.fiap.fastfood.api.core.domain.ports.inbound.CategoryServicePort;
-import br.com.fiap.fastfood.api.core.domain.ports.inbound.MenuProductServicePort;
+import br.com.fiap.fastfood.api.core.application.port.inbound.service.CategoryServicePort;
+import br.com.fiap.fastfood.api.core.application.port.inbound.service.MenuProductServicePort;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-@Service
 public class CategoryServicePortImpl implements CategoryServicePort {
 
   private final MenuProductServicePort menuProductService;
   private final CategoryRepositoryPort repository;
   private final CategoryValidator validator;
 
-  @Autowired
   public CategoryServicePortImpl(MenuProductServicePort menuProductServicePort,
       CategoryRepositoryPort repository) {
     this.menuProductService = menuProductServicePort;

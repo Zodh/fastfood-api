@@ -1,9 +1,9 @@
 package br.com.fiap.fastfood.api.core.application.service;
 
 import br.com.fiap.fastfood.api.core.application.exception.NotFoundException;
-import br.com.fiap.fastfood.api.core.application.ports.outbound.ActivationCodeLinkGeneratorPort;
-import br.com.fiap.fastfood.api.core.application.ports.repository.ActivationCodeRepositoryPort;
-import br.com.fiap.fastfood.api.core.application.ports.repository.CustomerRepositoryPort;
+import br.com.fiap.fastfood.api.core.application.port.outbound.ActivationCodeLinkGeneratorPort;
+import br.com.fiap.fastfood.api.core.application.port.repository.ActivationCodeRepositoryPort;
+import br.com.fiap.fastfood.api.core.application.port.repository.CustomerRepositoryPort;
 import br.com.fiap.fastfood.api.core.domain.exception.DomainException;
 import br.com.fiap.fastfood.api.core.domain.exception.ErrorDetail;
 import br.com.fiap.fastfood.api.core.domain.model.person.Customer;

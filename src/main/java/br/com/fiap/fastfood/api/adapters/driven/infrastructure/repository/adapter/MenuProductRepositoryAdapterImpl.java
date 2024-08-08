@@ -4,7 +4,7 @@ import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.product.Me
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.MenuProductMapper;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.product.MenuProductRepository;
 import br.com.fiap.fastfood.api.core.domain.model.product.MenuProduct;
-import br.com.fiap.fastfood.api.core.application.ports.repository.MenuProductRepositoryPort;
+import br.com.fiap.fastfood.api.core.application.port.repository.MenuProductRepositoryPort;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;

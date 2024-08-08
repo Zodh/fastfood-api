@@ -1,11 +1,15 @@
 package br.com.fiap.fastfood.api.adapters.driver.controller;
 
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.CategoryMapper;
+import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.adapter.CategoryRepositoryAdapterImpl;
+import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.adapter.MenuProductRepositoryAdapterImpl;
 import br.com.fiap.fastfood.api.adapters.driver.dto.category.CategoryDTO;
 import br.com.fiap.fastfood.api.adapters.driver.dto.category.CategoryResponseDTO;
+import br.com.fiap.fastfood.api.core.application.port.inbound.service.MenuProductServicePort;
 import br.com.fiap.fastfood.api.core.application.service.CategoryServicePortImpl;
+import br.com.fiap.fastfood.api.core.application.service.MenuProductServicePortImpl;
 import br.com.fiap.fastfood.api.core.domain.model.category.Category;
-import br.com.fiap.fastfood.api.core.domain.ports.inbound.CategoryServicePort;
+import br.com.fiap.fastfood.api.core.application.port.inbound.service.CategoryServicePort;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +33,9 @@ public class CategoryController {
 
   @Autowired
   public CategoryController(
-      CategoryServicePortImpl categoryServiceInboundPortImpl, CategoryMapper mapper) {
-    this.categoryServicePort = categoryServiceInboundPortImpl;
+      MenuProductRepositoryAdapterImpl menuProductRepositoryAdapter, CategoryRepositoryAdapterImpl categoryRepositoryAdapter, CategoryMapper mapper) {
+    MenuProductServicePort menuProductServicePort = new MenuProductServicePortImpl(menuProductRepositoryAdapter);
+    this.categoryServicePort = new CategoryServicePortImpl(menuProductServicePort, categoryRepositoryAdapter);
     this.mapper = mapper;
   }
 

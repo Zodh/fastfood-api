@@ -7,7 +7,7 @@ import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.OrderMappe
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.OrderProductMapper;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.OrderProductMapperImpl;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.product.OrderProductRepository;
-import br.com.fiap.fastfood.api.core.application.ports.repository.OrderProductRepositoryPort;
+import br.com.fiap.fastfood.api.core.application.port.repository.OrderProductRepositoryPort;
 import br.com.fiap.fastfood.api.core.domain.model.order.Order;
 import br.com.fiap.fastfood.api.core.domain.model.product.OrderProduct;
 import java.util.List;

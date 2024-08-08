@@ -1,11 +1,12 @@
 package br.com.fiap.fastfood.api.adapters.driver.controller;
 
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.MenuProductMapper;
+import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.adapter.MenuProductRepositoryAdapterImpl;
 import br.com.fiap.fastfood.api.adapters.driver.dto.product.MenuProductDTO;
 import br.com.fiap.fastfood.api.adapters.driver.dto.product.MenuProductResponseDTO;
 import br.com.fiap.fastfood.api.core.application.service.MenuProductServicePortImpl;
 import br.com.fiap.fastfood.api.core.domain.model.product.MenuProduct;
-import br.com.fiap.fastfood.api.core.domain.ports.inbound.MenuProductServicePort;
+import br.com.fiap.fastfood.api.core.application.port.inbound.service.MenuProductServicePort;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +30,8 @@ public class MenuProductController {
 
   @Autowired
   public MenuProductController(
-      MenuProductServicePortImpl menuProductServiceInboundPortImpl, MenuProductMapper mapper) {
-    this.menuProductServicePort = menuProductServiceInboundPortImpl;
+      MenuProductRepositoryAdapterImpl menuProductRepositoryAdapter, MenuProductMapper mapper) {
+    this.menuProductServicePort = new MenuProductServicePortImpl(menuProductRepositoryAdapter);
     this.mapper = mapper;
   }
 

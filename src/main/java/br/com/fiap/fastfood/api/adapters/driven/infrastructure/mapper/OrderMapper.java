@@ -1,6 +1,5 @@
 package br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper;
 
-import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.invoice.InvoiceEntity;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.order.OrderEntity;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.person.CollaboratorEntity;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.person.CustomerEntity;
@@ -9,7 +8,6 @@ import br.com.fiap.fastfood.api.adapters.driver.dto.collaborator.CollaboratorDTO
 import br.com.fiap.fastfood.api.adapters.driver.dto.customer.CustomerDTO;
 import br.com.fiap.fastfood.api.adapters.driver.dto.order.OrderDTO;
 import br.com.fiap.fastfood.api.adapters.driver.dto.product.OrderProductDTO;
-import br.com.fiap.fastfood.api.core.domain.model.invoice.Invoice;
 import br.com.fiap.fastfood.api.core.domain.model.order.Order;
 import br.com.fiap.fastfood.api.core.domain.model.order.OrderStateEnum;
 import br.com.fiap.fastfood.api.core.domain.model.order.state.OrderState;
@@ -100,7 +98,7 @@ public interface OrderMapper {
       case AWAITING_PAYMENT -> {
         return new OrderAwaitingPaymentState(order);
       }
-      case AWAITING_PREPARATION -> {
+      case RECEIVED -> {
         return new OrderAwaitingPreparationState(order);
       }
       case CANCELLED -> {
@@ -112,7 +110,7 @@ public interface OrderMapper {
       case IN_PREPARATION -> {
         return new OrderInPreparationState(order);
       }
-      case PICKUP_READY -> {
+      case READY -> {
         return new OrderPickupReadyState(order);
       }
     }
@@ -142,7 +140,7 @@ public interface OrderMapper {
       return OrderStateEnum.AWAITING_PAYMENT;
     }
     if (orderState instanceof OrderAwaitingPreparationState) {
-      return OrderStateEnum.AWAITING_PREPARATION;
+      return OrderStateEnum.RECEIVED;
     }
     if (orderState instanceof OrderCancelledState) {
       return OrderStateEnum.CANCELLED;
@@ -157,7 +155,7 @@ public interface OrderMapper {
       return OrderStateEnum.IN_PREPARATION;
     }
     if (orderState instanceof OrderPickupReadyState) {
-      return OrderStateEnum.PICKUP_READY;
+      return OrderStateEnum.READY;
     }
     throw new OrderOperationNotAllowedException("mapState");
   }

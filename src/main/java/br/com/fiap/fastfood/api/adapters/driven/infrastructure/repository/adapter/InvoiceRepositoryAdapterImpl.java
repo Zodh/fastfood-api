@@ -3,16 +3,14 @@ package br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.adapt
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.invoice.InvoiceEntity;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.InvoiceMapper;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.invoice.InvoiceRepository;
-import br.com.fiap.fastfood.api.core.application.ports.repository.InvoiceRepositoryPort;
+import br.com.fiap.fastfood.api.core.application.port.repository.InvoiceRepositoryPort;
 import br.com.fiap.fastfood.api.core.domain.model.invoice.Invoice;
-import br.com.fiap.fastfood.api.core.domain.model.invoice.state.InvoiceState;
 import java.util.Collections;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
-import org.springframework.util.CollectionUtils;
 
 @Component
 public class InvoiceRepositoryAdapterImpl implements InvoiceRepositoryPort {

@@ -1,5 +1,7 @@
 package br.com.fiap.fastfood.api.adapters.driver.controller;
 
+import br.com.fiap.fastfood.api.adapters.driven.infrastructure.email.ActivationCodeLinkGenerator;
+import br.com.fiap.fastfood.api.adapters.driven.infrastructure.email.EmailSender;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.CollaboratorMapper;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.CollaboratorMapperImpl;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.CustomerMapper;
@@ -10,20 +12,33 @@ import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.OrderMappe
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.OrderMapperImpl;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.OrderProductMapper;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.OrderProductMapperImpl;
+import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.adapter.CustomerRepositoryAdapterImpl;
+import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.adapter.InvoiceRepositoryAdapterImpl;
+import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.adapter.MenuProductRepositoryAdapterImpl;
+import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.adapter.OrderProductRepositoryAdapterImpl;
+import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.adapter.OrderRepositoryAdapterImpl;
+import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.person.activation.ActivationCodeRepositoryAdapterImpl;
 import br.com.fiap.fastfood.api.adapters.driver.dto.invoice.InvoiceDTO;
 import br.com.fiap.fastfood.api.adapters.driver.dto.order.CreateOrderRequestDTO;
 import br.com.fiap.fastfood.api.adapters.driver.dto.order.OrderDTO;
 import br.com.fiap.fastfood.api.adapters.driver.dto.order.PaidOrderResponseDTO;
 import br.com.fiap.fastfood.api.adapters.driver.dto.product.OrderProductDTO;
+import br.com.fiap.fastfood.api.core.application.policy.OrderInvoicePolicyPortImpl;
+import br.com.fiap.fastfood.api.core.application.service.CustomerServicePortImpl;
+import br.com.fiap.fastfood.api.core.application.service.InvoiceServicePortImpl;
+import br.com.fiap.fastfood.api.core.application.service.MenuProductServicePortImpl;
+import br.com.fiap.fastfood.api.core.application.service.OrderProductServicePortImpl;
+import br.com.fiap.fastfood.api.core.application.service.OrderServicePortImpl;
 import br.com.fiap.fastfood.api.core.domain.model.invoice.Invoice;
 import br.com.fiap.fastfood.api.core.domain.model.order.Order;
 import br.com.fiap.fastfood.api.core.domain.model.person.Collaborator;
 import br.com.fiap.fastfood.api.core.domain.model.person.Customer;
 import br.com.fiap.fastfood.api.core.domain.model.product.OrderProduct;
-import br.com.fiap.fastfood.api.core.domain.ports.inbound.InvoiceServicePort;
-import br.com.fiap.fastfood.api.core.domain.ports.inbound.OrderServicePort;
+import br.com.fiap.fastfood.api.core.application.port.inbound.service.InvoiceServicePort;
+import br.com.fiap.fastfood.api.core.application.port.inbound.service.OrderServicePort;
 import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -48,9 +63,22 @@ public class OrderController {
   private final InvoiceMapper invoiceMapper;
 
   @Autowired
-  public OrderController(OrderServicePort orderServicePort, InvoiceServicePort invoiceServicePort) {
-    this.orderServicePort = orderServicePort;
-    this.invoiceServicePort = invoiceServicePort;
+  public OrderController(
+      OrderRepositoryAdapterImpl orderRepositoryAdapter,
+      CustomerRepositoryAdapterImpl customerRepositoryAdapter,
+      EmailSender emailSenderAdapter,
+      ActivationCodeRepositoryAdapterImpl activationCodeRepositoryAdapter,
+      ActivationCodeLinkGenerator activationCodeLinkGenerator,
+      OrderProductRepositoryAdapterImpl orderProductRepositoryAdapter,
+      MenuProductRepositoryAdapterImpl menuProductRepositoryAdapter,
+      InvoiceRepositoryAdapterImpl invoiceRepositoryAdapter
+  ) {
+    CustomerServicePortImpl customerServicePortImpl = new CustomerServicePortImpl(customerRepositoryAdapter, emailSenderAdapter, activationCodeRepositoryAdapter, activationCodeLinkGenerator);
+    MenuProductServicePortImpl menuProductServicePortImpl = new MenuProductServicePortImpl(menuProductRepositoryAdapter);
+    OrderProductServicePortImpl orderProductServicePort = new OrderProductServicePortImpl(orderProductRepositoryAdapter, menuProductServicePortImpl);
+    OrderInvoicePolicyPortImpl orderInvoicePolicyPort = new OrderInvoicePolicyPortImpl(invoiceRepositoryAdapter, orderRepositoryAdapter);
+    this.orderServicePort = new OrderServicePortImpl(orderRepositoryAdapter, customerServicePortImpl, orderProductServicePort, orderInvoicePolicyPort);
+    this.invoiceServicePort = new InvoiceServicePortImpl(invoiceRepositoryAdapter, orderInvoicePolicyPort);
     this.customerMapper = new CustomerMapperImpl();
     this.collaboratorMapper = new CollaboratorMapperImpl();
     this.orderMapper = new OrderMapperImpl();
@@ -99,7 +127,7 @@ public class OrderController {
     Order order = orderServicePort.getById(id);
     invoiceServicePort.executeFakeCheckout(order);
     PaidOrderResponseDTO result = PaidOrderResponseDTO.builder().orderNumber(order.getId()).build();
-    return ResponseEntity.status(HttpStatus.NO_CONTENT).body(result);
+    return ResponseEntity.status(HttpStatus.OK).body(result);
   }
 
   @GetMapping("/{id}/invoice")

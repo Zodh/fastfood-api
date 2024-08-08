@@ -65,6 +65,6 @@ public class OrderPickupReadyState extends OrderState {
 
   @Override
   public OrderStateEnum getDescription() {
-    return OrderStateEnum.PICKUP_READY;
+    return OrderStateEnum.READY;
   }
 }

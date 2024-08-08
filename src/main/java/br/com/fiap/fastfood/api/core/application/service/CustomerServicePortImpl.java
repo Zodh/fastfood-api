@@ -1,20 +1,17 @@
 package br.com.fiap.fastfood.api.core.application.service;
 
 import br.com.fiap.fastfood.api.core.application.exception.NotFoundException;
-import br.com.fiap.fastfood.api.core.application.ports.outbound.ActivationCodeLinkGeneratorPort;
-import br.com.fiap.fastfood.api.core.application.ports.repository.ActivationCodeRepositoryPort;
-import br.com.fiap.fastfood.api.core.application.ports.repository.CustomerRepositoryPort;
+import br.com.fiap.fastfood.api.core.application.port.outbound.ActivationCodeLinkGeneratorPort;
+import br.com.fiap.fastfood.api.core.application.port.repository.ActivationCodeRepositoryPort;
+import br.com.fiap.fastfood.api.core.application.port.repository.CustomerRepositoryPort;
 import br.com.fiap.fastfood.api.core.domain.aggregate.ServiceAggregate;
 import br.com.fiap.fastfood.api.core.domain.model.person.Customer;
 import br.com.fiap.fastfood.api.core.domain.model.person.PersonValidator;
 import br.com.fiap.fastfood.api.core.domain.model.person.vo.Document;
-import br.com.fiap.fastfood.api.core.domain.ports.inbound.CustomerServicePort;
-import br.com.fiap.fastfood.api.core.domain.ports.outbound.EmailSenderPort;
+import br.com.fiap.fastfood.api.core.application.port.inbound.service.CustomerServicePort;
+import br.com.fiap.fastfood.api.core.domain.port.outbound.EmailSenderPort;
 import java.util.UUID;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-@Service
 public class CustomerServicePortImpl implements CustomerServicePort {
 
   private final CustomerRepositoryPort repository;
@@ -22,7 +19,6 @@ public class CustomerServicePortImpl implements CustomerServicePort {
   private final ActivationCodeService activationCodeService;
   private final PersonValidator personValidator;
 
-  @Autowired
   public CustomerServicePortImpl(
       CustomerRepositoryPort repository,
       EmailSenderPort emailSender,

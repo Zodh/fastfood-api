@@ -9,7 +9,7 @@ import br.com.fiap.fastfood.api.core.domain.model.order.state.impl.OrderInCreati
 import br.com.fiap.fastfood.api.core.domain.model.person.Collaborator;
 import br.com.fiap.fastfood.api.core.domain.model.person.Customer;
 import br.com.fiap.fastfood.api.core.domain.model.person.PersonValidator;
-import br.com.fiap.fastfood.api.core.domain.ports.outbound.EmailSenderPort;
+import br.com.fiap.fastfood.api.core.domain.port.outbound.EmailSenderPort;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Data;
