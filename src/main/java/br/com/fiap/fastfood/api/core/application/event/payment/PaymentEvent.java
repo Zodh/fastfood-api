@@ -1,4 +1,4 @@
-package br.com.fiap.fastfood.api.core.application.event;
+package br.com.fiap.fastfood.api.core.application.event.payment;
 
 import br.com.fiap.fastfood.api.core.domain.model.order.Order;
 import lombok.Getter;

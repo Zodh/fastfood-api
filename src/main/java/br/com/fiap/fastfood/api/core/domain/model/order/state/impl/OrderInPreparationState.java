@@ -34,13 +34,18 @@ public class OrderInPreparationState extends OrderState {
   }
 
   @Override
+  public void setAwaitingPreparation() {
+    throw new OrderOperationNotAllowedException();
+  }
+
+  @Override
   public void initializePreparation() {
     throw new OrderOperationNotAllowedException();
   }
 
   @Override
   public void setReadyToCollection() {
-    this.order.changeState(new OrderInPreparationState(this.order));
+    this.order.changeState(new OrderPickupReadyState(this.order));
   }
 
   @Override

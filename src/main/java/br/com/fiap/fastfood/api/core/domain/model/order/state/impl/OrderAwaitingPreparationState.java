@@ -35,6 +35,11 @@ public class OrderAwaitingPreparationState extends OrderState {
   }
 
   @Override
+  public void setAwaitingPreparation() {
+    throw new OrderOperationNotAllowedException();
+  }
+
+  @Override
   public void initializePreparation() {
     this.order.changeState(new OrderInPreparationState(this.order));
   }

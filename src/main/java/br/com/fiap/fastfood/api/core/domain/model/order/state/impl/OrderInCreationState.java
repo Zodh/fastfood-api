@@ -53,6 +53,11 @@ public class OrderInCreationState extends OrderState {
   }
 
   @Override
+  public void setAwaitingPreparation() {
+    throw new OrderOperationNotAllowedException();
+  }
+
+  @Override
   public void initializePreparation() {
     throw new OrderOperationNotAllowedException();
   }
