@@ -18,6 +18,7 @@ public abstract class OrderState {
   public abstract void removeOrderProduct(Long orderProductId);
   public abstract void confirmOrder(); // Neste momento, o pedido será cobrado.
   public abstract void cancelOrder();
+  public abstract void setAwaitingPreparation();
   public abstract void initializePreparation();
   public abstract void setReadyToCollection();
   public abstract void finish();

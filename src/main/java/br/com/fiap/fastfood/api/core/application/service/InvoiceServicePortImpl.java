@@ -1,5 +1,7 @@
 package br.com.fiap.fastfood.api.core.application.service;
 
+import br.com.fiap.fastfood.api.core.application.event.payment.PaymentEvent;
+import br.com.fiap.fastfood.api.core.application.event.payment.PaymentOperationEnum;
 import br.com.fiap.fastfood.api.core.application.ports.repository.InvoiceRepositoryPort;
 import br.com.fiap.fastfood.api.core.domain.aggregate.InvoiceAggregate;
 import br.com.fiap.fastfood.api.core.domain.model.invoice.Invoice;
@@ -10,6 +12,7 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.lang.NonNull;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -20,9 +23,11 @@ public class InvoiceServicePortImpl implements InvoiceServicePort {
     private final InvoiceRepositoryPort repository;
     @Value("${invoice.expiration.time}")
     private int invoiceExpirationTime;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Autowired
-    public InvoiceServicePortImpl(InvoiceRepositoryPort repository) {
+    public InvoiceServicePortImpl(InvoiceRepositoryPort repository, ApplicationEventPublisher eventPublisher) {
+        this.eventPublisher = eventPublisher;
         this.repository = repository;
     }
 
@@ -38,7 +43,9 @@ public class InvoiceServicePortImpl implements InvoiceServicePort {
     public Invoice executeFakeCheckout(Order order) {
         InvoiceAggregate invoiceAggregate = new InvoiceAggregate(order.getInvoice());
         Invoice invoice = invoiceAggregate.pay();
-        return repository.save(invoice);
+        Invoice result = repository.save(invoice);
+        eventPublisher.publishEvent(new PaymentEvent(this, order, PaymentOperationEnum.PAY));
+        return result;
     }
 
     @Override
@@ -50,7 +57,6 @@ public class InvoiceServicePortImpl implements InvoiceServicePort {
 
     @Override
     public List<Invoice> getInvoicesByOrder(Long orderId) {
-
         return repository.findByOrderId(orderId);
     }
 

@@ -13,6 +13,7 @@ import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.OrderProdu
 import br.com.fiap.fastfood.api.adapters.driver.dto.invoice.InvoiceDTO;
 import br.com.fiap.fastfood.api.adapters.driver.dto.order.CreateOrderRequestDTO;
 import br.com.fiap.fastfood.api.adapters.driver.dto.order.OrderDTO;
+import br.com.fiap.fastfood.api.adapters.driver.dto.order.PaidOrderResponseDTO;
 import br.com.fiap.fastfood.api.adapters.driver.dto.product.OrderProductDTO;
 import br.com.fiap.fastfood.api.core.domain.model.invoice.Invoice;
 import br.com.fiap.fastfood.api.core.domain.model.order.Order;
@@ -24,7 +25,6 @@ import br.com.fiap.fastfood.api.core.domain.ports.inbound.OrderServicePort;
 import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -95,10 +95,11 @@ public class OrderController {
   }
 
   @PatchMapping("/{id}/pay")
-  public ResponseEntity<Void> executeFakeCheckout(@PathVariable Long id) {
+  public ResponseEntity<PaidOrderResponseDTO> executeFakeCheckout(@PathVariable Long id) {
     Order order = orderServicePort.getById(id);
     invoiceServicePort.executeFakeCheckout(order);
-    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    PaidOrderResponseDTO result = PaidOrderResponseDTO.builder().orderNumber(order.getId()).build();
+    return ResponseEntity.status(HttpStatus.NO_CONTENT).body(result);
   }
 
   @GetMapping("/{id}/invoice")
@@ -111,6 +112,24 @@ public class OrderController {
   @DeleteMapping("/{id}/cancel")
   public ResponseEntity<Void> cancel(@PathVariable Long id) {
     orderServicePort.cancel(id);
+    return ResponseEntity.noContent().build();
+  }
+
+  @PatchMapping("/{id}/prepare")
+  public ResponseEntity<Void> startOrderPreparation(@PathVariable Long id) {
+    orderServicePort.prepare(id);
+    return ResponseEntity.noContent().build();
+  }
+
+  @PatchMapping("/{id}/ready-to-pick")
+  public ResponseEntity<Void> turnOrderReadyToPick(@PathVariable Long id) {
+    orderServicePort.turnReadyToPick(id);
+    return ResponseEntity.noContent().build();
+  }
+
+  @PatchMapping("/{id}/finish")
+  public ResponseEntity<Void> finishOrder(@PathVariable Long id) {
+    orderServicePort.finish(id);
     return ResponseEntity.noContent().build();
   }
 

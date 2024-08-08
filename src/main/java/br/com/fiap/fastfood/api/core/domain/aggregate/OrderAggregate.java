@@ -35,4 +35,20 @@ public class OrderAggregate {
     root.getState().cancelOrder();
   }
 
+  public void turnReadyToPrepare() {
+    root.getState().setAwaitingPreparation();
+  }
+
+  public void initializePreparation() {
+    root.getState().initializePreparation();
+  }
+
+  public void setReadyToCollection() {
+    root.getState().setReadyToCollection();
+  }
+
+  public void finishOrder () {
+    root.getState().finish();
+  }
+
 }

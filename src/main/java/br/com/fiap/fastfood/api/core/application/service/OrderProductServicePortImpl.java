@@ -1,6 +1,5 @@
 package br.com.fiap.fastfood.api.core.application.service;
 
-import br.com.fiap.fastfood.api.core.application.exception.ApplicationException;
 import br.com.fiap.fastfood.api.core.application.exception.NotFoundException;
 import br.com.fiap.fastfood.api.core.application.ports.repository.OrderProductRepositoryPort;
 import br.com.fiap.fastfood.api.core.domain.exception.DomainException;
@@ -12,7 +11,6 @@ import br.com.fiap.fastfood.api.core.domain.model.product.OrderProductValidator;
 import br.com.fiap.fastfood.api.core.domain.model.product.Product;
 import br.com.fiap.fastfood.api.core.domain.ports.inbound.MenuProductServicePort;
 import br.com.fiap.fastfood.api.core.domain.ports.inbound.OrderProductServicePort;
-import br.com.fiap.fastfood.api.core.domain.ports.inbound.OrderServicePort;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

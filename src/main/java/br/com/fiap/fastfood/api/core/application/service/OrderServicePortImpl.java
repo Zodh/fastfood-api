@@ -1,7 +1,8 @@
 package br.com.fiap.fastfood.api.core.application.service;
 
-import br.com.fiap.fastfood.api.core.application.event.PaymentEvent;
-import br.com.fiap.fastfood.api.core.application.event.PaymentOperationEnum;
+import br.com.fiap.fastfood.api.core.application.event.follow.up.FollowUpEvent;
+import br.com.fiap.fastfood.api.core.application.event.payment.PaymentEvent;
+import br.com.fiap.fastfood.api.core.application.event.payment.PaymentOperationEnum;
 import br.com.fiap.fastfood.api.core.application.exception.ApplicationException;
 import br.com.fiap.fastfood.api.core.application.exception.NotFoundException;
 import br.com.fiap.fastfood.api.core.application.ports.repository.OrderRepositoryPort;
@@ -86,6 +87,45 @@ public class OrderServicePortImpl implements OrderServicePort {
     Order confirmedOrder = save(order);
     eventPublisher.publishEvent(new PaymentEvent(this, confirmedOrder, PaymentOperationEnum.GENERATE));
     return confirmedOrder;
+  }
+
+  @Override
+  public void turnReadyToPrepare(Long orderId) {
+    Order order = getById(orderId);
+    OrderAggregate aggregate = new OrderAggregate(order);
+    aggregate.turnReadyToPrepare();
+    Order confirmedOrder = save(order);
+    eventPublisher.publishEvent(new PaymentEvent(this, confirmedOrder, PaymentOperationEnum.GENERATE));
+  }
+
+  @Override
+  public void prepare(Long orderId) {
+    Order order = getById(orderId);
+    OrderAggregate aggregate = new OrderAggregate(order);
+    aggregate.initializePreparation();
+    orderRepositoryPort.save(order);
+    FollowUpEvent followUpEvent = new FollowUpEvent(this, order);
+    eventPublisher.publishEvent(followUpEvent);
+  }
+
+  @Override
+  public void turnReadyToPick(Long orderId) {
+    Order order = getById(orderId);
+    OrderAggregate aggregate = new OrderAggregate(order);
+    aggregate.setReadyToCollection();
+    orderRepositoryPort.save(order);
+    FollowUpEvent followUpEvent = new FollowUpEvent(this, order);
+    eventPublisher.publishEvent(followUpEvent);
+  }
+
+  @Override
+  public void finish(Long orderId) {
+    Order order = getById(orderId);
+    OrderAggregate aggregate = new OrderAggregate(order);
+    aggregate.finishOrder();
+    orderRepositoryPort.save(order);
+    FollowUpEvent followUpEvent = new FollowUpEvent(this, order);
+    eventPublisher.publishEvent(followUpEvent);
   }
 
   private Order save(Order order) {
