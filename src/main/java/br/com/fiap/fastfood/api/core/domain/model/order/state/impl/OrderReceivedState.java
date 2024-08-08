@@ -7,20 +7,21 @@ import br.com.fiap.fastfood.api.core.domain.model.person.Collaborator;
 import br.com.fiap.fastfood.api.core.domain.model.person.Customer;
 import br.com.fiap.fastfood.api.core.domain.model.product.OrderProduct;
 
-public class OrderAwaitingPaymentState extends OrderState {
+// TODO: Esse estado será utilizado pelo checkout fake. Criado em: 03/08/2024 ás 04:48:49.
+public class OrderReceivedState extends OrderState {
 
-  public OrderAwaitingPaymentState(Order order) {
+  public OrderReceivedState(Order order) {
     super(order);
   }
 
   @Override
   public void includeOrderProduct(OrderProduct orderProduct) {
-    throw new OrderOperationNotAllowedException("orderProduct");
+    throw new OrderOperationNotAllowedException();
   }
 
   @Override
   public void removeOrderProduct(Long orderProductId) {
-    throw new OrderOperationNotAllowedException("order.orderProduct");
+    throw new OrderOperationNotAllowedException();
   }
 
   @Override
@@ -35,12 +36,12 @@ public class OrderAwaitingPaymentState extends OrderState {
 
   @Override
   public void setAwaitingPreparation() {
-    this.order.changeState(new OrderReceivedState(this.order));
+    throw new OrderOperationNotAllowedException();
   }
 
   @Override
   public void initializePreparation() {
-    throw new OrderOperationNotAllowedException();
+    this.order.changeState(new OrderInPreparationState(this.order));
   }
 
   @Override
@@ -65,6 +66,6 @@ public class OrderAwaitingPaymentState extends OrderState {
 
   @Override
   public OrderStateEnum getDescription() {
-    return OrderStateEnum.AWAITING_PAYMENT;
+    return OrderStateEnum.RECEIVED;
   }
 }

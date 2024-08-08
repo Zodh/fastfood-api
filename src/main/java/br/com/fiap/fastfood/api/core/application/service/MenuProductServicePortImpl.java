@@ -1,25 +1,20 @@
 package br.com.fiap.fastfood.api.core.application.service;
 
 import br.com.fiap.fastfood.api.core.application.exception.NotFoundException;
-import br.com.fiap.fastfood.api.core.application.ports.repository.MenuProductRepositoryPort;
+import br.com.fiap.fastfood.api.core.application.port.repository.MenuProductRepositoryPort;
 import br.com.fiap.fastfood.api.core.domain.aggregate.MenuProductAggregate;
 import br.com.fiap.fastfood.api.core.domain.model.product.MenuProduct;
 import br.com.fiap.fastfood.api.core.domain.model.product.MenuProductValidator;
-import br.com.fiap.fastfood.api.core.domain.ports.inbound.MenuProductServicePort;
+import br.com.fiap.fastfood.api.core.application.port.inbound.service.MenuProductServicePort;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
-@Service
 public class MenuProductServicePortImpl implements MenuProductServicePort {
 
   private final MenuProductRepositoryPort repository;
   private final MenuProductValidator validator;
 
-  @Autowired
   public MenuProductServicePortImpl(
       MenuProductRepositoryPort repository
   ) {
@@ -79,7 +74,7 @@ public class MenuProductServicePortImpl implements MenuProductServicePort {
   }
 
   private void fetchIngredients(MenuProduct menuProduct) {
-    if (Objects.nonNull(menuProduct) && !CollectionUtils.isEmpty(menuProduct.getIngredients())) {
+    if (Objects.nonNull(menuProduct) && Objects.nonNull(menuProduct.getIngredients()) && !menuProduct.getIngredients().isEmpty()) {
       List<MenuProduct> ingredients = menuProduct.getIngredients().stream()
           .map(i -> this.getById(i.getId())).toList();
       menuProduct.setIngredients(ingredients);

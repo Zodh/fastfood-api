@@ -1,6 +1,5 @@
 package br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper;
 
-import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.invoice.InvoiceEntity;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.order.OrderEntity;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.person.CollaboratorEntity;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.person.CustomerEntity;
@@ -9,18 +8,17 @@ import br.com.fiap.fastfood.api.adapters.driver.dto.collaborator.CollaboratorDTO
 import br.com.fiap.fastfood.api.adapters.driver.dto.customer.CustomerDTO;
 import br.com.fiap.fastfood.api.adapters.driver.dto.order.OrderDTO;
 import br.com.fiap.fastfood.api.adapters.driver.dto.product.OrderProductDTO;
-import br.com.fiap.fastfood.api.core.domain.model.invoice.Invoice;
 import br.com.fiap.fastfood.api.core.domain.model.order.Order;
 import br.com.fiap.fastfood.api.core.domain.model.order.OrderStateEnum;
 import br.com.fiap.fastfood.api.core.domain.model.order.state.OrderState;
 import br.com.fiap.fastfood.api.core.domain.model.order.state.impl.OrderAwaitingPaymentState;
-import br.com.fiap.fastfood.api.core.domain.model.order.state.impl.OrderAwaitingPreparationState;
+import br.com.fiap.fastfood.api.core.domain.model.order.state.impl.OrderReceivedState;
 import br.com.fiap.fastfood.api.core.domain.model.order.state.impl.OrderCancelledState;
 import br.com.fiap.fastfood.api.core.domain.model.order.state.impl.OrderFinishedState;
 import br.com.fiap.fastfood.api.core.domain.model.order.state.impl.OrderInCreationState;
 import br.com.fiap.fastfood.api.core.domain.model.order.state.impl.OrderInPreparationState;
 import br.com.fiap.fastfood.api.core.domain.model.order.state.impl.OrderOperationNotAllowedException;
-import br.com.fiap.fastfood.api.core.domain.model.order.state.impl.OrderPickupReadyState;
+import br.com.fiap.fastfood.api.core.domain.model.order.state.impl.OrderReadyState;
 import br.com.fiap.fastfood.api.core.domain.model.person.Collaborator;
 import br.com.fiap.fastfood.api.core.domain.model.person.Customer;
 import br.com.fiap.fastfood.api.core.domain.model.product.OrderProduct;
@@ -100,8 +98,8 @@ public interface OrderMapper {
       case AWAITING_PAYMENT -> {
         return new OrderAwaitingPaymentState(order);
       }
-      case AWAITING_PREPARATION -> {
-        return new OrderAwaitingPreparationState(order);
+      case RECEIVED -> {
+        return new OrderReceivedState(order);
       }
       case CANCELLED -> {
         return new OrderCancelledState(order);
@@ -112,8 +110,8 @@ public interface OrderMapper {
       case IN_PREPARATION -> {
         return new OrderInPreparationState(order);
       }
-      case PICKUP_READY -> {
-        return new OrderPickupReadyState(order);
+      case READY -> {
+        return new OrderReadyState(order);
       }
     }
     throw new OrderOperationNotAllowedException("mapStateImpl");
@@ -141,8 +139,8 @@ public interface OrderMapper {
     if (orderState instanceof OrderAwaitingPaymentState) {
       return OrderStateEnum.AWAITING_PAYMENT;
     }
-    if (orderState instanceof OrderAwaitingPreparationState) {
-      return OrderStateEnum.AWAITING_PREPARATION;
+    if (orderState instanceof OrderReceivedState) {
+      return OrderStateEnum.RECEIVED;
     }
     if (orderState instanceof OrderCancelledState) {
       return OrderStateEnum.CANCELLED;
@@ -156,8 +154,8 @@ public interface OrderMapper {
     if (orderState instanceof OrderInPreparationState) {
       return OrderStateEnum.IN_PREPARATION;
     }
-    if (orderState instanceof OrderPickupReadyState) {
-      return OrderStateEnum.PICKUP_READY;
+    if (orderState instanceof OrderReadyState) {
+      return OrderStateEnum.READY;
     }
     throw new OrderOperationNotAllowedException("mapState");
   }

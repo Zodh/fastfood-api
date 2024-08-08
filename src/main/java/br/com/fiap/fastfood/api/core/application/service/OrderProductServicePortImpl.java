@@ -1,7 +1,7 @@
 package br.com.fiap.fastfood.api.core.application.service;
 
 import br.com.fiap.fastfood.api.core.application.exception.NotFoundException;
-import br.com.fiap.fastfood.api.core.application.ports.repository.OrderProductRepositoryPort;
+import br.com.fiap.fastfood.api.core.application.port.repository.OrderProductRepositoryPort;
 import br.com.fiap.fastfood.api.core.domain.exception.DomainException;
 import br.com.fiap.fastfood.api.core.domain.exception.ErrorDetail;
 import br.com.fiap.fastfood.api.core.domain.model.order.Order;
@@ -9,27 +9,21 @@ import br.com.fiap.fastfood.api.core.domain.model.product.MenuProduct;
 import br.com.fiap.fastfood.api.core.domain.model.product.OrderProduct;
 import br.com.fiap.fastfood.api.core.domain.model.product.OrderProductValidator;
 import br.com.fiap.fastfood.api.core.domain.model.product.Product;
-import br.com.fiap.fastfood.api.core.domain.ports.inbound.MenuProductServicePort;
-import br.com.fiap.fastfood.api.core.domain.ports.inbound.OrderProductServicePort;
+import br.com.fiap.fastfood.api.core.application.port.inbound.service.MenuProductServicePort;
+import br.com.fiap.fastfood.api.core.application.port.inbound.service.OrderProductServicePort;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
-
-@Service
 public class OrderProductServicePortImpl implements OrderProductServicePort {
 
     private final MenuProductServicePort menuProductServicePort;
-    private final OrderProductValidator orderProductValidator = new OrderProductValidator();
     private final OrderProductRepositoryPort orderProductRepository;
+    private final OrderProductValidator orderProductValidator = new OrderProductValidator();
 
-    @Autowired
     public OrderProductServicePortImpl(OrderProductRepositoryPort orderProductRepository, MenuProductServicePort menuProductServicePort) {
         this.orderProductRepository = orderProductRepository;
         this.menuProductServicePort = menuProductServicePort;
@@ -39,7 +33,7 @@ public class OrderProductServicePortImpl implements OrderProductServicePort {
     public OrderProduct create(Order order, OrderProduct orderProduct) {
         OrderProduct validOrderProduct = validateAndDetail(orderProduct);
         validOrderProduct.setIngredients(validOrderProduct.getIngredients().stream().map(ingredient -> orderProductRepository.save(null, ingredient)).collect(Collectors.toList()));
-        if (!CollectionUtils.isEmpty(validOrderProduct.getOptionals())) {
+        if (Objects.nonNull(validOrderProduct.getOptionals()) && !validOrderProduct.getOptionals().isEmpty()) {
             validOrderProduct.setOptionals(validOrderProduct.getOptionals().stream().map(optional -> orderProductRepository.save(null, optional)).collect(Collectors.toList()));
         }
         return orderProductRepository.save(order, validOrderProduct);
@@ -89,13 +83,13 @@ public class OrderProductServicePortImpl implements OrderProductServicePort {
         OrderProduct orderProduct = getById(id);
         List<Long> allOrderProductIdsToDelete = new ArrayList<>();
         allOrderProductIdsToDelete.add(id);
-        if (!CollectionUtils.isEmpty(orderProduct.getIngredients())) {
+        if (Objects.nonNull(orderProduct.getIngredients()) && !orderProduct.getIngredients().isEmpty()) {
             List<Long> ingredients = orderProduct.getIngredients().stream().filter(i -> Objects.nonNull(i) && Objects.nonNull(i.getId())).map(
                 Product::getId).toList();
             orderProductRepository.deleteIngredients(ingredients);
             allOrderProductIdsToDelete.addAll(ingredients);
         }
-        if (!CollectionUtils.isEmpty(orderProduct.getOptionals())) {
+        if (Objects.nonNull(orderProduct.getOptionals()) && !orderProduct.getOptionals().isEmpty()) {
             List<Long> optionals = orderProduct.getOptionals().stream().filter(o -> Objects.nonNull(o) && Objects.nonNull(o.getId())).map(
                 Product::getId).toList();
             orderProductRepository.deleteOptionals(optionals);
@@ -117,7 +111,7 @@ public class OrderProductServicePortImpl implements OrderProductServicePort {
         findMenuProductAndClone(orderProduct);
 
         List<ErrorDetail> errors = orderProductValidator.validate(orderProduct);
-        if (!CollectionUtils.isEmpty(errors)) {
+        if (Objects.nonNull(errors) && !errors.isEmpty()) {
             throw new DomainException(errors);
         }
 
@@ -143,7 +137,7 @@ public class OrderProductServicePortImpl implements OrderProductServicePort {
     }
 
     private void fetchOptionalsData(OrderProduct orderProduct) {
-        if (!CollectionUtils.isEmpty(orderProduct.getOptionals())) {
+        if (Objects.nonNull(orderProduct.getOptionals()) && !orderProduct.getOptionals().isEmpty()) {
             List<Long> ids = orderProduct.getOptionals().stream().map(op -> op.getMenuProduct().getId()).toList();
             Map<Long, MenuProduct> optionalsById = menuProductServicePort.findAllById(ids).stream().collect(Collectors.toMap(
                 Product::getId, Function.identity()));

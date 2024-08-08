@@ -6,7 +6,7 @@ import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.CustomerMa
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.person.CustomerRepository;
 import br.com.fiap.fastfood.api.core.domain.model.person.Customer;
 import br.com.fiap.fastfood.api.core.domain.model.person.vo.Document;
-import br.com.fiap.fastfood.api.core.application.ports.repository.CustomerRepositoryPort;
+import br.com.fiap.fastfood.api.core.application.port.repository.CustomerRepositoryPort;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

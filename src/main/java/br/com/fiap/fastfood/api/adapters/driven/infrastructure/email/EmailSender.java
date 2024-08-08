@@ -1,6 +1,6 @@
 package br.com.fiap.fastfood.api.adapters.driven.infrastructure.email;
 
-import br.com.fiap.fastfood.api.core.domain.ports.outbound.EmailSenderPort;
+import br.com.fiap.fastfood.api.core.domain.port.outbound.EmailSenderPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;

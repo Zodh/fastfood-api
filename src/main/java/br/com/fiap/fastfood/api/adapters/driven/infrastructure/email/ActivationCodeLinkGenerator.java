@@ -2,7 +2,7 @@ package br.com.fiap.fastfood.api.adapters.driven.infrastructure.email;
 
 import br.com.fiap.fastfood.api.core.application.exception.ApplicationException;
 import br.com.fiap.fastfood.api.core.domain.model.person.activation.ActivationCode;
-import br.com.fiap.fastfood.api.core.application.ports.outbound.ActivationCodeLinkGeneratorPort;
+import br.com.fiap.fastfood.api.core.application.port.outbound.ActivationCodeLinkGeneratorPort;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import org.springframework.beans.factory.annotation.Value;

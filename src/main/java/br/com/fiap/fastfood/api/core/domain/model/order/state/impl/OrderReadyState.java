@@ -7,20 +7,20 @@ import br.com.fiap.fastfood.api.core.domain.model.person.Collaborator;
 import br.com.fiap.fastfood.api.core.domain.model.person.Customer;
 import br.com.fiap.fastfood.api.core.domain.model.product.OrderProduct;
 
-public class OrderAwaitingPaymentState extends OrderState {
+public class OrderReadyState extends OrderState {
 
-  public OrderAwaitingPaymentState(Order order) {
+  public OrderReadyState(Order order) {
     super(order);
   }
 
   @Override
   public void includeOrderProduct(OrderProduct orderProduct) {
-    throw new OrderOperationNotAllowedException("orderProduct");
+    throw new OrderOperationNotAllowedException();
   }
 
   @Override
   public void removeOrderProduct(Long orderProductId) {
-    throw new OrderOperationNotAllowedException("order.orderProduct");
+    throw new OrderOperationNotAllowedException();
   }
 
   @Override
@@ -35,7 +35,7 @@ public class OrderAwaitingPaymentState extends OrderState {
 
   @Override
   public void setAwaitingPreparation() {
-    this.order.changeState(new OrderReceivedState(this.order));
+    throw new OrderOperationNotAllowedException();
   }
 
   @Override
@@ -50,7 +50,7 @@ public class OrderAwaitingPaymentState extends OrderState {
 
   @Override
   public void finish() {
-    throw new OrderOperationNotAllowedException();
+    this.order.changeState(new OrderFinishedState(this.order));
   }
 
   @Override
@@ -65,6 +65,6 @@ public class OrderAwaitingPaymentState extends OrderState {
 
   @Override
   public OrderStateEnum getDescription() {
-    return OrderStateEnum.AWAITING_PAYMENT;
+    return OrderStateEnum.READY;
   }
 }
