@@ -35,7 +35,7 @@ public class OrderAwaitingPaymentState extends OrderState {
 
   @Override
   public void setAwaitingPreparation() {
-    this.order.changeState(new OrderAwaitingPreparationState(this.order));
+    this.order.changeState(new OrderReceivedState(this.order));
   }
 
   @Override

@@ -45,7 +45,7 @@ public class OrderInPreparationState extends OrderState {
 
   @Override
   public void setReadyToCollection() {
-    this.order.changeState(new OrderPickupReadyState(this.order));
+    this.order.changeState(new OrderReadyState(this.order));
   }
 
   @Override

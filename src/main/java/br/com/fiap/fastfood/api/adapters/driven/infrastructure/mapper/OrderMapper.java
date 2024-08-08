@@ -12,13 +12,13 @@ import br.com.fiap.fastfood.api.core.domain.model.order.Order;
 import br.com.fiap.fastfood.api.core.domain.model.order.OrderStateEnum;
 import br.com.fiap.fastfood.api.core.domain.model.order.state.OrderState;
 import br.com.fiap.fastfood.api.core.domain.model.order.state.impl.OrderAwaitingPaymentState;
-import br.com.fiap.fastfood.api.core.domain.model.order.state.impl.OrderAwaitingPreparationState;
+import br.com.fiap.fastfood.api.core.domain.model.order.state.impl.OrderReceivedState;
 import br.com.fiap.fastfood.api.core.domain.model.order.state.impl.OrderCancelledState;
 import br.com.fiap.fastfood.api.core.domain.model.order.state.impl.OrderFinishedState;
 import br.com.fiap.fastfood.api.core.domain.model.order.state.impl.OrderInCreationState;
 import br.com.fiap.fastfood.api.core.domain.model.order.state.impl.OrderInPreparationState;
 import br.com.fiap.fastfood.api.core.domain.model.order.state.impl.OrderOperationNotAllowedException;
-import br.com.fiap.fastfood.api.core.domain.model.order.state.impl.OrderPickupReadyState;
+import br.com.fiap.fastfood.api.core.domain.model.order.state.impl.OrderReadyState;
 import br.com.fiap.fastfood.api.core.domain.model.person.Collaborator;
 import br.com.fiap.fastfood.api.core.domain.model.person.Customer;
 import br.com.fiap.fastfood.api.core.domain.model.product.OrderProduct;
@@ -99,7 +99,7 @@ public interface OrderMapper {
         return new OrderAwaitingPaymentState(order);
       }
       case RECEIVED -> {
-        return new OrderAwaitingPreparationState(order);
+        return new OrderReceivedState(order);
       }
       case CANCELLED -> {
         return new OrderCancelledState(order);
@@ -111,7 +111,7 @@ public interface OrderMapper {
         return new OrderInPreparationState(order);
       }
       case READY -> {
-        return new OrderPickupReadyState(order);
+        return new OrderReadyState(order);
       }
     }
     throw new OrderOperationNotAllowedException("mapStateImpl");
@@ -139,7 +139,7 @@ public interface OrderMapper {
     if (orderState instanceof OrderAwaitingPaymentState) {
       return OrderStateEnum.AWAITING_PAYMENT;
     }
-    if (orderState instanceof OrderAwaitingPreparationState) {
+    if (orderState instanceof OrderReceivedState) {
       return OrderStateEnum.RECEIVED;
     }
     if (orderState instanceof OrderCancelledState) {
@@ -154,7 +154,7 @@ public interface OrderMapper {
     if (orderState instanceof OrderInPreparationState) {
       return OrderStateEnum.IN_PREPARATION;
     }
-    if (orderState instanceof OrderPickupReadyState) {
+    if (orderState instanceof OrderReadyState) {
       return OrderStateEnum.READY;
     }
     throw new OrderOperationNotAllowedException("mapState");

@@ -8,9 +8,9 @@ import br.com.fiap.fastfood.api.core.domain.model.person.Customer;
 import br.com.fiap.fastfood.api.core.domain.model.product.OrderProduct;
 
 // TODO: Esse estado será utilizado pelo checkout fake. Criado em: 03/08/2024 ás 04:48:49.
-public class OrderAwaitingPreparationState extends OrderState {
+public class OrderReceivedState extends OrderState {
 
-  public OrderAwaitingPreparationState(Order order) {
+  public OrderReceivedState(Order order) {
     super(order);
   }
 

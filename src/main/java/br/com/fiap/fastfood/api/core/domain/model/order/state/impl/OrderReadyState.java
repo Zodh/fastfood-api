@@ -7,9 +7,9 @@ import br.com.fiap.fastfood.api.core.domain.model.person.Collaborator;
 import br.com.fiap.fastfood.api.core.domain.model.person.Customer;
 import br.com.fiap.fastfood.api.core.domain.model.product.OrderProduct;
 
-public class OrderPickupReadyState extends OrderState {
+public class OrderReadyState extends OrderState {
 
-  public OrderPickupReadyState(Order order) {
+  public OrderReadyState(Order order) {
     super(order);
   }
 
