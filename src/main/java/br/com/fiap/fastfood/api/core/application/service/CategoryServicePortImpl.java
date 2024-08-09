@@ -11,6 +11,8 @@ import br.com.fiap.fastfood.api.core.domain.ports.inbound.MenuProductServicePort
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,8 +31,8 @@ public class CategoryServicePortImpl implements CategoryServicePort {
   }
 
   @Override
-  public List<Category> getAll() {
-    return repository.getAll();
+  public Page<Category> getAll(Pageable pageable) {
+    return repository.getAll(pageable);
   }
 
   @Override

@@ -2,23 +2,18 @@ package br.com.fiap.fastfood.api.adapters.driver.controller;
 
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.MenuProductMapper;
 import br.com.fiap.fastfood.api.adapters.driver.dto.product.MenuProductDTO;
-import br.com.fiap.fastfood.api.adapters.driver.dto.product.MenuProductResponseDTO;
 import br.com.fiap.fastfood.api.core.application.service.MenuProductServicePortImpl;
 import br.com.fiap.fastfood.api.core.domain.model.product.MenuProduct;
 import br.com.fiap.fastfood.api.core.domain.ports.inbound.MenuProductServicePort;
 import jakarta.validation.Valid;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/menu-products")
@@ -35,11 +30,17 @@ public class MenuProductController {
   }
 
   @GetMapping
-  public ResponseEntity<MenuProductResponseDTO> getAll() {
-    List<MenuProduct> allProducts = menuProductServicePort.getAll();
-    List<MenuProductDTO> listMenuProductDTO = mapper.toMenuProductDTO(allProducts);
-    MenuProductResponseDTO response = new MenuProductResponseDTO(listMenuProductDTO);
-    return ResponseEntity.status(HttpStatus.CREATED).body(response);
+  public ResponseEntity<Page<MenuProductDTO>> getAll(
+          @RequestParam(value = "page", defaultValue = "0") int page,
+          @RequestParam(value = "size", defaultValue = "10") int size,
+          @RequestParam(value = "sort", defaultValue = "id") String sort,
+          @RequestParam(value = "direction", defaultValue = "asc") String direction) {
+    Sort.Direction sortDirection = Sort.Direction.fromString(direction);
+    Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sort));
+
+    Page<MenuProduct> allProducts = menuProductServicePort.getAll(pageable);
+    Page<MenuProductDTO> listMenuProductDTO = allProducts.map(mapper::toMenuProductDTO);
+    return ResponseEntity.ok(listMenuProductDTO);
   }
 
   @GetMapping("/{id}")

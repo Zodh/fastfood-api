@@ -8,6 +8,9 @@ import br.com.fiap.fastfood.api.core.application.ports.repository.MenuProductRep
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -50,9 +53,14 @@ public class MenuProductRepositoryAdapterImpl implements MenuProductRepositoryPo
   }
 
   @Override
-  public List<MenuProduct> getAll() {
-    List<MenuProductEntity> entityProducts = repository.findAll();
-    return entityProducts.stream().map(mapper::toDomain).toList();
+  public Page<MenuProduct> getAll(Pageable pageable) {
+    Page<MenuProductEntity> entityProducts = repository.findAll(pageable);
+
+    List<MenuProduct> domainMenuProducts = entityProducts.stream()
+            .map(mapper::toDomain)
+            .collect(Collectors.toList());
+
+    return new PageImpl<>(domainMenuProducts, pageable, entityProducts.getTotalElements());
   }
 
   @Override

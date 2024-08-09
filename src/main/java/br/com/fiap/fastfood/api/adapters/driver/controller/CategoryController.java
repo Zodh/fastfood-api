@@ -2,23 +2,18 @@ package br.com.fiap.fastfood.api.adapters.driver.controller;
 
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.CategoryMapper;
 import br.com.fiap.fastfood.api.adapters.driver.dto.category.CategoryDTO;
-import br.com.fiap.fastfood.api.adapters.driver.dto.category.CategoryResponseDTO;
 import br.com.fiap.fastfood.api.core.application.service.CategoryServicePortImpl;
 import br.com.fiap.fastfood.api.core.domain.model.category.Category;
 import br.com.fiap.fastfood.api.core.domain.ports.inbound.CategoryServicePort;
 import jakarta.validation.Valid;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/categories")
@@ -35,11 +30,16 @@ public class CategoryController {
   }
 
   @GetMapping
-  public ResponseEntity<CategoryResponseDTO> getAll() {
-    List<Category> allCategories = categoryServicePort.getAll();
-    List<CategoryDTO> listCategoryDTO = mapper.toCategoryDTO(allCategories);
-    CategoryResponseDTO response = new CategoryResponseDTO(listCategoryDTO);
-    return ResponseEntity.status(HttpStatus.CREATED).body(response);
+  public ResponseEntity<Page<CategoryDTO>> getAll(
+          @RequestParam(value = "page", defaultValue = "0") int page,
+          @RequestParam(value = "size", defaultValue = "10") int size,
+          @RequestParam(value = "sort", defaultValue = "id") String sort,
+          @RequestParam(value = "direction", defaultValue = "asc") String direction) {
+    Sort.Direction sortDirection = Sort.Direction.fromString(direction);
+    Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sort));
+    Page<Category> categoryPage = categoryServicePort.getAll(pageable);
+    Page<CategoryDTO> categoryDTOPage = categoryPage.map(mapper::toCategoryDTO);
+    return ResponseEntity.ok(categoryDTOPage);
   }
 
   @GetMapping("/{identifier}")
