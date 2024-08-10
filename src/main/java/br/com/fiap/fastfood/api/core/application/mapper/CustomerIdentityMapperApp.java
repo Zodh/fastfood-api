@@ -8,7 +8,7 @@ import org.mapstruct.NullValueCheckStrategy;
 import org.mapstruct.ReportingPolicy;
 
 @Mapper(unmappedSourcePolicy = ReportingPolicy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
-public interface CustomerIdentityMapper {
+public interface CustomerIdentityMapperApp {
 
 
   @Mapping(source = "customer.document.value", target = "documentNumber")

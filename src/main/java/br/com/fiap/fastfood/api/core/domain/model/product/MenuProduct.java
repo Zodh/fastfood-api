@@ -1,6 +1,7 @@
 package br.com.fiap.fastfood.api.core.domain.model.product;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Optional;
@@ -29,7 +30,7 @@ public class MenuProduct extends Product {
 
     @Override
     public BigDecimal getCost() {
-        return isIngredient() ? this.cost : Optional.ofNullable(this.ingredients).orElse(Collections.emptyList()).stream()
+        return isIngredient() ? this.cost : Optional.ofNullable(this.ingredients).orElse(new ArrayList<>()).stream()
             .filter(mp -> Objects.nonNull(mp) && Objects.nonNull(mp.getCost()))
             .map(mp -> mp.getCost().multiply(BigDecimal.valueOf(mp.getQuantity())))
             .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -52,7 +53,7 @@ public class MenuProduct extends Product {
     }
 
     private BigDecimal calculateCost() {
-        List<MenuProduct> i = Optional.ofNullable(this.ingredients).orElse(Collections.emptyList());
+        List<MenuProduct> i = Optional.ofNullable(this.ingredients).orElse(new ArrayList<>());
         return i.stream()
             .filter(mp -> Objects.nonNull(mp) && Objects.nonNull(mp.getCost()))
             .map(mp -> mp.getCost().multiply(BigDecimal.valueOf(mp.getQuantity())))

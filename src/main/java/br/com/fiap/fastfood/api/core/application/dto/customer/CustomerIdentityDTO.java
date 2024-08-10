@@ -1,4 +1,4 @@
-package br.com.fiap.fastfood.api.adapters.driven.infrastructure.dto.customer;
+package br.com.fiap.fastfood.api.core.application.dto.customer;
 
 import lombok.*;
 

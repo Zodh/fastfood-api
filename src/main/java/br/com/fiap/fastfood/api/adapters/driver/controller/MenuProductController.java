@@ -2,8 +2,8 @@ package br.com.fiap.fastfood.api.adapters.driver.controller;
 
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.MenuProductMapper;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.adapter.MenuProductRepositoryAdapterImpl;
-import br.com.fiap.fastfood.api.adapters.driver.dto.product.MenuProductDTO;
-import br.com.fiap.fastfood.api.adapters.driver.dto.product.MenuProductResponseDTO;
+import br.com.fiap.fastfood.api.core.application.dto.product.MenuProductDTO;
+import br.com.fiap.fastfood.api.core.application.dto.product.MenuProductResponseDTO;
 import br.com.fiap.fastfood.api.core.application.service.MenuProductServicePortImpl;
 import br.com.fiap.fastfood.api.core.domain.model.product.MenuProduct;
 import br.com.fiap.fastfood.api.core.application.port.inbound.service.MenuProductServicePort;
@@ -37,31 +37,27 @@ public class MenuProductController {
 
   @GetMapping
   public ResponseEntity<MenuProductResponseDTO> getAll() {
-    List<MenuProduct> allProducts = menuProductServicePort.getAll();
-    List<MenuProductDTO> listMenuProductDTO = mapper.toMenuProductDTO(allProducts);
-    MenuProductResponseDTO response = new MenuProductResponseDTO(listMenuProductDTO);
+    List<MenuProductDTO> allProducts = menuProductServicePort.getAll();
+    MenuProductResponseDTO response = new MenuProductResponseDTO(allProducts);
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 
   @GetMapping("/{id}")
   public ResponseEntity<MenuProductDTO> getById(@PathVariable Long id) {
-    MenuProduct menuProduct = menuProductServicePort.getById(id);
-    MenuProductDTO menuProductDTO = mapper.toMenuProductDTO(menuProduct);
+    MenuProductDTO menuProductDTO = menuProductServicePort.getById(id);
     return ResponseEntity.status(HttpStatus.CREATED).body(menuProductDTO);
   }
 
   @PostMapping
   public ResponseEntity<Void> create(@Valid @RequestBody MenuProductDTO menuProductDTO) {
-    MenuProduct domain = mapper.toDomain(menuProductDTO);
-    menuProductServicePort.register(domain);
+    menuProductServicePort.register(menuProductDTO);
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
   @PutMapping("/{id}")
   public ResponseEntity<Void> update(@PathVariable Long id,
       @RequestBody MenuProductDTO menuProductDTO) {
-    MenuProduct domain = mapper.toDomain(menuProductDTO);
-    menuProductServicePort.update(id, domain);
+    menuProductServicePort.update(id, menuProductDTO);
     return ResponseEntity.status(HttpStatus.OK).build();
   }
 

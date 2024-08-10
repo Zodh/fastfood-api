@@ -15,7 +15,7 @@ class DocumentTest {
       + "When Call Is Valid "
       + "Then Return True")
   void isValidCpf() {
-    Document document = new Document("496.046.288-44");
+    Document document = new Document("496.046.288-44", "CPF");
     assertThat(document.isValid()).isTrue();
   }
 
@@ -24,7 +24,7 @@ class DocumentTest {
       + "When Call Is Valid "
       + "Then Return False")
   void isNotValidCpf() {
-    Document document = new Document("159283817");
+    Document document = new Document("159283817", "CPF");
     assertThat(document.isValid()).isFalse();
   }
 

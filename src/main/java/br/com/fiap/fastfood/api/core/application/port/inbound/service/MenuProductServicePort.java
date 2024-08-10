@@ -1,15 +1,15 @@
 package br.com.fiap.fastfood.api.core.application.port.inbound.service;
 
-import br.com.fiap.fastfood.api.core.domain.model.product.MenuProduct;
+import br.com.fiap.fastfood.api.core.application.dto.product.MenuProductDTO;
 import java.util.List;
 
 public interface MenuProductServicePort {
 
-  List<MenuProduct> getAll();
-  MenuProduct getById(Long id);
-  void register(MenuProduct menuProduct);
+  List<MenuProductDTO> getAll();
+  MenuProductDTO getById(Long id);
+  void register(MenuProductDTO dto);
   void remove(Long id);
-  void update(Long id, MenuProduct menuProduct);
-  List<MenuProduct> findAllById(List<Long> ids);
+  void update(Long id, MenuProductDTO dto);
+  List<MenuProductDTO> findAllById(List<Long> ids);
 
 }

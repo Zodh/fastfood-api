@@ -1,6 +1,6 @@
-package br.com.fiap.fastfood.api.adapters.driven.infrastructure.dto.category;
+package br.com.fiap.fastfood.api.core.application.dto.category;
 
-import br.com.fiap.fastfood.api.adapters.driven.infrastructure.dto.product.MenuProductDTO;
+import br.com.fiap.fastfood.api.core.application.dto.product.MenuProductDTO;
 import lombok.*;
 
 import java.util.List;

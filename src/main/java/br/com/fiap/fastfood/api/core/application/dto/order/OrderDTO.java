@@ -1,9 +1,11 @@
-package br.com.fiap.fastfood.api.adapters.driven.infrastructure.dto.order;
+package br.com.fiap.fastfood.api.core.application.dto.order;
 
-import br.com.fiap.fastfood.api.adapters.driven.infrastructure.dto.collaborator.CollaboratorDTO;
-import br.com.fiap.fastfood.api.adapters.driven.infrastructure.dto.customer.CustomerDTO;
-import br.com.fiap.fastfood.api.adapters.driven.infrastructure.dto.product.OrderProductDTO;
+import br.com.fiap.fastfood.api.core.application.dto.collaborator.CollaboratorDTO;
+import br.com.fiap.fastfood.api.core.application.dto.customer.CustomerDTO;
+import br.com.fiap.fastfood.api.core.application.dto.invoice.InvoiceDTO;
+import br.com.fiap.fastfood.api.core.application.dto.product.OrderProductDTO;
 import br.com.fiap.fastfood.api.core.domain.model.order.OrderStateEnum;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,5 +28,8 @@ public class OrderDTO {
   private CustomerDTO customer;
   private BigDecimal price;
   private LocalDateTime createdAt;
+  @JsonIgnore
+  private List<InvoiceDTO> invoices;
+  private InvoiceDTO invoice;
 
 }

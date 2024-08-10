@@ -18,11 +18,11 @@ import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.adapte
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.adapter.OrderProductRepositoryAdapterImpl;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.adapter.OrderRepositoryAdapterImpl;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.person.activation.ActivationCodeRepositoryAdapterImpl;
-import br.com.fiap.fastfood.api.adapters.driver.dto.invoice.InvoiceDTO;
-import br.com.fiap.fastfood.api.adapters.driver.dto.order.CreateOrderRequestDTO;
-import br.com.fiap.fastfood.api.adapters.driver.dto.order.OrderDTO;
-import br.com.fiap.fastfood.api.adapters.driver.dto.order.PaidOrderResponseDTO;
-import br.com.fiap.fastfood.api.adapters.driver.dto.product.OrderProductDTO;
+import br.com.fiap.fastfood.api.core.application.dto.invoice.InvoiceDTO;
+import br.com.fiap.fastfood.api.core.application.dto.order.CreateOrderRequestDTO;
+import br.com.fiap.fastfood.api.core.application.dto.order.OrderDTO;
+import br.com.fiap.fastfood.api.core.application.dto.order.PaidOrderResponseDTO;
+import br.com.fiap.fastfood.api.core.application.dto.product.OrderProductDTO;
 import br.com.fiap.fastfood.api.core.application.policy.OrderInvoicePolicyImpl;
 import br.com.fiap.fastfood.api.core.application.service.CustomerServicePortImpl;
 import br.com.fiap.fastfood.api.core.application.service.InvoiceServicePortImpl;
@@ -54,13 +54,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class OrderController {
 
   private final OrderServicePort orderServicePort;
-  private final OrderMapper orderMapper;
   private final InvoiceServicePort invoiceServicePort;
-  private final InvoiceMapper invoiceMapper;
-
-  private final CustomerMapper customerMapper;
-  private final CollaboratorMapper collaboratorMapper;
-  private final OrderProductMapper orderProductMapper;
 
   @Autowired
   public OrderController(
@@ -86,62 +80,45 @@ public class OrderController {
         customerServicePortImpl, orderProductServicePort, orderInvoicePolicyPort);
     this.invoiceServicePort = new InvoiceServicePortImpl(invoiceRepositoryAdapter,
         orderInvoicePolicyPort);
-    this.customerMapper = new CustomerMapperImpl();
-    this.collaboratorMapper = new CollaboratorMapperImpl();
-    this.orderMapper = new OrderMapperImpl();
-    this.orderProductMapper = new OrderProductMapperImpl();
-    this.invoiceMapper = new InvoiceMapperImpl();
   }
 
   @PostMapping
   public ResponseEntity<OrderDTO> create(@RequestBody(required = false) CreateOrderRequestDTO request) {
-    Customer customer = null;
-    Collaborator collaborator = null;
-    if (Objects.nonNull(request)) {
-      customer = customerMapper.toDomain(request.getCustomer());
-      collaborator = collaboratorMapper.toDomain(request.getCollaborator());
-    }
-    Order order = orderServicePort.create(customer, collaborator);
-    OrderDTO orderDTO = orderMapper.toDto(order);
+    OrderDTO orderDTO = orderServicePort.create(request.getCustomer(), request.getCollaborator());
     return ResponseEntity.status(HttpStatus.OK).body(orderDTO);
   }
 
   @PostMapping("/{id}/products")
   public ResponseEntity<OrderDTO> includeOrderProduct(@PathVariable Long id, @RequestBody
       OrderProductDTO orderProductDTO) {
-    OrderProduct orderProduct = orderProductMapper.toDomain(orderProductDTO);
-    Order order = orderServicePort.includeOrderProduct(id, orderProduct);
-    OrderDTO result = orderMapper.toDto(order);
-    return ResponseEntity.status(HttpStatus.CREATED).body(result);
+    OrderDTO order = orderServicePort.includeOrderProduct(id, orderProductDTO);
+    return ResponseEntity.status(HttpStatus.CREATED).body(order);
   }
 
   @DeleteMapping("/{id}/products/{orderProductId}")
   public ResponseEntity<OrderDTO> removeOrderProduct(@PathVariable Long id, @PathVariable Long orderProductId) {
-    Order order = orderServicePort.removeOrderProduct(id, orderProductId);
-    OrderDTO result = orderMapper.toDto(order);
-    return ResponseEntity.status(HttpStatus.OK).body(result);
+    OrderDTO orderDTO = orderServicePort.removeOrderProduct(id, orderProductId);
+    return ResponseEntity.status(HttpStatus.OK).body(orderDTO);
   }
 
   @PatchMapping("/{id}/confirm")
   public ResponseEntity<OrderDTO> confirmOrder(@PathVariable Long id) {
-    Order confirmedOrder = orderServicePort.confirm(id);
-    OrderDTO result = orderMapper.toDto(confirmedOrder);
-    return ResponseEntity.status(HttpStatus.OK).body(result);
+    OrderDTO confirmedOrder = orderServicePort.confirm(id);
+    return ResponseEntity.status(HttpStatus.OK).body(confirmedOrder);
   }
 
   @PatchMapping("/{id}/pay")
   public ResponseEntity<PaidOrderResponseDTO> executeFakeCheckout(@PathVariable Long id) {
-    Order order = orderServicePort.getById(id);
-    invoiceServicePort.executeFakeCheckout(order);
-    PaidOrderResponseDTO result = PaidOrderResponseDTO.builder().orderNumber(order.getId()).build();
+    OrderDTO orderDTO = orderServicePort.getById(id);
+    invoiceServicePort.executeFakeCheckout(orderDTO);
+    PaidOrderResponseDTO result = PaidOrderResponseDTO.builder().orderNumber(orderDTO.getId()).build();
     return ResponseEntity.status(HttpStatus.OK).body(result);
   }
 
   @GetMapping("/{id}/invoice")
   public ResponseEntity<InvoiceDTO> getOrderInvoice(@PathVariable Long id) {
-    Invoice orderInvoice = orderServicePort.getById(id).getInvoice();
-    InvoiceDTO result = invoiceMapper.toDto(orderInvoice);
-    return ResponseEntity.status(HttpStatus.OK).body(result);
+    InvoiceDTO orderInvoice = orderServicePort.getById(id).getInvoice();
+    return ResponseEntity.status(HttpStatus.OK).body(orderInvoice);
   }
 
   @DeleteMapping("/{id}/cancel")
@@ -156,7 +133,7 @@ public class OrderController {
     return ResponseEntity.noContent().build();
   }
 
-  @PatchMapping("/{id}/ready-to-pick")
+  @PatchMapping("/{id}/ready")
   public ResponseEntity<Void> turnOrderReadyToPick(@PathVariable Long id) {
     orderServicePort.turnReadyToPick(id);
     return ResponseEntity.noContent().build();

@@ -1,7 +1,7 @@
 package br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.person;
 
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.person.CustomerEntity;
-import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.person.DocumentTypeEnum;
+import br.com.fiap.fastfood.api.core.application.dto.customer.DocumentTypeEnum;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

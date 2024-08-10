@@ -45,8 +45,7 @@ public class InvoiceAggregate {
         return invoice;
     }
 
-    public Invoice pay() {
+    public void pay() {
         invoice.getState().payInvoice();
-        return invoice;
     }
 }

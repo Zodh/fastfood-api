@@ -1,7 +1,7 @@
-package br.com.fiap.fastfood.api.core.application.mapper;
+package br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper;
 
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.invoice.InvoiceVendorEntity;
-import br.com.fiap.fastfood.api.core.domain.model.invoice.InvoiceVendor;
+import br.com.fiap.fastfood.api.core.application.dto.invoice.InvoiceVendorDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValueCheckStrategy;
 import org.mapstruct.ReportingPolicy;
@@ -9,6 +9,7 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(unmappedSourcePolicy = ReportingPolicy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface InvoiceVendorMapper {
 
-    InvoiceVendorEntity toEntity(InvoiceVendor domain);
-    InvoiceVendor toDomain(InvoiceVendorEntity entity);
+    InvoiceVendorEntity toEntity(InvoiceVendorDTO dto);
+    InvoiceVendorDTO toDTO(InvoiceVendorEntity entity);
+
 }

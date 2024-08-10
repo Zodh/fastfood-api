@@ -2,6 +2,7 @@ package br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.perso
 
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.person.activation.ActivationCodeEntity;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.ActivationCodeMapper;
+import br.com.fiap.fastfood.api.core.application.dto.customer.activation.ActivationCodeDTO;
 import br.com.fiap.fastfood.api.core.domain.model.person.activation.ActivationCode;
 import br.com.fiap.fastfood.api.core.application.port.repository.ActivationCodeRepositoryPort;
 import java.util.Optional;
@@ -17,16 +18,16 @@ public class ActivationCodeRepositoryAdapterImpl implements ActivationCodeReposi
   private final ActivationCodeMapper mapper;
 
   @Override
-  public Optional<ActivationCode> findById(UUID identifier) {
+  public Optional<ActivationCodeDTO> findById(UUID identifier) {
     Optional<ActivationCodeEntity> activationCodeOpt = repository.findById(identifier);
-    return activationCodeOpt.map(mapper::toDomain);
+    return activationCodeOpt.map(mapper::toDTO);
   }
 
   @Override
-  public ActivationCode save(ActivationCode data) {
+  public ActivationCodeDTO save(ActivationCodeDTO data) {
     ActivationCodeEntity entity = mapper.toEntity(data);
     ActivationCodeEntity persistedEntity = repository.save(entity);
-    return mapper.toDomain(persistedEntity);
+    return mapper.toDTO(persistedEntity);
   }
 
   @Override

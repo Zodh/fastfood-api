@@ -1,17 +1,17 @@
 package br.com.fiap.fastfood.api.core.application.port.inbound.service;
 
-import br.com.fiap.fastfood.api.core.domain.model.order.Order;
-import br.com.fiap.fastfood.api.core.domain.model.product.OrderProduct;
+import br.com.fiap.fastfood.api.core.application.dto.order.OrderDTO;
+import br.com.fiap.fastfood.api.core.application.dto.product.OrderProductDTO;
 
 public interface OrderProductServicePort {
 
 
-  OrderProduct create(Order order, OrderProduct orderProduct);
-  OrderProduct includeOptional(Long orderProductId, OrderProduct optional);
-  OrderProduct removeOptional(Long orderProductId, Long optionalId);
-  OrderProduct updateShouldRemove(Long orderProductId, Long ingredientId, boolean shouldRemove);
+  OrderProductDTO create(OrderDTO order, OrderProductDTO orderProduct);
+  OrderProductDTO includeOptional(Long orderProductId, OrderProductDTO optional);
+  OrderProductDTO removeOptional(Long orderProductId, Long optionalId);
+  OrderProductDTO updateShouldRemove(Long orderProductId, Long ingredientId, boolean shouldRemove);
   void delete(Long id);
-  OrderProduct getById(Long id);
-  OrderProduct validateAndDetail(OrderProduct orderProduct);
+  OrderProductDTO getById(Long id);
+  OrderProductDTO validateAndDetail(OrderProductDTO orderProduct);
 
 }

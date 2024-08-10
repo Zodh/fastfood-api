@@ -1,16 +1,14 @@
-package br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper;
+package br.com.fiap.fastfood.api.core.application.mapper;
 
-import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.person.CollaboratorEntity;
 import br.com.fiap.fastfood.api.core.application.dto.collaborator.CollaboratorDTO;
+import br.com.fiap.fastfood.api.core.domain.model.person.Collaborator;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValueCheckStrategy;
 import org.mapstruct.ReportingPolicy;
 
 @Mapper(unmappedSourcePolicy = ReportingPolicy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
-public interface CollaboratorMapper {
+public interface CollaboratorMapperApp {
 
-  CollaboratorEntity toEntity(CollaboratorDTO dto);
-
-  CollaboratorDTO toDTO(CollaboratorEntity entity);
+  Collaborator toDomain(CollaboratorDTO dto);
 
 }

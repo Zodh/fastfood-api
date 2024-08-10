@@ -3,8 +3,9 @@ package br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.adapt
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.invoice.InvoiceEntity;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.InvoiceMapper;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.invoice.InvoiceRepository;
+import br.com.fiap.fastfood.api.core.application.dto.invoice.InvoiceDTO;
 import br.com.fiap.fastfood.api.core.application.port.repository.InvoiceRepositoryPort;
-import br.com.fiap.fastfood.api.core.domain.model.invoice.Invoice;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,22 +26,16 @@ public class InvoiceRepositoryAdapterImpl implements InvoiceRepositoryPort {
     }
 
     @Override
-    public Optional<Invoice> findById(Long identifier) {
+    public Optional<InvoiceDTO> findById(Long identifier) {
         Optional<InvoiceEntity> entity = repository.findById(identifier);
-        Optional<Invoice> domain = entity.map(mapper::toDomain);
-        domain.ifPresent(invoice ->
-                mapper.mapStateImpl(entity.get().getState(), domain.get())
-        );
-        return domain;
+        return entity.map(mapper::toDTO);
     }
 
     @Override
-    public Invoice save(Invoice invoice) {
+    public InvoiceDTO save(InvoiceDTO invoice) {
         InvoiceEntity entity = mapper.toEntity(invoice);
         InvoiceEntity persistedEntity = repository.save(entity);
-        Invoice toDomain = mapper.toDomain(persistedEntity);
-        mapper.mapStateImpl(persistedEntity.getState(), toDomain);
-        return toDomain;
+        return mapper.toDTO(persistedEntity);
     }
 
     @Override
@@ -60,13 +55,10 @@ public class InvoiceRepositoryAdapterImpl implements InvoiceRepositoryPort {
     }
 
     @Override
-    public List<Invoice> findByOrderId(Long orderId) {
+    public List<InvoiceDTO> findByOrderId(Long orderId) {
         List<InvoiceEntity> invoiceEntities = repository.findByOrderId(orderId);
-        return Optional.ofNullable(invoiceEntities).orElse(Collections.emptyList()).stream().map(invoiceEntity -> {
-            Invoice invoice = mapper.toDomain(invoiceEntity);
-            mapper.mapStateImpl(invoiceEntity.getState(), invoice);
-            return invoice;
-        }).toList();
+        return Optional.ofNullable(invoiceEntities).orElse(new ArrayList<>()).stream().map(
+            mapper::toDTO).toList();
     }
 
 }

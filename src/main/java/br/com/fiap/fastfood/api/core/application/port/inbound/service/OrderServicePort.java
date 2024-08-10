@@ -1,18 +1,18 @@
 package br.com.fiap.fastfood.api.core.application.port.inbound.service;
 
-import br.com.fiap.fastfood.api.core.domain.model.order.Order;
-import br.com.fiap.fastfood.api.core.domain.model.person.Collaborator;
-import br.com.fiap.fastfood.api.core.domain.model.person.Customer;
-import br.com.fiap.fastfood.api.core.domain.model.product.OrderProduct;
+import br.com.fiap.fastfood.api.core.application.dto.collaborator.CollaboratorDTO;
+import br.com.fiap.fastfood.api.core.application.dto.customer.CustomerDTO;
+import br.com.fiap.fastfood.api.core.application.dto.order.OrderDTO;
+import br.com.fiap.fastfood.api.core.application.dto.product.OrderProductDTO;
 
 public interface OrderServicePort {
 
-  Order create(Customer customer, Collaborator collaborator);
-  Order includeOrderProduct(Long orderId, OrderProduct orderProduct);
-  Order getById(Long orderId);
-  Order removeOrderProduct(Long orderId, Long orderProductId);
+  OrderDTO create(CustomerDTO customerDTO, CollaboratorDTO collaboratorDTO);
+  OrderDTO includeOrderProduct(Long orderId, OrderProductDTO orderProduct);
+  OrderDTO getById(Long orderId);
+  OrderDTO removeOrderProduct(Long orderId, Long orderProductId);
   void cancel(Long orderId);
-  Order confirm(Long orderId);
+  OrderDTO confirm(Long orderId);
 
   // TODO: When security layer comes, this method should receive also customer that started preparation. Criado em: 07/08/2024 ás 18:39:08.
   void turnReadyToPrepare(Long orderId);

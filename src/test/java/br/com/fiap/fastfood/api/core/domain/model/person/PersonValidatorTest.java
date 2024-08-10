@@ -54,7 +54,7 @@ class PersonValidatorTest {
       + "Then Return Error")
   void invalidDocumentTest() {
     Person person = mockValidPerson();
-    person.setDocument(new Document("1982745"));
+    person.setDocument(new Document("1982745", "CPF"));
     List<ErrorDetail> errors = personValidator.validate(person);
     assertThat(errors).isNotEmpty().hasSize(1).containsOnly(new ErrorDetail("person.document", "O documento não é válido! Precisa ter o formato XXX.XXX.XXX-XX."));
   }
@@ -115,7 +115,7 @@ class PersonValidatorTest {
 
   private Person mockValidPerson() {
     Customer validPerson = new Customer();
-    validPerson.setDocument(new Document("123.123.123-12"));
+    validPerson.setDocument(new Document("123.123.123-12","CPF"));
     validPerson.setEmail(new Email("test@test.com"));
     validPerson.setPhoneNumber(new PhoneNumber("(99) 99999-9999"));
     validPerson.setName("John");

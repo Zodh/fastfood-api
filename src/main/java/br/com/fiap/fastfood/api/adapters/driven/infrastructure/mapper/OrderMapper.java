@@ -1,30 +1,14 @@
-package br.com.fiap.fastfood.api.core.application.mapper;
+package br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper;
 
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.order.OrderEntity;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.person.CollaboratorEntity;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.person.CustomerEntity;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.product.OrderProductEntity;
-import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.CollaboratorMapperImpl;
-import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.CustomerMapperImpl;
-import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.OrderProductMapperImpl;
 import br.com.fiap.fastfood.api.core.application.dto.collaborator.CollaboratorDTO;
 import br.com.fiap.fastfood.api.core.application.dto.customer.CustomerDTO;
 import br.com.fiap.fastfood.api.core.application.dto.order.OrderDTO;
 import br.com.fiap.fastfood.api.core.application.dto.product.OrderProductDTO;
-import br.com.fiap.fastfood.api.core.domain.model.order.Order;
-import br.com.fiap.fastfood.api.core.domain.model.order.OrderStateEnum;
-import br.com.fiap.fastfood.api.core.domain.model.order.state.OrderState;
-import br.com.fiap.fastfood.api.core.domain.model.order.state.impl.OrderAwaitingPaymentState;
-import br.com.fiap.fastfood.api.core.domain.model.order.state.impl.OrderReceivedState;
-import br.com.fiap.fastfood.api.core.domain.model.order.state.impl.OrderCancelledState;
-import br.com.fiap.fastfood.api.core.domain.model.order.state.impl.OrderFinishedState;
-import br.com.fiap.fastfood.api.core.domain.model.order.state.impl.OrderInCreationState;
-import br.com.fiap.fastfood.api.core.domain.model.order.state.impl.OrderInPreparationState;
-import br.com.fiap.fastfood.api.core.domain.model.order.state.impl.OrderOperationNotAllowedException;
-import br.com.fiap.fastfood.api.core.domain.model.order.state.impl.OrderReadyState;
-import br.com.fiap.fastfood.api.core.domain.model.person.Collaborator;
-import br.com.fiap.fastfood.api.core.domain.model.person.Customer;
-import br.com.fiap.fastfood.api.core.domain.model.product.OrderProduct;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -38,129 +22,51 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(unmappedSourcePolicy = ReportingPolicy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface OrderMapper {
 
-  @Mapping(source = "order.state", target = "state", qualifiedByName = "mapState")
-  @Mapping(source = "order.products", target = "products", qualifiedByName = "mapProductsToEntity")
-  @Mapping(source = "order.collaborator", target = "collaborator", qualifiedByName = "mapCollaboratorToEntity")
-  @Mapping(source = "order.customer", target = "customer", qualifiedByName = "mapCustomerToEntity")
-  OrderEntity toEntity(Order order);
+  @Mapping(source = "dto.products", target = "products", qualifiedByName = "mapProductsToEntity")
+  @Mapping(source = "dto.collaborator", target = "collaborator", qualifiedByName = "mapCollaboratorToEntity")
+  @Mapping(source = "dto.customer", target = "customer", qualifiedByName = "mapCustomerToEntity")
+  OrderEntity toEntity(OrderDTO dto);
 
-  @Mapping(target = "state", ignore = true)
-  @Mapping(source = "orderEntity.products", target = "products", qualifiedByName = "mapProductsToDomain")
-  @Mapping(source = "orderEntity.collaborator", target = "collaborator", qualifiedByName = "mapCollaboratorToDomain")
-  @Mapping(source = "orderEntity.customer", target = "customer", qualifiedByName = "mapCustomerToDomain")
-  Order toDomain(OrderEntity orderEntity);
+  @Mapping(source = "orderEntity.products", target = "products", qualifiedByName = "mapProductsToDTO")
+  @Mapping(source = "orderEntity.collaborator", target = "collaborator", qualifiedByName = "mapCollaboratorToDTO")
+  @Mapping(source = "orderEntity.customer", target = "customer", qualifiedByName = "mapCustomerToDTO")
+  OrderDTO toDTO(OrderEntity orderEntity);
 
-  @Mapping(source = "order.state", target = "state", qualifiedByName = "mapState")
-  @Mapping(source = "order.products", target = "products", qualifiedByName = "mapProductsToDto")
-  @Mapping(source = "order.collaborator", target = "collaborator", qualifiedByName = "mapCollaboratorToDto")
-  @Mapping(source = "order.customer", target = "customer", qualifiedByName = "mapCustomerToDto")
-  OrderDTO toDto(Order order);
-
-  @Named("mapProductsToDto")
-  default List<OrderProductDTO> mapProductsToDto(List<OrderProduct> orderProducts) {
-    OrderProductMapper orderProductMapper = new OrderProductMapperImpl();
-    return Optional.ofNullable(orderProducts).orElse(Collections.emptyList()).stream().map(orderProductMapper::toDto).collect(Collectors.toList());
-  }
-
-  @Named("mapCollaboratorToDto")
-  default CollaboratorDTO mapCollaboratorToDto(Collaborator collaborator) {
-    return new CollaboratorDTO(collaborator.getId(), collaborator.getName(), collaborator.getRole());
-  }
-
-  @Named("mapCustomerToDto")
-  default CustomerDTO mapCustomerToDto(Customer customer) {
-    CustomerMapper customerMapper = new CustomerMapperImpl();
-    return customerMapper.toDto(customer);
-  }
-
-  @Named("mapCollaboratorToDomain")
-  default Collaborator mapCollaboratorToDomain(CollaboratorEntity collaboratorEntity) {
+  @Named("mapCollaboratorToDTO")
+  default CollaboratorDTO mapCollaboratorToDTO(CollaboratorEntity collaboratorEntity) {
     CollaboratorMapper collaboratorMapper = new CollaboratorMapperImpl();
-    return collaboratorMapper.toDomain(collaboratorEntity);
+    return collaboratorMapper.toDTO(collaboratorEntity);
   }
 
-  @Named("mapCustomerToDomain")
-  default Customer mapCustomerToDomain(CustomerEntity customer) {
+  @Named("mapCustomerToDTO")
+  default CustomerDTO mapCustomerToDTO(CustomerEntity customer) {
     CustomerMapper customerMapper = new CustomerMapperImpl();
-    return customerMapper.toDomain(customer);
+    return customerMapper.toDTO(customer);
   }
 
-  @Named("mapProductsToDomain")
-  default List<OrderProduct> mapProductsToDomain(List<OrderProductEntity> products) {
+  @Named("mapProductsToDTO")
+  default List<OrderProductDTO> mapProductsToDTO(List<OrderProductEntity> products) {
     OrderProductMapper orderProductMapper = new OrderProductMapperImpl();
-    return Optional.ofNullable(products).orElse(Collections.emptyList()).stream()
-        .map(orderProductMapper::toDomain)
+    return Optional.ofNullable(products).orElse(new ArrayList<>()).stream()
+        .map(orderProductMapper::toDTO)
         .collect(Collectors.toList());
   }
 
-  default OrderState mapStateImpl(OrderStateEnum state, Order order) {
-    switch (state) {
-      case FINISHED -> {
-        return new OrderFinishedState(order);
-      }
-      case AWAITING_PAYMENT -> {
-        return new OrderAwaitingPaymentState(order);
-      }
-      case RECEIVED -> {
-        return new OrderReceivedState(order);
-      }
-      case CANCELLED -> {
-        return new OrderCancelledState(order);
-      }
-      case IN_CREATION -> {
-        return new OrderInCreationState(order);
-      }
-      case IN_PREPARATION -> {
-        return new OrderInPreparationState(order);
-      }
-      case READY -> {
-        return new OrderReadyState(order);
-      }
-    }
-    throw new OrderOperationNotAllowedException("mapStateImpl");
-  }
-
   @Named("mapCollaboratorToEntity")
-  default CollaboratorEntity mapCollaboratorToEntity(Collaborator collaborator) {
-    return new CollaboratorMapperImpl().toEntity(collaborator);
+  default CollaboratorEntity mapCollaboratorToEntity(CollaboratorDTO dto) {
+    return new CollaboratorMapperImpl().toEntity(dto);
   }
 
   @Named("mapCustomerToEntity")
-  default CustomerEntity mapCustomerToEntity(Customer customer) {
-    return new CustomerMapperImpl().toEntity(customer);
+  default CustomerEntity mapCustomerToEntity(CustomerDTO dto) {
+    return new CustomerMapperImpl().toEntity(dto);
   }
 
   @Named("mapProductsToEntity")
-  default List<OrderProductEntity> mapProductsToEntity(List<OrderProduct> products) {
+  default List<OrderProductEntity> mapProductsToEntity(List<OrderProductDTO> products) {
     OrderProductMapper mapper = new OrderProductMapperImpl();
-    return Optional.ofNullable(products).orElse(Collections.emptyList()).stream().map(mapper::toEntity).collect(
+    return Optional.ofNullable(products).orElse(new ArrayList<>()).stream().map(mapper::toEntity).collect(
         Collectors.toList());
-  }
-
-  @Named("mapState")
-  default OrderStateEnum mapState(OrderState orderState) {
-    if (orderState instanceof OrderAwaitingPaymentState) {
-      return OrderStateEnum.AWAITING_PAYMENT;
-    }
-    if (orderState instanceof OrderReceivedState) {
-      return OrderStateEnum.RECEIVED;
-    }
-    if (orderState instanceof OrderCancelledState) {
-      return OrderStateEnum.CANCELLED;
-    }
-    if (orderState instanceof OrderFinishedState) {
-      return OrderStateEnum.FINISHED;
-    }
-    if (orderState instanceof OrderInCreationState) {
-      return OrderStateEnum.IN_CREATION;
-    }
-    if (orderState instanceof OrderInPreparationState) {
-      return OrderStateEnum.IN_PREPARATION;
-    }
-    if (orderState instanceof OrderReadyState) {
-      return OrderStateEnum.READY;
-    }
-    throw new OrderOperationNotAllowedException("mapState");
   }
 
 }

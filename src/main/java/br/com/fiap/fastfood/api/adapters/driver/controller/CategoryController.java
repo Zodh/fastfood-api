@@ -3,12 +3,11 @@ package br.com.fiap.fastfood.api.adapters.driver.controller;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.CategoryMapper;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.adapter.CategoryRepositoryAdapterImpl;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.adapter.MenuProductRepositoryAdapterImpl;
-import br.com.fiap.fastfood.api.adapters.driver.dto.category.CategoryDTO;
-import br.com.fiap.fastfood.api.adapters.driver.dto.category.CategoryResponseDTO;
+import br.com.fiap.fastfood.api.core.application.dto.category.CategoryDTO;
+import br.com.fiap.fastfood.api.core.application.dto.category.CategoryResponseDTO;
 import br.com.fiap.fastfood.api.core.application.port.inbound.service.MenuProductServicePort;
 import br.com.fiap.fastfood.api.core.application.service.CategoryServicePortImpl;
 import br.com.fiap.fastfood.api.core.application.service.MenuProductServicePortImpl;
-import br.com.fiap.fastfood.api.core.domain.model.category.Category;
 import br.com.fiap.fastfood.api.core.application.port.inbound.service.CategoryServicePort;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -41,36 +40,32 @@ public class CategoryController {
 
   @GetMapping
   public ResponseEntity<CategoryResponseDTO> getAll() {
-    List<Category> allCategories = categoryServicePort.getAll();
-    List<CategoryDTO> listCategoryDTO = mapper.toCategoryDTO(allCategories);
-    CategoryResponseDTO response = new CategoryResponseDTO(listCategoryDTO);
+    List<CategoryDTO> allCategories = categoryServicePort.getAll();
+    CategoryResponseDTO response = new CategoryResponseDTO(allCategories);
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 
   @GetMapping("/{identifier}")
   public ResponseEntity<CategoryDTO> getByIdOrName(@PathVariable String identifier) {
-    Category category;
+    CategoryDTO categoryDTO;
     try {
       Long id = Long.parseLong(identifier);
-      category = categoryServicePort.getById(id);
+      categoryDTO = categoryServicePort.getById(id);
     } catch (NumberFormatException e) {
-      category = categoryServicePort.getByName(identifier);
+      categoryDTO = categoryServicePort.getByName(identifier);
     }
-    CategoryDTO categoryDTO = mapper.toCategoryDTO(category);
     return ResponseEntity.status(HttpStatus.CREATED).body(categoryDTO);
   }
 
   @PostMapping
   public ResponseEntity<Void> create(@Valid @RequestBody CategoryDTO categoryDTO) {
-    Category domain = mapper.toDomain(categoryDTO);
-    categoryServicePort.create(domain);
+    categoryServicePort.create(categoryDTO);
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
   @PutMapping("/{id}")
   public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody CategoryDTO categoryDTO) {
-    Category domain = mapper.toDomain(categoryDTO);
-    categoryServicePort.update(id, domain);
+    categoryServicePort.update(id, categoryDTO);
     return ResponseEntity.status(HttpStatus.OK).build();
   }
 

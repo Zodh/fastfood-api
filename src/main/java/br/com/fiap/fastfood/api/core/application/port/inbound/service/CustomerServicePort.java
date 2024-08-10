@@ -1,16 +1,16 @@
 package br.com.fiap.fastfood.api.core.application.port.inbound.service;
 
-import br.com.fiap.fastfood.api.core.domain.model.person.Customer;
-import br.com.fiap.fastfood.api.core.domain.model.person.vo.Document;
+import br.com.fiap.fastfood.api.core.application.dto.customer.CustomerDTO;
+import br.com.fiap.fastfood.api.core.application.dto.customer.DocumentTypeEnum;
 import java.util.UUID;
 
 public interface CustomerServicePort {
 
-  void register(Customer customer);
+  void register(CustomerDTO customerDTO);
   void activate(UUID code);
-  Customer identify(String documentNumber);
+  CustomerDTO identify(String documentNumber, DocumentTypeEnum documentType);
   void resendActivationCode(String email);
-  Customer getById(Long id);
-  Customer getByDocument(Document document);
+  CustomerDTO getById(Long id);
+  CustomerDTO getByDocument(String documentNumber, DocumentTypeEnum documentType);
 
 }

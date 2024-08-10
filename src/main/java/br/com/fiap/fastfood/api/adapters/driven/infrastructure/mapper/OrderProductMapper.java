@@ -1,12 +1,10 @@
-package br.com.fiap.fastfood.api.core.application.mapper;
+package br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper;
 
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.product.MenuProductEntity;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.product.OrderProductEntity;
-import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.MenuProductMapperImpl;
 import br.com.fiap.fastfood.api.core.application.dto.product.MenuProductDTO;
 import br.com.fiap.fastfood.api.core.application.dto.product.OrderProductDTO;
-import br.com.fiap.fastfood.api.core.domain.model.product.MenuProduct;
-import br.com.fiap.fastfood.api.core.domain.model.product.OrderProduct;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -20,68 +18,36 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(unmappedSourcePolicy = ReportingPolicy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface OrderProductMapper {
 
-  @Mapping(source = "orderProduct.optionals", target = "optionals", qualifiedByName = "mapDomainToDtoList")
-  @Mapping(source = "orderProduct.ingredients", target = "ingredients", qualifiedByName = "mapDomainToDtoList")
-  @Mapping(source = "orderProduct.menuProduct", target = "menuProduct", qualifiedByName = "mapDomainToMenuProduct")
-  OrderProductDTO toDto(OrderProduct orderProduct);
+  @Mapping(source = "entity.ingredients", target = "ingredients", qualifiedByName = "mapListToDTO")
+  @Mapping(source = "entity.optionals", target = "optionals", qualifiedByName = "mapListToDTO")
+  @Mapping(source = "entity.menuProduct", target = "menuProduct", qualifiedByName = "mapMenuProductToDTO")
+  OrderProductDTO toDTO(OrderProductEntity entity);
 
-  @Named("mapDomainToMenuProduct")
-  default MenuProductDTO mapDomainToMenuProduct(MenuProduct menuProduct) {
-    MenuProductMapper menuProductMapper = new MenuProductMapperImpl();
-    return menuProductMapper.toMenuProductDTO(menuProduct);
-  }
-
-  @Named("mapDomainToDtoList")
-  default List<OrderProductDTO> mapDomainToDtoList(List<OrderProduct> orderProducts) {
-    return Optional.ofNullable(orderProducts).orElse(Collections.emptyList()).stream().map(this::toDto).toList();
-  }
-
-  @Mapping(source = "entity.ingredients", target = "ingredients", qualifiedByName = "mapListToDomain")
-  @Mapping(source = "entity.optionals", target = "optionals", qualifiedByName = "mapListToDomain")
-  @Mapping(source = "entity.menuProduct", target = "menuProduct", qualifiedByName = "mapMenuProductToDomain")
-  OrderProduct toDomain(OrderProductEntity entity);
-
-  @Mapping(source = "dto.ingredients", target = "ingredients", qualifiedByName = "mapDtoListToDomain")
-  @Mapping(source = "dto.optionals", target = "optionals", qualifiedByName = "mapDtoListToDomain")
-  @Mapping(source = "dto.menuProduct", target = "menuProduct", qualifiedByName = "mapDtoMenuProductToDomain")
-  OrderProduct toDomain(OrderProductDTO dto);
-
-  @Named("mapDtoListToDomain")
-  default List<OrderProduct> mapDtoListToDomain(List<OrderProductDTO> dtoList) {
-    return Optional.ofNullable(dtoList).orElse(Collections.emptyList()).stream().map(this::toDomain).collect(Collectors.toList());
-  }
-
-  @Named("mapDtoMenuProductToDomain")
-  default MenuProduct mapDtoMenuProductToDomain(MenuProductDTO menuProductDTO) {
-    MenuProductMapper menuProductMapper = new MenuProductMapperImpl();
-    return menuProductMapper.toDomain(menuProductDTO);
-  }
-
-  @Named("mapListToDomain")
-  default List<OrderProduct> mapListToDomain(List<OrderProductEntity> orderProductEntities) {
-    return Optional.ofNullable(orderProductEntities).orElse(Collections.emptyList()).stream().map(this::toDomain).collect(
+  @Named("mapListToDTO")
+  default List<OrderProductDTO> mapListToDTO(List<OrderProductEntity> orderProductEntities) {
+    return Optional.ofNullable(orderProductEntities).orElse(new ArrayList<>()).stream().map(this::toDTO).collect(
         Collectors.toList());
   }
 
-  @Mapping(source = "domain.ingredients", target = "ingredients")
-  @Mapping(source = "domain.optionals", target = "optionals")
-  @Mapping(source = "domain.menuProduct", target = "menuProduct", qualifiedByName = "mapMenuProductToEntity")
-  OrderProductEntity toEntity(OrderProduct domain);
+  @Mapping(source = "dto.ingredients", target = "ingredients", qualifiedByName = "mapListToEntity")
+  @Mapping(source = "dto.optionals", target = "optionals", qualifiedByName = "mapListToEntity")
+  @Mapping(source = "dto.menuProduct", target = "menuProduct", qualifiedByName = "mapMenuProductToEntity")
+  OrderProductEntity toEntity(OrderProductDTO dto);
 
   @Named("mapListToEntity")
-  default List<OrderProductEntity> mapListToEntity(List<OrderProduct> orderProducts) {
-    return Optional.ofNullable(orderProducts).orElse(Collections.emptyList()).stream().map(this::toEntity).collect(
+  default List<OrderProductEntity> mapListToEntity(List<OrderProductDTO> orderProducts) {
+    return Optional.ofNullable(orderProducts).orElse(new ArrayList<>()).stream().map(this::toEntity).collect(
         Collectors.toList());
   }
 
-  @Named("mapMenuProductToDomain")
-  default MenuProduct mapMenuProductToDomain(MenuProductEntity menuProductEntity) {
+  @Named("mapMenuProductToDTO")
+  default MenuProductDTO mapMenuProductToDTO(MenuProductEntity menuProductEntity) {
     MenuProductMapper menuProductMapper = new MenuProductMapperImpl();
-    return menuProductMapper.toDomain(menuProductEntity);
+    return menuProductMapper.toDTO(menuProductEntity);
   }
 
   @Named("mapMenuProductToEntity")
-  default MenuProductEntity mapMenuProductToEntity(MenuProduct menuProduct) {
+  default MenuProductEntity mapMenuProductToEntity(MenuProductDTO menuProduct) {
     MenuProductMapper menuProductMapper = new MenuProductMapperImpl();
     return menuProductMapper.toEntity(menuProduct);
   }

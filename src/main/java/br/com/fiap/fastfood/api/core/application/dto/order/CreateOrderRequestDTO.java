@@ -1,7 +1,7 @@
-package br.com.fiap.fastfood.api.adapters.driven.infrastructure.dto.order;
+package br.com.fiap.fastfood.api.core.application.dto.order;
 
-import br.com.fiap.fastfood.api.adapters.driven.infrastructure.dto.collaborator.CollaboratorDTO;
-import br.com.fiap.fastfood.api.adapters.driven.infrastructure.dto.customer.CustomerDTO;
+import br.com.fiap.fastfood.api.core.application.dto.collaborator.CollaboratorDTO;
+import br.com.fiap.fastfood.api.core.application.dto.customer.CustomerDTO;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

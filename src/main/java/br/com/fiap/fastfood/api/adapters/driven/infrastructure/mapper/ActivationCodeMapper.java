@@ -2,8 +2,8 @@ package br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper;
 
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.person.CustomerEntity;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.person.activation.ActivationCodeEntity;
-import br.com.fiap.fastfood.api.core.domain.model.person.Customer;
-import br.com.fiap.fastfood.api.core.domain.model.person.activation.ActivationCode;
+import br.com.fiap.fastfood.api.core.application.dto.customer.CustomerDTO;
+import br.com.fiap.fastfood.api.core.application.dto.customer.activation.ActivationCodeDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -13,22 +13,22 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(unmappedSourcePolicy = ReportingPolicy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface ActivationCodeMapper {
 
-  @Mapping(source = "domain.customer", target = "customer", qualifiedByName = "mapCustomerEntity")
-  ActivationCodeEntity toEntity(ActivationCode domain);
+  @Mapping(source = "dto.customer", target = "customer", qualifiedByName = "mapCustomerEntity")
+  ActivationCodeEntity toEntity(ActivationCodeDTO dto);
 
   @Named("mapCustomerEntity")
-  default CustomerEntity mapCustomerEntity(Customer customer) {
+  default CustomerEntity mapCustomerEntity(CustomerDTO dto) {
     CustomerMapper customerMapper = new CustomerMapperImpl();
-    return customerMapper.toEntity(customer);
+    return customerMapper.toEntity(dto);
   }
 
-  @Mapping(source = "entity.customer", target = "customer", qualifiedByName = "mapCustomer")
-  ActivationCode toDomain(ActivationCodeEntity entity);
+  @Mapping(source = "entity.customer", target = "customer", qualifiedByName = "mapCustomerDTO")
+  ActivationCodeDTO toDTO(ActivationCodeEntity entity);
 
-  @Named("mapCustomer")
-  default Customer mapCustomer(CustomerEntity entity) {
+  @Named("mapCustomerDTO")
+  default CustomerDTO mapCustomerDTO(CustomerEntity entity) {
     CustomerMapper customerMapper = new CustomerMapperImpl();
-    return customerMapper.toDomain(entity);
+    return customerMapper.toDTO(entity);
   }
 
 }

@@ -1,4 +1,4 @@
-package br.com.fiap.fastfood.api.adapters.driven.infrastructure.dto;
+package br.com.fiap.fastfood.api.core.application.dto;
 
 import java.util.List;
 

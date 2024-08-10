@@ -1,8 +1,7 @@
-package br.com.fiap.fastfood.api.core.application.mapper;
+package br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper;
 
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.product.MenuProductEntity;
 import br.com.fiap.fastfood.api.core.application.dto.product.MenuProductDTO;
-import br.com.fiap.fastfood.api.core.domain.model.product.MenuProduct;
 import org.mapstruct.*;
 import org.springframework.util.CollectionUtils;
 
@@ -14,27 +13,21 @@ import java.util.stream.Collectors;
 public interface MenuProductMapper {
 
     @Mapping(source = "entity.ingredients", target = "ingredients", qualifiedByName = "mapListToDomain")
-    MenuProduct toDomain(MenuProductEntity entity);
-
-    MenuProduct toDomain(MenuProductDTO dto);
-
-    List<MenuProductDTO> toMenuProductDTO(List<MenuProduct> menuProduct);
-
-    MenuProductDTO toMenuProductDTO(MenuProduct menuProduct);
+    MenuProductDTO toDTO(MenuProductEntity entity);
 
     @Named("mapListToDomain")
-    default List<MenuProduct> mapListToDomain(List<MenuProductEntity> menuProductEntities) {
+    default List<MenuProductDTO> mapListToDomain(List<MenuProductEntity> menuProductEntities) {
         if (CollectionUtils.isEmpty(menuProductEntities)) {
             return new ArrayList<>();
         }
-        return menuProductEntities.stream().map(this::toDomain).collect(Collectors.toList());
+        return menuProductEntities.stream().map(this::toDTO).collect(Collectors.toList());
     }
 
-    @Mapping(source = "domain.ingredients", target = "ingredients", qualifiedByName = "mapListToEntity")
-    MenuProductEntity toEntity(MenuProduct domain);
+    @Mapping(source = "dto.ingredients", target = "ingredients", qualifiedByName = "mapListToEntity")
+    MenuProductEntity toEntity(MenuProductDTO dto);
 
     @Named("mapListToEntity")
-    default List<MenuProductEntity> mapListToEntity(List<MenuProduct> menuProducts) {
+    default List<MenuProductEntity> mapListToEntity(List<MenuProductDTO> menuProducts) {
         if (CollectionUtils.isEmpty(menuProducts)) {
             return new ArrayList<>();
         }

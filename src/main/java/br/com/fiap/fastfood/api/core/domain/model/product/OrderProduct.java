@@ -50,7 +50,7 @@ public class OrderProduct extends Product {
 
     public void calculatePrice() {
         BigDecimal basePrice = Optional.ofNullable(menuProduct.getPrice()).orElse(BigDecimal.ZERO);
-        BigDecimal optionalsPrice = Optional.ofNullable(optionals).orElse(Collections.emptyList()).stream()
+        BigDecimal optionalsPrice = Optional.ofNullable(optionals).orElse(new ArrayList<>()).stream()
             .filter(opt -> Objects.nonNull(opt) && Objects.nonNull(opt.getPrice()))
             .map(op -> op.getPrice().multiply(new BigDecimal(op.getQuantity())))
             .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -105,7 +105,7 @@ public class OrderProduct extends Product {
     }
 
     public OrderProduct findOptionalById(Long id) {
-        return Optional.ofNullable(this.optionals).orElse(Collections.emptyList()).stream()
+        return Optional.ofNullable(this.optionals).orElse(new ArrayList<>()).stream()
             .filter(opt -> Objects.nonNull(opt) && Objects.equals(
                 opt.getId(), id)).findFirst().orElseThrow(() -> new DomainException(
                 new ErrorDetail("orderProduct.optionals",
@@ -113,7 +113,7 @@ public class OrderProduct extends Product {
     }
 
     public OrderProduct findIngredientById(Long id) {
-        return Optional.ofNullable(this.ingredients).orElse(Collections.emptyList()).stream()
+        return Optional.ofNullable(this.ingredients).orElse(new ArrayList<>()).stream()
             .filter(ingredient -> Objects.nonNull(ingredient) && Objects.equals(
                 ingredient.getId(), id)).findFirst().orElseThrow(() -> new DomainException(
                 new ErrorDetail("orderProduct.ingredients",

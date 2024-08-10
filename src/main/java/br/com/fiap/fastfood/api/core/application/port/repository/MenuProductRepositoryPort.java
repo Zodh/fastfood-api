@@ -1,15 +1,15 @@
 package br.com.fiap.fastfood.api.core.application.port.repository;
 
+import br.com.fiap.fastfood.api.core.application.dto.product.MenuProductDTO;
 import br.com.fiap.fastfood.api.core.application.port.BaseRepository;
-import br.com.fiap.fastfood.api.core.domain.model.product.MenuProduct;
 
 import java.util.List;
 
-public interface MenuProductRepositoryPort extends BaseRepository<MenuProduct, Long> {
+public interface MenuProductRepositoryPort extends BaseRepository<MenuProductDTO, Long> {
 
-    List<MenuProduct> getAll();
-    void update(MenuProduct menuProduct);
+    List<MenuProductDTO> getAll();
+    void update(MenuProductDTO menuProduct);
     List<Long> fetchProductsRelatedToProduct(Long productId);
-    List<MenuProduct> findAllById(List<Long> ids);
+    List<MenuProductDTO> findAllById(List<Long> ids);
 
 }

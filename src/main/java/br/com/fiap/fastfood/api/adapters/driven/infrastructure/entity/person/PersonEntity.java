@@ -1,6 +1,7 @@
 package br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.person;
 
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.user.UserEntity;
+import br.com.fiap.fastfood.api.core.application.dto.customer.DocumentTypeEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

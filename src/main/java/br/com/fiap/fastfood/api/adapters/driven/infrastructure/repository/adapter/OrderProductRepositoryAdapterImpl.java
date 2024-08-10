@@ -7,6 +7,8 @@ import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.OrderMappe
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.OrderProductMapper;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.OrderProductMapperImpl;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.product.OrderProductRepository;
+import br.com.fiap.fastfood.api.core.application.dto.order.OrderDTO;
+import br.com.fiap.fastfood.api.core.application.dto.product.OrderProductDTO;
 import br.com.fiap.fastfood.api.core.application.port.repository.OrderProductRepositoryPort;
 import br.com.fiap.fastfood.api.core.domain.model.order.Order;
 import br.com.fiap.fastfood.api.core.domain.model.product.OrderProduct;
@@ -30,16 +32,16 @@ public class OrderProductRepositoryAdapterImpl implements OrderProductRepository
   }
 
   @Override
-  public Optional<OrderProduct> findById(Long identifier) {
+  public Optional<OrderProductDTO> findById(Long identifier) {
     Optional<OrderProductEntity> entity = repository.findById(identifier);
-    return entity.map(orderProductMapper::toDomain);
+    return entity.map(orderProductMapper::toDTO);
   }
 
   @Override
-  public OrderProduct save(OrderProduct data) {
+  public OrderProductDTO save(OrderProductDTO data) {
     OrderProductEntity entity = orderProductMapper.toEntity(data);
     OrderProductEntity persistedEntity = repository.save(entity);
-    return orderProductMapper.toDomain(persistedEntity);
+    return orderProductMapper.toDTO(persistedEntity);
   }
 
   @Override
@@ -49,12 +51,12 @@ public class OrderProductRepositoryAdapterImpl implements OrderProductRepository
   }
 
   @Override
-  public OrderProduct save(Order order, OrderProduct orderProduct) {
+  public OrderProductDTO save(OrderDTO order, OrderProductDTO orderProduct) {
     OrderEntity orderEntity = orderMapper.toEntity(order);
     OrderProductEntity orderProductEntity = orderProductMapper.toEntity(orderProduct);
     orderProductEntity.setOrder(orderEntity);
     OrderProductEntity persistedOrderProductEntity = repository.save(orderProductEntity);
-    return orderProductMapper.toDomain(persistedOrderProductEntity);
+    return orderProductMapper.toDTO(persistedOrderProductEntity);
   }
 
   @Override

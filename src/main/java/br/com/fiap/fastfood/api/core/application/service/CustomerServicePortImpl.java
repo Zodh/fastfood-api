@@ -1,6 +1,10 @@
 package br.com.fiap.fastfood.api.core.application.service;
 
+import br.com.fiap.fastfood.api.core.application.dto.customer.CustomerDTO;
+import br.com.fiap.fastfood.api.core.application.dto.customer.DocumentTypeEnum;
 import br.com.fiap.fastfood.api.core.application.exception.NotFoundException;
+import br.com.fiap.fastfood.api.core.application.mapper.CustomerMapperApp;
+import br.com.fiap.fastfood.api.core.application.mapper.CustomerMapperAppImpl;
 import br.com.fiap.fastfood.api.core.application.port.outbound.ActivationCodeLinkGeneratorPort;
 import br.com.fiap.fastfood.api.core.application.port.repository.ActivationCodeRepositoryPort;
 import br.com.fiap.fastfood.api.core.application.port.repository.CustomerRepositoryPort;
@@ -18,6 +22,7 @@ public class CustomerServicePortImpl implements CustomerServicePort {
   private final EmailSenderPort emailSender;
   private final ActivationCodeService activationCodeService;
   private final PersonValidator personValidator;
+  private CustomerMapperApp customerMapperApp;
 
   public CustomerServicePortImpl(
       CustomerRepositoryPort repository,
@@ -31,25 +36,30 @@ public class CustomerServicePortImpl implements CustomerServicePort {
         activationCodeLinkGeneratorPort,
         repository);
     this.personValidator = new PersonValidator();
+    this.customerMapperApp = new CustomerMapperAppImpl();
   }
 
-  private Customer findByEmail(String email) {
+  private CustomerDTO findByEmail(String email) {
     return repository.findByEmail(email).orElseThrow(
         () -> new NotFoundException("Não foi encontrado um cliente com o email informado!"));
   }
 
-  public void register(Customer customer) {
-    boolean isEmailUsed = repository.findByEmail(customer.getEmail().getValue()).isPresent();
-    boolean isDocumentUsed = repository.findByDocument(customer.getDocument()).isPresent();
+  public void register(CustomerDTO customerDTO) {
+    boolean isEmailUsed = repository.findByEmail(customerDTO.getEmail()).isPresent();
+    boolean isDocumentUsed = repository.findByDocument(customerDTO.getDocumentNumber(),
+        customerDTO.getDocumentType()).isPresent();
+    Customer customer = customerMapperApp.toDomain(customerDTO);
     ServiceAggregate serviceAggregate = new ServiceAggregate(
         customer,
         emailSender,
         personValidator
     );
     serviceAggregate.register(isEmailUsed, isDocumentUsed);
-    Customer persistedCustomer = repository.save(customer);
+    CustomerDTO registeredCustomer = customerMapperApp.toDTO(customer);
+    CustomerDTO persistedCustomer = repository.save(registeredCustomer);
     String activationCode = activationCodeService.generate(persistedCustomer);
-    serviceAggregate.sendActivationCode(customer, activationCode);
+    Customer result = customerMapperApp.toDomain(persistedCustomer);
+    serviceAggregate.sendActivationCode(result, activationCode);
   }
 
   @Override
@@ -58,33 +68,36 @@ public class CustomerServicePortImpl implements CustomerServicePort {
   }
 
   @Override
-  public Customer identify(String documentNumber) {
+  public CustomerDTO identify(String documentNumber, DocumentTypeEnum documentType) {
     Customer customer = new Customer();
-    Document document = new Document(documentNumber);
+    Document document = new Document(documentNumber, documentType.name());
     customer.setDocument(document);
     ServiceAggregate serviceAggregate = new ServiceAggregate(customer);
     serviceAggregate.checkDocument();
-    return repository.findByDocument(document).orElseThrow(() -> new NotFoundException(
+    DocumentTypeEnum documentTypeEnum = DocumentTypeEnum.valueOf(document.getType().name());
+    return repository.findByDocument(documentNumber, documentTypeEnum).orElseThrow(() -> new NotFoundException(
         "Não foi encontrado um cliente cadastrado com esse documento!"));
   }
 
   @Override
   public void resendActivationCode(String email) {
-    Customer customer = this.findByEmail(email);
+    CustomerDTO customerDTO = this.findByEmail(email);
+    Customer customer = customerMapperApp.toDomain(customerDTO);
     ServiceAggregate serviceAggregate = new ServiceAggregate(customer, emailSender);
     serviceAggregate.canResendActivationCode();
-    String activationCode = activationCodeService.generate(customer);
+    CustomerDTO validCustomer = customerMapperApp.toDTO(customer);
+    String activationCode = activationCodeService.generate(validCustomer);
     serviceAggregate.sendActivationCode(customer, activationCode);
   }
 
   @Override
-  public Customer getById(Long id) {
+  public CustomerDTO getById(Long id) {
     return repository.findById(id).orElseThrow(() -> new NotFoundException(String.format("Não foi encontrado um cliente com o identificador %d!", id)));
   }
 
   @Override
-  public Customer getByDocument(Document document) {
-    return repository.findByDocument(document).orElseThrow(() -> new NotFoundException(String.format("Não foi encontrado um cliente com o documento %s!", document)));
+  public CustomerDTO getByDocument(String documentNumber, DocumentTypeEnum documentType) {
+    return repository.findByDocument(documentNumber, documentType).orElseThrow(() -> new NotFoundException(String.format("Não foi encontrado um cliente com o documento %s %s!", documentType, documentNumber)));
   }
 
 }

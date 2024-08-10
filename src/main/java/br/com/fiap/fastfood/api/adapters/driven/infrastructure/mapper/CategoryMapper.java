@@ -1,10 +1,9 @@
-package br.com.fiap.fastfood.api.core.application.mapper;
+package br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper;
 
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.category.CategoryEntity;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.product.MenuProductEntity;
 import br.com.fiap.fastfood.api.core.application.dto.category.CategoryDTO;
-import br.com.fiap.fastfood.api.core.domain.model.category.Category;
-import br.com.fiap.fastfood.api.core.domain.model.product.MenuProduct;
+import br.com.fiap.fastfood.api.core.application.dto.product.MenuProductDTO;
 import org.mapstruct.*;
 import org.springframework.util.CollectionUtils;
 
@@ -15,34 +14,28 @@ import java.util.stream.Collectors;
 @Mapper(unmappedSourcePolicy = ReportingPolicy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface CategoryMapper {
 
-  @Mapping(source = "entity.categoryProducts", target = "products", qualifiedByName = "mapListToDomain")
-  Category toDomain(CategoryEntity entity);
+  @Mapping(source = "entity.categoryProducts", target = "products", qualifiedByName = "mapListToDTO")
+  CategoryDTO toDTO(CategoryEntity entity);
 
-  @Mapping(source = "entity.ingredients", target = "ingredients", qualifiedByName = "mapListToDomain")
-  MenuProduct toDomain(MenuProductEntity entity);
+  @Mapping(source = "entity.ingredients", target = "ingredients", qualifiedByName = "mapListToDTO")
+  MenuProductDTO toDTO(MenuProductEntity entity);
 
-  @Named("mapListToDomain")
-  default List<MenuProduct> mapListToDomain(List<MenuProductEntity> categoryProducts) {
+  @Named("mapListToDTO")
+  default List<MenuProductDTO> mapListToDTO(List<MenuProductEntity> categoryProducts) {
     if (CollectionUtils.isEmpty(categoryProducts)) {
       return new ArrayList<>();
     }
-    return categoryProducts.stream().map(this::toDomain).collect(Collectors.toList());
+    return categoryProducts.stream().map(this::toDTO).collect(Collectors.toList());
   }
 
-  Category toDomain(CategoryDTO category);
+  @Mapping(source = "dto.products", target = "categoryProducts", qualifiedByName = "mapListToEntity")
+  CategoryEntity toEntity(CategoryDTO dto);
 
-  List<CategoryDTO> toCategoryDTO(List<Category> categories);
-
-  CategoryDTO toCategoryDTO(Category category);
-
-  @Mapping(source = "domain.products", target = "categoryProducts", qualifiedByName = "mapListToEntity")
-  CategoryEntity toEntity(Category domain);
-
-  @Mapping(source = "domain.ingredients", target = "ingredients", qualifiedByName = "mapListToEntity")
-  MenuProductEntity toEntity(MenuProduct domain);
+  @Mapping(source = "dto.ingredients", target = "ingredients", qualifiedByName = "mapListToEntity")
+  MenuProductEntity toEntity(MenuProductDTO dto);
 
   @Named("mapListToEntity")
-  default List<MenuProductEntity> mapListToEntity(List<MenuProduct> menuProducts) {
+  default List<MenuProductEntity> mapListToEntity(List<MenuProductDTO> menuProducts) {
     if (CollectionUtils.isEmpty(menuProducts)) {
       return new ArrayList<>();
     }

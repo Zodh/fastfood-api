@@ -1,10 +1,17 @@
 package br.com.fiap.fastfood.api.core.application.policy;
 
+import br.com.fiap.fastfood.api.core.application.dto.invoice.InvoiceDTO;
+import br.com.fiap.fastfood.api.core.application.dto.order.OrderDTO;
+import br.com.fiap.fastfood.api.core.application.mapper.InvoiceMapperApp;
+import br.com.fiap.fastfood.api.core.application.mapper.InvoiceMapperAppImpl;
+import br.com.fiap.fastfood.api.core.application.mapper.OrderMapperApp;
+import br.com.fiap.fastfood.api.core.application.mapper.OrderMapperAppImpl;
 import br.com.fiap.fastfood.api.core.application.port.repository.InvoiceRepositoryPort;
 import br.com.fiap.fastfood.api.core.application.port.repository.OrderRepositoryPort;
+import br.com.fiap.fastfood.api.core.domain.aggregate.EstablishmentAggregate;
 import br.com.fiap.fastfood.api.core.domain.aggregate.InvoiceAggregate;
-import br.com.fiap.fastfood.api.core.domain.aggregate.OrderAggregate;
 import br.com.fiap.fastfood.api.core.domain.model.invoice.Invoice;
+import br.com.fiap.fastfood.api.core.domain.model.invoice.state.InvoiceStateEnum;
 import br.com.fiap.fastfood.api.core.domain.model.order.Order;
 import java.util.Objects;
 
@@ -12,32 +19,43 @@ public class OrderInvoicePolicyImpl implements OrderInvoicePolicy {
 
   private final InvoiceRepositoryPort invoiceRepositoryPort;
   private final OrderRepositoryPort orderRepositoryPort;
+  private final InvoiceMapperApp invoiceMapperApp;
+  private final OrderMapperApp orderMapperApp;
 
   public OrderInvoicePolicyImpl(InvoiceRepositoryPort invoiceRepositoryPort, OrderRepositoryPort orderRepositoryPort) {
     this.invoiceRepositoryPort = invoiceRepositoryPort;
     this.orderRepositoryPort = orderRepositoryPort;
+    this.invoiceMapperApp = new InvoiceMapperAppImpl();
+    this.orderMapperApp = new OrderMapperAppImpl();
   }
 
   @Override
-  public void cancelInvoiceByOrder(Order order) {
-    if (Objects.nonNull(order.getId()) && order.getId() > 0 && order.hasInvoice()) {
-      invoiceRepositoryPort.cancelPendingInvoicesByOrder(order.getId());
+  public void cancelOrderInvoice(OrderDTO orderDTO) {
+    if (Objects.nonNull(orderDTO.getId()) && orderDTO.getId() > 0 && Objects.nonNull(orderDTO.getInvoice()) && orderDTO.getInvoice().getState().equals(
+        InvoiceStateEnum.PENDING)) {
+      invoiceRepositoryPort.cancelPendingInvoicesByOrder(orderDTO.getId());
     }
   }
 
   @Override
-  public void generateInvoiceByOrder(Order order) {
+  public void generateOrderInvoice(OrderDTO orderDTO) {
     InvoiceAggregate invoiceAggregate = new InvoiceAggregate();
-    this.cancelInvoiceByOrder(order);
+    this.cancelOrderInvoice(orderDTO);
+    Order order = orderMapperApp.toDomain(orderDTO);
+    order.setState(orderMapperApp.mapStateImpl(orderDTO.getState(), order));
     Invoice invoice = invoiceAggregate.createInvoice(order);
-    invoiceRepositoryPort.save(invoice);
+    InvoiceDTO validInvoice = invoiceMapperApp.toDto(invoice);
+    orderDTO.setInvoice(invoiceRepositoryPort.save(validInvoice));
   }
 
   @Override
-  public void payOrderInvoice(Order order) {
-    OrderAggregate aggregate = new OrderAggregate(order);
+  public void defineOrderEligibleToPreparation(OrderDTO orderDTO) {
+    Order order = orderMapperApp.toDomain(orderDTO);
+    order.setState(orderMapperApp.mapStateImpl(orderDTO.getState(), order));
+    EstablishmentAggregate aggregate = new EstablishmentAggregate(order);
     aggregate.turnReadyToPrepare();
-    orderRepositoryPort.save(order);
+    OrderDTO orderReadyToPreparation = orderMapperApp.toDTO(order);
+    orderRepositoryPort.save(orderReadyToPreparation);
     // Politica de follow up.
   }
 

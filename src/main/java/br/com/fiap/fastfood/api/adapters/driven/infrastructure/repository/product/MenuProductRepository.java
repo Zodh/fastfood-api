@@ -13,7 +13,4 @@ public interface MenuProductRepository extends JpaRepository<MenuProductEntity, 
   @Query(value = "SELECT DISTINCT(product_id) FROM menu_product_ingredient WHERE ingredient_id = :ingredientId", nativeQuery = true)
   List<Long> fetchProductsByIngredient(@Param("ingredientId") Long ingredientId);
 
-  @Query(value = "SELECT DISTINCT(product_id) FROM menu_product_optional WHERE optional_id = :optionalId", nativeQuery = true)
-  List<Long> fetchProductsByOptional(@Param("optionalId") Long optionalId);
-
 }

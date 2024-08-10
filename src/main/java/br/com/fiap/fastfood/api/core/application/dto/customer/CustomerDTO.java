@@ -1,4 +1,4 @@
-package br.com.fiap.fastfood.api.adapters.driven.infrastructure.dto.customer;
+package br.com.fiap.fastfood.api.core.application.dto.customer;
 
 import br.com.fiap.fastfood.api.core.domain.model.person.vo.DocumentType;
 import java.time.LocalDate;
@@ -19,8 +19,7 @@ public class CustomerDTO {
   private String email;
   private String phoneNumber;
   private String documentNumber;
-  @Builder.Default
-  private final DocumentType documentType = DocumentType.CPF;
+  private DocumentTypeEnum documentType;
   private LocalDate birthdate;
 
 }

@@ -1,4 +1,4 @@
-package br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.person;
+package br.com.fiap.fastfood.api.core.application.dto.customer;
 
 public enum DocumentTypeEnum {
   CPF;

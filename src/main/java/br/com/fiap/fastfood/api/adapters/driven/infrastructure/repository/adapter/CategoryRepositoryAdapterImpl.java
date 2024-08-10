@@ -3,7 +3,7 @@ package br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.adapt
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.category.CategoryEntity;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.CategoryMapper;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.category.CategoryRepository;
-import br.com.fiap.fastfood.api.core.domain.model.category.Category;
+import br.com.fiap.fastfood.api.core.application.dto.category.CategoryDTO;
 import br.com.fiap.fastfood.api.core.application.port.repository.CategoryRepositoryPort;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,33 +18,32 @@ public class CategoryRepositoryAdapterImpl implements CategoryRepositoryPort {
   private final CategoryMapper mapper;
 
   @Autowired
-  public CategoryRepositoryAdapterImpl(CategoryRepository repository,
-                                       CategoryMapper mapper) {
+  public CategoryRepositoryAdapterImpl(CategoryRepository repository, CategoryMapper mapper) {
     this.repository = repository;
     this.mapper = mapper;
   }
 
   @Override
-  public Optional<Category> findById(Long identifier) {
+  public Optional<CategoryDTO> findById(Long identifier) {
     Optional<CategoryEntity> categoryEntityOpt = repository.findById(identifier);
-    return categoryEntityOpt.map(mapper::toDomain);
+    return categoryEntityOpt.map(mapper::toDTO);
   }
 
   @Override
-  public Optional<Category> findByName(String name) {
+  public Optional<CategoryDTO> findByName(String name) {
     Optional<CategoryEntity> categoryEntityOpt = repository.findByName(name);
-    return categoryEntityOpt.map(mapper::toDomain);
+    return categoryEntityOpt.map(mapper::toDTO);
   }
 
   @Override
-  public Category save(Category data) {
+  public CategoryDTO save(CategoryDTO data) {
     CategoryEntity entity = mapper.toEntity(data);
     CategoryEntity persistedCategory = repository.save(entity);
-    return mapper.toDomain(persistedCategory);
+    return mapper.toDTO(persistedCategory);
   }
 
   @Override
-  public void update(Category category) {
+  public void update(CategoryDTO category) {
     CategoryEntity entity = mapper.toEntity(category);
     repository.save(entity);
   }
@@ -65,8 +64,8 @@ public class CategoryRepositoryAdapterImpl implements CategoryRepositoryPort {
   }
 
   @Override
-  public List<Category> getAll() {
+  public List<CategoryDTO> getAll() {
     List<CategoryEntity> entityCategories = repository.findAll();
-    return entityCategories.stream().map(mapper::toDomain).toList();
+    return entityCategories.stream().map(mapper::toDTO).toList();
   }
 }

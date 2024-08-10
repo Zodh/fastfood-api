@@ -1,6 +1,12 @@
 package br.com.fiap.fastfood.api.core.application.service;
 
+import br.com.fiap.fastfood.api.core.application.dto.customer.CustomerDTO;
+import br.com.fiap.fastfood.api.core.application.dto.customer.activation.ActivationCodeDTO;
 import br.com.fiap.fastfood.api.core.application.exception.NotFoundException;
+import br.com.fiap.fastfood.api.core.application.mapper.ActivationCodeMapperApp;
+import br.com.fiap.fastfood.api.core.application.mapper.ActivationCodeMapperAppImpl;
+import br.com.fiap.fastfood.api.core.application.mapper.CustomerMapperApp;
+import br.com.fiap.fastfood.api.core.application.mapper.CustomerMapperAppImpl;
 import br.com.fiap.fastfood.api.core.application.port.outbound.ActivationCodeLinkGeneratorPort;
 import br.com.fiap.fastfood.api.core.application.port.repository.ActivationCodeRepositoryPort;
 import br.com.fiap.fastfood.api.core.application.port.repository.CustomerRepositoryPort;
@@ -20,15 +26,20 @@ public class ActivationCodeService {
   private final ActivationCodeRepositoryPort activationCodeRepository;
   private final ActivationCodeLinkGeneratorPort linkGenerator;
   private final CustomerRepositoryPort customerRepository;
+  private final CustomerMapperApp customerMapperApp;
+  private final ActivationCodeMapperApp activationCodeMapperApp;
 
   public ActivationCodeService(ActivationCodeRepositoryPort activationCodeRepository,
       ActivationCodeLinkGeneratorPort linkGenerator, CustomerRepositoryPort customerRepository) {
     this.activationCodeRepository = activationCodeRepository;
     this.linkGenerator = linkGenerator;
     this.customerRepository = customerRepository;
+    this.customerMapperApp = new CustomerMapperAppImpl();
+    this.activationCodeMapperApp = new ActivationCodeMapperAppImpl();
   }
 
-  public String generate(Customer customer) {
+  public String generate(CustomerDTO customerDTO) {
+    Customer customer = customerMapperApp.toDomain(customerDTO);
     ActivationCode activationCode = new ActivationCode(customer,
         LocalDateTime.now().plusMinutes(EXPIRATION_TIME_IN_MINUTES));
     if (!activationCode.isValid()) {
@@ -36,7 +47,8 @@ public class ActivationCodeService {
           "A pessoa não pode ser nula e deve estar inativa!");
       throw new DomainException(errorDetail);
     }
-    ActivationCode persistedActivationCode = activationCodeRepository.save(activationCode);
+    ActivationCodeDTO validActivationCode = activationCodeMapperApp.toDTO(activationCode);
+    ActivationCodeDTO persistedActivationCode = activationCodeRepository.save(validActivationCode);
     return linkGenerator.generate(persistedActivationCode);
   }
 
@@ -46,19 +58,20 @@ public class ActivationCodeService {
           "O código de ativação é inválido!");
       throw new DomainException(errorDetail);
     }
-    Optional<ActivationCode> activationCodeOpt = activationCodeRepository.findById(code);
+    Optional<ActivationCodeDTO> activationCodeOpt = activationCodeRepository.findById(code);
     if (activationCodeOpt.isEmpty()) {
       throw new NotFoundException("O código de ativação não foi encontrado!");
     }
-    ActivationCode activationCode = activationCodeOpt.get();
+    ActivationCodeDTO activationCodeDTO = activationCodeOpt.get();
+    ActivationCode activationCode = activationCodeMapperApp.toDomain(activationCodeDTO);
     if (!activationCode.isValid()) {
       ErrorDetail errorDetail = new ErrorDetail(ACTIVATION_CODE,
           "O código de ativação não é mais válido!");
       throw new DomainException(errorDetail);
     }
-    customerRepository.activate(activationCode.getCustomer().getId());
+    customerRepository.activate(activationCodeDTO.getCustomer().getId());
     activationCodeRepository.deleteAllActivationCodeByCustomer(
-        activationCode.getCustomer().getId());
+        activationCodeDTO.getCustomer().getId());
   }
 
 }

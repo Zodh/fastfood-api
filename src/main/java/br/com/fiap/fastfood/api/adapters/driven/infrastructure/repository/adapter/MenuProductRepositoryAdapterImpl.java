@@ -3,6 +3,7 @@ package br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.adapt
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.product.MenuProductEntity;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.MenuProductMapper;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.product.MenuProductRepository;
+import br.com.fiap.fastfood.api.core.application.dto.product.MenuProductDTO;
 import br.com.fiap.fastfood.api.core.domain.model.product.MenuProduct;
 import br.com.fiap.fastfood.api.core.application.port.repository.MenuProductRepositoryPort;
 import java.util.stream.Collectors;
@@ -27,16 +28,16 @@ public class MenuProductRepositoryAdapterImpl implements MenuProductRepositoryPo
   }
 
   @Override
-  public Optional<MenuProduct> findById(Long identifier) {
+  public Optional<MenuProductDTO> findById(Long identifier) {
     Optional<MenuProductEntity> menuProductEntityOpt = repository.findById(identifier);
-    return menuProductEntityOpt.map(mapper::toDomain);
+    return menuProductEntityOpt.map(mapper::toDTO);
   }
 
   @Override
-  public MenuProduct save(MenuProduct data) {
+  public MenuProductDTO save(MenuProductDTO data) {
     MenuProductEntity entity = mapper.toEntity(data);
     MenuProductEntity persistedMenuProduct = repository.save(entity);
-    return mapper.toDomain(persistedMenuProduct);
+    return mapper.toDTO(persistedMenuProduct);
   }
 
   @Override
@@ -50,29 +51,26 @@ public class MenuProductRepositoryAdapterImpl implements MenuProductRepositoryPo
   }
 
   @Override
-  public List<MenuProduct> getAll() {
+  public List<MenuProductDTO> getAll() {
     List<MenuProductEntity> entityProducts = repository.findAll();
-    return entityProducts.stream().map(mapper::toDomain).toList();
+    return entityProducts.stream().map(mapper::toDTO).toList();
   }
 
   @Override
-  public void update(MenuProduct menuProduct) {
+  public void update(MenuProductDTO menuProduct) {
     MenuProductEntity entity = mapper.toEntity(menuProduct);
     repository.save(entity);
   }
 
   @Override
   public List<Long> fetchProductsRelatedToProduct(Long productId) {
-    return Stream.concat(
-        repository.fetchProductsByIngredient(productId).stream(),
-        repository.fetchProductsByOptional(productId
-        ).stream()).distinct().collect(Collectors.toList());
+    return repository.fetchProductsByIngredient(productId).stream().distinct().collect(Collectors.toList());
   }
 
   @Override
-  public List<MenuProduct> findAllById(List<Long> ids) {
+  public List<MenuProductDTO> findAllById(List<Long> ids) {
     List<MenuProductEntity> products = repository.findAllById(ids);
-    return products.stream().map(mapper::toDomain).collect(Collectors.toList());
+    return products.stream().map(mapper::toDTO).collect(Collectors.toList());
   }
 
 }
