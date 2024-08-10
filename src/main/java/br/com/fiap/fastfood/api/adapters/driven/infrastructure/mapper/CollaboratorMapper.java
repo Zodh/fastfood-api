@@ -1,8 +1,8 @@
-package br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper;
+package br.com.fiap.fastfood.api.core.application.mapper;
 
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.person.CollaboratorEntity;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.person.DocumentTypeEnum;
-import br.com.fiap.fastfood.api.adapters.driver.dto.collaborator.CollaboratorDTO;
+import br.com.fiap.fastfood.api.core.application.dto.collaborator.CollaboratorDTO;
 import br.com.fiap.fastfood.api.core.domain.model.person.Collaborator;
 import br.com.fiap.fastfood.api.core.domain.model.person.vo.DocumentType;
 import org.mapstruct.Mapper;

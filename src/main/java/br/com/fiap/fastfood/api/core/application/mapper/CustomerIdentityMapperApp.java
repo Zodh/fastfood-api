@@ -1,6 +1,6 @@
-package br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper;
+package br.com.fiap.fastfood.api.core.application.mapper;
 
-import br.com.fiap.fastfood.api.adapters.driver.dto.customer.CustomerIdentityDTO;
+import br.com.fiap.fastfood.api.core.application.dto.customer.CustomerIdentityDTO;
 import br.com.fiap.fastfood.api.core.domain.model.person.Customer;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

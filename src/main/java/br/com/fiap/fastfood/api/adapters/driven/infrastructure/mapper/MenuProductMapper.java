@@ -1,7 +1,7 @@
-package br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper;
+package br.com.fiap.fastfood.api.core.application.mapper;
 
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.product.MenuProductEntity;
-import br.com.fiap.fastfood.api.adapters.driver.dto.product.MenuProductDTO;
+import br.com.fiap.fastfood.api.core.application.dto.product.MenuProductDTO;
 import br.com.fiap.fastfood.api.core.domain.model.product.MenuProduct;
 import org.mapstruct.*;
 import org.springframework.util.CollectionUtils;

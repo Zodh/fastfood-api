@@ -1,7 +1,9 @@
-package br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper;
+package br.com.fiap.fastfood.api.core.application.mapper;
 
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.invoice.InvoiceEntity;
-import br.com.fiap.fastfood.api.adapters.driver.dto.invoice.InvoiceDTO;
+import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.InvoiceVendorMapperImpl;
+import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.OrderMapperImpl;
+import br.com.fiap.fastfood.api.core.application.dto.invoice.InvoiceDTO;
 import br.com.fiap.fastfood.api.core.domain.model.invoice.state.InvoiceStateEnum;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.invoice.InvoiceVendorEntity;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.order.OrderEntity;

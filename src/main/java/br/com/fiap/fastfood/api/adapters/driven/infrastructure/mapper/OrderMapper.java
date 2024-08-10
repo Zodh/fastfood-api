@@ -1,13 +1,16 @@
-package br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper;
+package br.com.fiap.fastfood.api.core.application.mapper;
 
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.order.OrderEntity;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.person.CollaboratorEntity;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.person.CustomerEntity;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.product.OrderProductEntity;
-import br.com.fiap.fastfood.api.adapters.driver.dto.collaborator.CollaboratorDTO;
-import br.com.fiap.fastfood.api.adapters.driver.dto.customer.CustomerDTO;
-import br.com.fiap.fastfood.api.adapters.driver.dto.order.OrderDTO;
-import br.com.fiap.fastfood.api.adapters.driver.dto.product.OrderProductDTO;
+import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.CollaboratorMapperImpl;
+import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.CustomerMapperImpl;
+import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.OrderProductMapperImpl;
+import br.com.fiap.fastfood.api.core.application.dto.collaborator.CollaboratorDTO;
+import br.com.fiap.fastfood.api.core.application.dto.customer.CustomerDTO;
+import br.com.fiap.fastfood.api.core.application.dto.order.OrderDTO;
+import br.com.fiap.fastfood.api.core.application.dto.product.OrderProductDTO;
 import br.com.fiap.fastfood.api.core.domain.model.order.Order;
 import br.com.fiap.fastfood.api.core.domain.model.order.OrderStateEnum;
 import br.com.fiap.fastfood.api.core.domain.model.order.state.OrderState;

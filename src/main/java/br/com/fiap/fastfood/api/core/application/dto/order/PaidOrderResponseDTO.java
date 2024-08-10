@@ -1,4 +1,4 @@
-package br.com.fiap.fastfood.api.adapters.driver.dto.order;
+package br.com.fiap.fastfood.api.adapters.driven.infrastructure.dto.order;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

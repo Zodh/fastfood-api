@@ -1,8 +1,8 @@
-package br.com.fiap.fastfood.api.adapters.driver.dto.order;
+package br.com.fiap.fastfood.api.adapters.driven.infrastructure.dto.order;
 
-import br.com.fiap.fastfood.api.adapters.driver.dto.collaborator.CollaboratorDTO;
-import br.com.fiap.fastfood.api.adapters.driver.dto.customer.CustomerDTO;
-import br.com.fiap.fastfood.api.adapters.driver.dto.product.OrderProductDTO;
+import br.com.fiap.fastfood.api.adapters.driven.infrastructure.dto.collaborator.CollaboratorDTO;
+import br.com.fiap.fastfood.api.adapters.driven.infrastructure.dto.customer.CustomerDTO;
+import br.com.fiap.fastfood.api.adapters.driven.infrastructure.dto.product.OrderProductDTO;
 import br.com.fiap.fastfood.api.core.domain.model.order.OrderStateEnum;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

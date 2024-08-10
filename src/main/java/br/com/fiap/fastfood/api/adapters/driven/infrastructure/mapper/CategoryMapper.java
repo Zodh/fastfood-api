@@ -1,8 +1,8 @@
-package br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper;
+package br.com.fiap.fastfood.api.core.application.mapper;
 
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.category.CategoryEntity;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.product.MenuProductEntity;
-import br.com.fiap.fastfood.api.adapters.driver.dto.category.CategoryDTO;
+import br.com.fiap.fastfood.api.core.application.dto.category.CategoryDTO;
 import br.com.fiap.fastfood.api.core.domain.model.category.Category;
 import br.com.fiap.fastfood.api.core.domain.model.product.MenuProduct;
 import org.mapstruct.*;

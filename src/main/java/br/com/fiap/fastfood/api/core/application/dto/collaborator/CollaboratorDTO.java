@@ -1,4 +1,4 @@
-package br.com.fiap.fastfood.api.adapters.driver.dto.collaborator;
+package br.com.fiap.fastfood.api.adapters.driven.infrastructure.dto.collaborator;
 
 import br.com.fiap.fastfood.api.core.domain.model.person.CollaboratorRoleEnum;
 import lombok.AccessLevel;

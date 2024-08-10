@@ -1,4 +1,4 @@
-package br.com.fiap.fastfood.api.adapters.driver.dto.invoice;
+package br.com.fiap.fastfood.api.adapters.driven.infrastructure.dto.invoice;
 
 import br.com.fiap.fastfood.api.core.domain.model.invoice.state.InvoiceStateEnum;
 import java.math.BigDecimal;
