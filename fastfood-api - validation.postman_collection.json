@@ -1,0 +1,1320 @@
+{
+	"info": {
+		"_postman_id": "009c2a70-6039-4f7a-bf14-bb61477ffee0",
+		"name": "fastfood-api - validation",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17304835"
+	},
+	"item": [
+		{
+			"name": "atendimento",
+			"item": [
+				{
+					"name": "Criar cliente",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Seu nome\",\n  \"email\": \"seu.email@gmail.com\",\n  \"phoneNumber\": \"(00) 00000-0000\",\n  \"documentNumber\": \"000.000.000-00\",\n  \"documentType\": \"CPF\",\n  \"birthdate\": \"2001-01-01\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/customers",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"customers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ativar cliente",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/activation-code/:activationCode",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"activation-code",
+								":activationCode"
+							],
+							"variable": [
+								{
+									"key": "activationCode",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Gerar novo codigo",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/activation-code/generate?email=seu.email@gmail.com",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"activation-code",
+								"generate"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "seu.email@gmail.com"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Identificar cliente",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/customers?documentNumber=000.000.000-00&documentType=CPF",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"customers"
+							],
+							"query": [
+								{
+									"key": "documentNumber",
+									"value": "000.000.000-00"
+								},
+								{
+									"key": "documentType",
+									"value": "CPF"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Criar pedido",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/orders",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"orders"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "produto",
+			"item": [
+				{
+					"name": "menu",
+					"item": [
+						{
+							"name": "criar produtos",
+							"item": [
+								{
+									"name": "Criar hamburger",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"Hamburguer\",\r\n    \"quantity\": 1,\r\n    \"cost\": \"0.80\",\r\n    \"price\": \"1.00\",\r\n    \"optional\": true,\r\n    \"ingredient\": true,\r\n    \"preparationTimeInMillis\": 60000\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8080/menu-products",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"menu-products"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Criar mostarda",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"Mustard\",\r\n    \"quantity\": 1,\r\n    \"cost\": \"0.30\",\r\n    \"price\": \"0.50\",\r\n    \"optional\": true,\r\n    \"ingredient\": true\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8080/menu-products",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"menu-products"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Criar ketchup",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"Ketchup\",\r\n    \"quantity\": 1,\r\n    \"cost\": \"0.05\",\r\n    \"price\": \"0.50\",\r\n    \"optional\": true,\r\n    \"ingredient\": true\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8080/menu-products",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"menu-products"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Criar pão",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"Bread\",\r\n    \"quantity\": 1,\r\n    \"cost\": \"0.50\",\r\n    \"price\": \"0.80\",\r\n    \"optional\": true,\r\n    \"ingredient\": true\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8080/menu-products",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"menu-products"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Criar hyper",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"Hyper Burger\",\r\n    \"quantity\": 1,\r\n    \"optional\": false,\r\n    \"ingredient\": false,\r\n    \"preparationTimeInMillis\": 150000,\r\n    \"price\": \"15.50\",\r\n    \"ingredients\": [\r\n        {\r\n            \"id\": 4\r\n        },\r\n        {\r\n            \"id\": 1\r\n        },\r\n        {\r\n            \"id\": 2\r\n        },\r\n        {\r\n            \"id\": 3\r\n        }\r\n    ]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8080/menu-products",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"menu-products"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Criar produto",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Batata\",\r\n    \"quantity\": 1,\r\n    \"optional\": false,\r\n    \"ingredient\": true,\r\n    \"preparationTimeInMillis\": 240000,\r\n    \"price\": \"4.00\",\r\n    \"cost\": \"2.00\",\r\n    \"ingredients\": [\r\n        \r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/menu-products",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"menu-products"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "0 - Hamburger",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"Hamburguer\",\r\n    \"quantity\": 1,\r\n    \"cost\": \"0.80\",\r\n    \"optional\": true,\r\n    \"ingredient\": true,\r\n    \"preparationTimeInMillis\": 60000\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8080/menu-products",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"menu-products"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "plain",
+									"header": [
+										{
+											"key": "Content-Length",
+											"value": "0"
+										},
+										{
+											"key": "Date",
+											"value": "Mon, 29 Jul 2024 02:44:41 GMT"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=60"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "1 - Mustard",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"Mustard\",\r\n    \"quantity\": 1,\r\n    \"cost\": \"0.30\",\r\n    \"optional\": true,\r\n    \"ingredient\": true\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8080/menu-products",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"menu-products"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "plain",
+									"header": [
+										{
+											"key": "Content-Length",
+											"value": "0"
+										},
+										{
+											"key": "Date",
+											"value": "Mon, 29 Jul 2024 02:47:33 GMT"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=60"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "2 - Ketchup",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"Ketchup\",\r\n    \"quantity\": 1,\r\n    \"cost\": \"0.05\",\r\n    \"optional\": true,\r\n    \"ingredient\": true\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8080/menu-products",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"menu-products"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "plain",
+									"header": [
+										{
+											"key": "Content-Length",
+											"value": "0"
+										},
+										{
+											"key": "Date",
+											"value": "Mon, 29 Jul 2024 02:48:28 GMT"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=60"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "3 - Bread",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"Bread\",\r\n    \"quantity\": 1,\r\n    \"cost\": \"0.50\",\r\n    \"optional\": true,\r\n    \"ingredient\": true\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8080/menu-products",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"menu-products"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "plain",
+									"header": [
+										{
+											"key": "Content-Length",
+											"value": "0"
+										},
+										{
+											"key": "Date",
+											"value": "Mon, 29 Jul 2024 02:49:08 GMT"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=60"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "4 - Hyper",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"Hyper Burger\",\r\n    \"quantity\": 1,\r\n    \"optional\": false,\r\n    \"ingredient\": false,\r\n    \"preparationTimeInMillis\": 150000,\r\n    \"price\": \"15.50\",\r\n    \"ingredients\": [\r\n        {\r\n            \"id\": 4\r\n        },\r\n        {\r\n            \"id\": 1\r\n        },\r\n        {\r\n            \"id\": 2\r\n        },\r\n        {\r\n            \"id\": 3\r\n        }\r\n    ]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8080/menu-products",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"menu-products"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "plain",
+									"header": [
+										{
+											"key": "Content-Length",
+											"value": "0"
+										},
+										{
+											"key": "Date",
+											"value": "Mon, 29 Jul 2024 02:52:45 GMT"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=60"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "Busca todos os produtos",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/menu-products",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"menu-products"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Busca por id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/menu-products/:menuProductId",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"menu-products",
+										":menuProductId"
+									],
+									"variable": [
+										{
+											"key": "menuProductId",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Atualiza produto",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\": 5,\r\n    \"name\": \"Hyper Burger\",\r\n    \"description\": null,\r\n    \"price\": 15.50,\r\n    \"preparationTimeInMillis\": 200000,\r\n    \"quantity\": 1,\r\n    \"cost\": 1000,\r\n    \"optionals\": [],\r\n    \"ingredients\": [\r\n        {\r\n            \"id\": 1,\r\n            \"name\": \"Hamburguer\",\r\n            \"description\": null,\r\n            \"price\": null,\r\n            \"preparationTimeInMillis\": 60000,\r\n            \"quantity\": 1,\r\n            \"cost\": 0.80,\r\n            \"optionals\": [],\r\n            \"ingredients\": [],\r\n            \"optional\": true,\r\n            \"ingredient\": true\r\n        },\r\n        {\r\n            \"id\": 1,\r\n            \"name\": \"Hamburguer\",\r\n            \"description\": null,\r\n            \"price\": null,\r\n            \"preparationTimeInMillis\": 60000,\r\n            \"quantity\": 1,\r\n            \"cost\": 0.80,\r\n            \"optionals\": [],\r\n            \"ingredients\": [],\r\n            \"optional\": true,\r\n            \"ingredient\": true\r\n        },\r\n        {\r\n            \"id\": 2,\r\n            \"name\": \"Mustard\",\r\n            \"description\": null,\r\n            \"price\": null,\r\n            \"preparationTimeInMillis\": null,\r\n            \"quantity\": 1,\r\n            \"cost\": 0.30,\r\n            \"optionals\": [],\r\n            \"ingredients\": [],\r\n            \"optional\": true,\r\n            \"ingredient\": true\r\n        },\r\n        {\r\n            \"id\": 3,\r\n            \"name\": \"Ketchup\",\r\n            \"description\": null,\r\n            \"price\": null,\r\n            \"preparationTimeInMillis\": null,\r\n            \"quantity\": 1,\r\n            \"cost\": 0.05,\r\n            \"optionals\": [],\r\n            \"ingredients\": [],\r\n            \"optional\": true,\r\n            \"ingredient\": true\r\n        }\r\n    ],\r\n    \"optional\": false,\r\n    \"ingredient\": false\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/menu-products/:menuProductId",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"menu-products",
+										":menuProductId"
+									],
+									"variable": [
+										{
+											"key": "menuProductId",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Remove produto",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/menu-products/:menuProductId",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"menu-products",
+										":menuProductId"
+									],
+									"variable": [
+										{
+											"key": "menuProductId",
+											"value": "4"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "categoria",
+			"item": [
+				{
+					"name": "Cria Categoria",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Bebida\",\n    \"description\": \"As mais saborosas bebidas do mundo!\",\n    \"enabled\": true,\n    \"products\": [\n        {\n            \"id\": 10\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/categories",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edita categoria",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 2,\n    \"name\": \"Bebida\",\n    \"description\": \"As mais saborosas bebidas do bairro!\",\n    \"enabled\": true,\n    \"products\": [\n        {\n            \"id\": 10,\n            \"name\": \"Pink Lemonade\",\n            \"price\": 13.00,\n            \"preparationTimeInMillis\": 180000,\n            \"quantity\": 1,\n            \"cost\": 2.45,\n            \"ingredients\": [\n                {\n                    \"id\": 6,\n                    \"name\": \"Água\",\n                    \"price\": 2.50,\n                    \"preparationTimeInMillis\": 0,\n                    \"quantity\": 1,\n                    \"cost\": 0.50,\n                    \"ingredients\": [],\n                    \"optional\": false,\n                    \"ingredient\": true\n                },\n                {\n                    \"id\": 7,\n                    \"name\": \"Limão\",\n                    \"price\": 1.00,\n                    \"preparationTimeInMillis\": 30000,\n                    \"quantity\": 1,\n                    \"cost\": 0.15,\n                    \"ingredients\": [],\n                    \"optional\": true,\n                    \"ingredient\": true\n                },\n                {\n                    \"id\": 8,\n                    \"name\": \"Morango\",\n                    \"price\": 1.50,\n                    \"preparationTimeInMillis\": 60000,\n                    \"quantity\": 1,\n                    \"cost\": 0.90,\n                    \"ingredients\": [],\n                    \"optional\": true,\n                    \"ingredient\": true\n                },\n                {\n                    \"id\": 9,\n                    \"name\": \"Amora\",\n                    \"price\": 1.50,\n                    \"preparationTimeInMillis\": 60000,\n                    \"quantity\": 1,\n                    \"cost\": 0.90,\n                    \"ingredients\": [],\n                    \"optional\": true,\n                    \"ingredient\": true\n                }\n            ],\n            \"optional\": false,\n            \"ingredient\": false\n        },\n        {\n            \"id\": 6\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/categories/:categoryId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"categories",
+								":categoryId"
+							],
+							"variable": [
+								{
+									"key": "categoryId",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Busca categoria por nome",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/categories/:categoryName",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"categories",
+								":categoryName"
+							],
+							"variable": [
+								{
+									"key": "categoryName",
+									"value": "Bebida"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Busca todas as categorias",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/categories",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Busca categoria por id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/categories/:categoryId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"categories",
+								":categoryId"
+							],
+							"variable": [
+								{
+									"key": "categoryId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deleta categoria por id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/categories/:categoryId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"categories",
+								":categoryId"
+							],
+							"variable": [
+								{
+									"key": "categoryId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "order",
+			"item": [
+				{
+					"name": "Incluir produto no pedido",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"menuProduct\": {\r\n        \"id\": 5\r\n    },\r\n    \"quantity\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/orders/:orderId/products",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"orders",
+								":orderId",
+								"products"
+							],
+							"variable": [
+								{
+									"key": "orderId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Incluir opcional no produto do pedido",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"menuProduct\": {\r\n        \"id\": 1\r\n    },\r\n    \"quantity\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/orders/:orderId/products/:orderProductId/optionals",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"orders",
+								":orderId",
+								"products",
+								":orderProductId",
+								"optionals"
+							],
+							"variable": [
+								{
+									"key": "orderId",
+									"value": ""
+								},
+								{
+									"key": "orderProductId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remover opcional do produto do pedido",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/orders/:orderId/products/:orderProductId/optionals/:optionalId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"orders",
+								":orderId",
+								"products",
+								":orderProductId",
+								"optionals",
+								":optionalId"
+							],
+							"variable": [
+								{
+									"key": "orderId",
+									"value": ""
+								},
+								{
+									"key": "orderProductId",
+									"value": ""
+								},
+								{
+									"key": "optionalId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Confirmar pedido",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/orders/:orderId/confirm",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"orders",
+								":orderId",
+								"confirm"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "orderId",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Pagar fatura",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/orders/:orderId/pay",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"orders",
+								":orderId",
+								"pay"
+							],
+							"variable": [
+								{
+									"key": "orderId",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Iniciar preparo do pedido",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/orders/:orderId/prepare",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"orders",
+								":orderId",
+								"prepare"
+							],
+							"variable": [
+								{
+									"key": "orderId",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Finalizar preparo do pedido",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/orders/:orderId/ready",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"orders",
+								":orderId",
+								"ready"
+							],
+							"variable": [
+								{
+									"key": "orderId",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Coletar pedido (finalizar)",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/orders/:orderId/finish",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"orders",
+								":orderId",
+								"finish"
+							],
+							"variable": [
+								{
+									"key": "orderId",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remover produto do pedido",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/orders/1/products/11",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"orders",
+								"1",
+								"products",
+								"11"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cancelar pedido",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/orders/:orderId/cancel",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"orders",
+								":orderId",
+								"cancel"
+							],
+							"variable": [
+								{
+									"key": "orderId",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Consultar fatura",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/orders/:orderId/invoice",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"orders",
+								":orderId",
+								"invoice"
+							],
+							"variable": [
+								{
+									"key": "orderId",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deve remover ingrediente",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/orders/:orderId/products/:orderProductId/ingredients/:ingredientId?shouldRemove=true",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"orders",
+								":orderId",
+								"products",
+								":orderProductId",
+								"ingredients",
+								":ingredientId"
+							],
+							"query": [
+								{
+									"key": "shouldRemove",
+									"value": "true"
+								}
+							],
+							"variable": [
+								{
+									"key": "orderId",
+									"value": "2"
+								},
+								{
+									"key": "orderProductId",
+									"value": "10"
+								},
+								{
+									"key": "ingredientId",
+									"value": "11"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar pedidos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/orders",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"orders"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "acompanhamento",
+			"item": [
+				{
+					"name": "Listar status atual dos pedidos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/follow-up",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"follow-up"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
