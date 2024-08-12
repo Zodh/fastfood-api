@@ -11,7 +11,7 @@ import org.mapstruct.*;
 import java.util.List;
 
 @Mapper(unmappedSourcePolicy = ReportingPolicy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
-public interface InvoiceMapper {
+public interface InvoiceMapperInfra {
 
     @Mapping(source = "dto.order", target = "order", qualifiedByName = "mapOrderToEntity")
     InvoiceEntity toEntity(InvoiceDTO dto);
@@ -23,18 +23,18 @@ public interface InvoiceMapper {
 
     @Named("mapOrderToEntity")
     default OrderEntity mapOrderToEntity(OrderDTO orderDTO) {
-        return new OrderMapperImpl().toEntity(orderDTO);
+        return new OrderMapperInfraImpl().toEntity(orderDTO);
     }
 
     @Named("mapVendorToDomain")
     default InvoiceVendorDTO mapVendorToDomain(InvoiceVendorEntity entity) {
-        InvoiceVendorMapper invoiceMapper = new InvoiceVendorMapperImpl();
+        InvoiceVendorMapperInfra invoiceMapper = new InvoiceVendorMapperInfraImpl();
         return invoiceMapper.toDTO(entity);
     }
 
     @Named("mapOrderToDTO")
     default OrderDTO mapOrderToDTO(OrderEntity entity) {
-        OrderMapper orderMapper = new OrderMapperImpl();
-        return orderMapper.toDTO(entity);
+        OrderMapperInfra orderMapperInfra = new OrderMapperInfraImpl();
+        return orderMapperInfra.toDTO(entity);
     }
 }

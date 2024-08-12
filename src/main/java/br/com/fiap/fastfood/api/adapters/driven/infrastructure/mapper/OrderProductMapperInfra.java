@@ -5,7 +5,6 @@ import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.product.Or
 import br.com.fiap.fastfood.api.core.application.dto.product.MenuProductDTO;
 import br.com.fiap.fastfood.api.core.application.dto.product.OrderProductDTO;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -16,7 +15,7 @@ import org.mapstruct.NullValueCheckStrategy;
 import org.mapstruct.ReportingPolicy;
 
 @Mapper(unmappedSourcePolicy = ReportingPolicy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
-public interface OrderProductMapper {
+public interface OrderProductMapperInfra {
 
   @Mapping(source = "entity.ingredients", target = "ingredients", qualifiedByName = "mapListToDTO")
   @Mapping(source = "entity.optionals", target = "optionals", qualifiedByName = "mapListToDTO")
@@ -42,14 +41,14 @@ public interface OrderProductMapper {
 
   @Named("mapMenuProductToDTO")
   default MenuProductDTO mapMenuProductToDTO(MenuProductEntity menuProductEntity) {
-    MenuProductMapper menuProductMapper = new MenuProductMapperImpl();
-    return menuProductMapper.toDTO(menuProductEntity);
+    MenuProductMapperInfra menuProductMapperInfra = new MenuProductMapperInfraImpl();
+    return menuProductMapperInfra.toDTO(menuProductEntity);
   }
 
   @Named("mapMenuProductToEntity")
   default MenuProductEntity mapMenuProductToEntity(MenuProductDTO menuProduct) {
-    MenuProductMapper menuProductMapper = new MenuProductMapperImpl();
-    return menuProductMapper.toEntity(menuProduct);
+    MenuProductMapperInfra menuProductMapperInfra = new MenuProductMapperInfraImpl();
+    return menuProductMapperInfra.toEntity(menuProduct);
   }
 
 }

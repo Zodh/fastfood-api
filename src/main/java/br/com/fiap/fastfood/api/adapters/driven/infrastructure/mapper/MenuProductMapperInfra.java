@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Mapper(unmappedSourcePolicy = ReportingPolicy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
-public interface MenuProductMapper {
+public interface MenuProductMapperInfra {
 
     @Mapping(source = "entity.ingredients", target = "ingredients", qualifiedByName = "mapListToDomain")
     MenuProductDTO toDTO(MenuProductEntity entity);

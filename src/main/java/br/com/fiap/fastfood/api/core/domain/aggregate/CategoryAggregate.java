@@ -5,8 +5,8 @@ import br.com.fiap.fastfood.api.core.domain.exception.ErrorDetail;
 import br.com.fiap.fastfood.api.core.domain.model.category.Category;
 import br.com.fiap.fastfood.api.core.domain.model.category.CategoryValidator;
 import java.util.List;
+import java.util.Objects;
 import lombok.Data;
-import org.springframework.util.CollectionUtils;
 
 @Data
 public class CategoryAggregate {
@@ -25,7 +25,7 @@ public class CategoryAggregate {
 
   public void create() {
     List<ErrorDetail> errors = categoryValidator.validate(categoryRoot);
-    if (!CollectionUtils.isEmpty(errors)) {
+    if (Objects.nonNull(errors) && !errors.isEmpty()) {
       throw new DomainException(errors);
     }
   }
@@ -33,7 +33,7 @@ public class CategoryAggregate {
   public void update(Category current) {
     categoryRoot.setId(current.getId());
     List<ErrorDetail> errors = categoryValidator.validate(categoryRoot);
-    if (!CollectionUtils.isEmpty(errors)) {
+    if (Objects.nonNull(errors) && !errors.isEmpty()) {
       throw new DomainException(errors);
     }
   }

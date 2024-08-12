@@ -4,7 +4,6 @@ import br.com.fiap.fastfood.api.core.application.exception.NotFoundException;
 import br.com.fiap.fastfood.api.core.domain.exception.DomainException;
 import br.com.fiap.fastfood.api.core.domain.exception.ErrorDetail;
 import br.com.fiap.fastfood.api.core.domain.model.invoice.Invoice;
-import br.com.fiap.fastfood.api.core.domain.model.invoice.state.impl.InvoicePaidState;
 import br.com.fiap.fastfood.api.core.domain.model.invoice.state.impl.InvoicePendingState;
 import br.com.fiap.fastfood.api.core.domain.model.order.state.OrderState;
 import br.com.fiap.fastfood.api.core.domain.model.person.Collaborator;
@@ -13,7 +12,6 @@ import br.com.fiap.fastfood.api.core.domain.model.product.OrderProduct;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -60,6 +58,11 @@ public class Order {
         .filter(current -> current.getState() instanceof InvoicePendingState)
         .findFirst()
         .orElse(null);
+  }
+
+  public OrderProduct findProductById(Long productId) {
+    return Optional.ofNullable(this.getProducts()).orElse(new ArrayList<>()).stream().filter(op -> Objects.nonNull(op) && Objects.equals(
+        op.getId(), productId)).findFirst().orElseThrow(() -> new DomainException(new ErrorDetail("order.products", String.format("Não foi encontrado um produto com o identificador %d", productId))));
   }
 
   public boolean hasInvoice() {

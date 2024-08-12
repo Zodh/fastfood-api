@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.springframework.util.CollectionUtils;
 
 public class OrderProductValidator implements Validator<OrderProduct> {
 
@@ -15,7 +14,7 @@ public class OrderProductValidator implements Validator<OrderProduct> {
   @Override
   public List<ErrorDetail> validate(OrderProduct object) {
     List<ErrorDetail> errors = productValidator.validate(object);
-    if (CollectionUtils.isEmpty(object.getIngredients())) {
+    if (!object.isOptional() && !object.isIngredient() && (Objects.isNull(object.getIngredients()) || object.getIngredients().isEmpty())) {
       errors.add(new ErrorDetail("product.ingredients",
           "O produto do pedido deve conter ao menos um ingrediente!"));
     }
@@ -37,7 +36,7 @@ public class OrderProductValidator implements Validator<OrderProduct> {
       errors.add(new ErrorDetail("product.ingredients",
           "Todos os ingredientes do produto do pedido devem estar contidos no produto do menu!"));
     }
-    if (!CollectionUtils.isEmpty(object.getOptionals()) && object.getOptionals().stream().anyMatch(optional -> Objects.isNull(optional) || Objects.isNull(optional.getMenuProduct()) || Objects.isNull(optional.getMenuProduct().getId()) || optional.getMenuProduct().getId() <= 0)) {
+    if (Objects.nonNull(object.getOptionals()) && !object.getOptionals().isEmpty() && object.getOptionals().stream().anyMatch(optional -> Objects.isNull(optional) || Objects.isNull(optional.getMenuProduct()) || Objects.isNull(optional.getMenuProduct().getId()) || optional.getMenuProduct().getId() <= 0)) {
       errors.add(new ErrorDetail("product.optionals", "Os opcionais devem se basear em algum produto do menu válido!"));
     }
     return errors;

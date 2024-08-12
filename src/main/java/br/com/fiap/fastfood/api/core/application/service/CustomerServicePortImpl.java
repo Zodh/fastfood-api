@@ -22,7 +22,7 @@ public class CustomerServicePortImpl implements CustomerServicePort {
   private final EmailSenderPort emailSender;
   private final ActivationCodeService activationCodeService;
   private final PersonValidator personValidator;
-  private CustomerMapperApp customerMapperApp;
+  private final CustomerMapperApp customerMapperApp;
 
   public CustomerServicePortImpl(
       CustomerRepositoryPort repository,

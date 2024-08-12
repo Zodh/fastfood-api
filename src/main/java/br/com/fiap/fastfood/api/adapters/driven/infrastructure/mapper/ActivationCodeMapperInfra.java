@@ -11,15 +11,15 @@ import org.mapstruct.NullValueCheckStrategy;
 import org.mapstruct.ReportingPolicy;
 
 @Mapper(unmappedSourcePolicy = ReportingPolicy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
-public interface ActivationCodeMapper {
+public interface ActivationCodeMapperInfra {
 
   @Mapping(source = "dto.customer", target = "customer", qualifiedByName = "mapCustomerEntity")
   ActivationCodeEntity toEntity(ActivationCodeDTO dto);
 
   @Named("mapCustomerEntity")
   default CustomerEntity mapCustomerEntity(CustomerDTO dto) {
-    CustomerMapper customerMapper = new CustomerMapperImpl();
-    return customerMapper.toEntity(dto);
+    CustomerMapperInfra customerMapperInfra = new CustomerMapperInfraImpl();
+    return customerMapperInfra.toEntity(dto);
   }
 
   @Mapping(source = "entity.customer", target = "customer", qualifiedByName = "mapCustomerDTO")
@@ -27,8 +27,8 @@ public interface ActivationCodeMapper {
 
   @Named("mapCustomerDTO")
   default CustomerDTO mapCustomerDTO(CustomerEntity entity) {
-    CustomerMapper customerMapper = new CustomerMapperImpl();
-    return customerMapper.toDTO(entity);
+    CustomerMapperInfra customerMapperInfra = new CustomerMapperInfraImpl();
+    return customerMapperInfra.toDTO(entity);
   }
 
 }

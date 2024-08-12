@@ -1,7 +1,7 @@
 package br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.adapter;
 
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.category.CategoryEntity;
-import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.CategoryMapper;
+import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.CategoryMapperInfra;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.category.CategoryRepository;
 import br.com.fiap.fastfood.api.core.application.dto.category.CategoryDTO;
 import br.com.fiap.fastfood.api.core.application.port.repository.CategoryRepositoryPort;
@@ -15,10 +15,10 @@ import java.util.Optional;
 public class CategoryRepositoryAdapterImpl implements CategoryRepositoryPort {
 
   private final CategoryRepository repository;
-  private final CategoryMapper mapper;
+  private final CategoryMapperInfra mapper;
 
   @Autowired
-  public CategoryRepositoryAdapterImpl(CategoryRepository repository, CategoryMapper mapper) {
+  public CategoryRepositoryAdapterImpl(CategoryRepository repository, CategoryMapperInfra mapper) {
     this.repository = repository;
     this.mapper = mapper;
   }

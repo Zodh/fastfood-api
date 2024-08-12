@@ -65,6 +65,21 @@ public class OrderReceivedState extends OrderState {
   }
 
   @Override
+  public void includeOptionalInProduct() {
+    throw new OrderOperationNotAllowedException();
+  }
+
+  @Override
+  public void removeOptionalFromProduct() {
+    new OrderOperationNotAllowedException();
+  }
+
+  @Override
+  public void updateIngredientRemoval(Long productId, Long ingredientId, boolean shouldRemove) {
+    new OrderOperationNotAllowedException();
+  }
+
+  @Override
   public OrderStateEnum getDescription() {
     return OrderStateEnum.RECEIVED;
   }

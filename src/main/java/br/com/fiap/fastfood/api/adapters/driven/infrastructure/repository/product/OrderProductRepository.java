@@ -22,4 +22,9 @@ public interface OrderProductRepository extends JpaRepository<OrderProductEntity
   @Query(value = "DELETE FROM order_product_optional WHERE order_optional_id IN (:ids)", nativeQuery = true)
   void deleteOptionalByIds(@Param("ids") List<Long> ids);
 
+  @Modifying
+  @Transactional
+  @Query(value = "DELETE FROM order_product WHERE id IN (:ids)", nativeQuery = true)
+  void deleteAllById(@Param("ids") List<Long> ids);
+
 }

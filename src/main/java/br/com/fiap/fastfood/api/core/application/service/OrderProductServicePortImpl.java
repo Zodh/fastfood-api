@@ -48,41 +48,46 @@ public class OrderProductServicePortImpl implements OrderProductServicePort {
     }
 
     @Override
-    public OrderProductDTO includeOptional(Long orderProductId, OrderProductDTO optional) {
+    public OrderProductDTO includeOptional(OrderDTO orderDTO, Long orderProductId, OrderProductDTO optional) {
         OrderProductDTO orderProductDTO = getById(orderProductId);
         OrderProductDTO validOptionalDTO = validateAndDetail(optional);
         if (!validOptionalDTO.isOptional()) {
             throw new DomainException(new ErrorDetail("optional", "O produto selecionado não é um opcional!"));
         }
         OrderProduct validOptional = orderProductMapperApp.toDomain(validOptionalDTO);
-        OrderProduct orderProduct = orderProductMapperApp.toDomain(orderProductDTO);
-        orderProduct.includeOptional(validOptional);
         validOptional.calculateCost();
         validOptional.calculatePrice();
+        OrderProductDTO updatedValidOptional = orderProductMapperApp.toDto(validOptional);
+        OrderProductDTO persistedOptional = orderProductRepository.save(updatedValidOptional);
+        validOptional.setId(persistedOptional.getId());
 
+        OrderProduct orderProduct = orderProductMapperApp.toDomain(orderProductDTO);
+        orderProduct.includeOptional(validOptional);
         orderProduct.calculateCost();
         orderProduct.calculatePrice();
+
         OrderProductDTO updatedOrderProduct = orderProductMapperApp.toDto(orderProduct);
-        orderProductRepository.save(updatedOrderProduct);
+        orderProductRepository.save(orderDTO, updatedOrderProduct);
         return updatedOrderProduct;
     }
 
     @Override
-    public OrderProductDTO removeOptional(Long orderProductId, Long optionalId) {
+    public OrderProductDTO removeOptional(OrderDTO orderDTO, Long orderProductId, Long optionalId) {
         OrderProductDTO orderProductDTO = getById(orderProductId);
         OrderProduct orderProduct = orderProductMapperApp.toDomain(orderProductDTO);
+
         OrderProduct optional = orderProduct.findOptionalById(optionalId);
-        orderProductRepository.delete(optional.getId());
-        OrderProductDTO updatedWithoutCalculateDTO = getById(orderProductId);
-        OrderProduct updatedWithoutCalculate = orderProductMapperApp.toDomain(updatedWithoutCalculateDTO);
-        updatedWithoutCalculate.calculatePrice();
-        updatedWithoutCalculate.calculateCost();
-        OrderProductDTO calculated = orderProductMapperApp.toDto(updatedWithoutCalculate);
-        return orderProductRepository.save(calculated);
+        orderProduct.removeOptional(optionalId);
+        orderProduct.calculatePrice();
+        orderProduct.calculateCost();
+        this.delete(optional.getId());
+
+        OrderProductDTO calculated = orderProductMapperApp.toDto(orderProduct);
+        return orderProductRepository.save(orderDTO, calculated);
     }
 
     @Override
-    public OrderProductDTO updateShouldRemove(Long orderProductId, Long ingredientId, boolean shouldRemove) {
+    public OrderProductDTO updateShouldRemove(OrderDTO orderDTO, Long orderProductId, Long ingredientId, boolean shouldRemove) {
         OrderProductDTO orderProductDTO = getById(orderProductId);
         OrderProduct orderProduct = orderProductMapperApp.toDomain(orderProductDTO);
         OrderProduct ingredient = orderProduct.findIngredientById(ingredientId);
@@ -90,8 +95,9 @@ public class OrderProductServicePortImpl implements OrderProductServicePort {
         orderProduct.calculateCost();
         orderProduct.calculatePrice();
         OrderProductDTO orderProductWithIngredientForRemoval = orderProductMapperApp.toDto(orderProduct);
+
         // TODO: validar atualização em cascata de ingredientes. Criado em: 02/08/2024 ás 05:31:34.
-        return orderProductRepository.save(orderProductWithIngredientForRemoval);
+        return orderProductRepository.save(orderDTO, orderProductWithIngredientForRemoval);
     }
 
     @Override
@@ -110,6 +116,12 @@ public class OrderProductServicePortImpl implements OrderProductServicePort {
                 OrderProductDTO::getId).toList();
             orderProductRepository.deleteOptionals(optionals);
             allOrderProductIdsToDelete.addAll(optionals);
+        }
+        if (orderProduct.isOptional()) {
+            orderProductRepository.deleteOptionals(List.of(orderProduct.getId()));
+        }
+        if (orderProduct.isIngredient()) {
+            orderProductRepository.deleteIngredients(List.of(orderProduct.getId()));
         }
         orderProductRepository.deleteAllById(allOrderProductIdsToDelete);
     }
@@ -139,6 +151,16 @@ public class OrderProductServicePortImpl implements OrderProductServicePort {
         orderProduct.calculatePrice();
 
         return orderProductMapperApp.toDto(orderProduct);
+    }
+
+    @Override
+    public OrderProductDTO save(OrderProductDTO orderProductDTO) {
+        return orderProductRepository.save(orderProductDTO);
+    }
+
+    @Override
+    public OrderProductDTO save(OrderDTO orderDTO, OrderProductDTO orderProductDTO) {
+        return orderProductRepository.save(orderDTO, orderProductDTO);
     }
 
     private OrderProductDTO findMenuProductAndClone(OrderProductDTO orderProductDTO) {

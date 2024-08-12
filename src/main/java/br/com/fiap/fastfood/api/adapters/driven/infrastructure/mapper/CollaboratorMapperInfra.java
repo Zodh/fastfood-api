@@ -7,7 +7,7 @@ import org.mapstruct.NullValueCheckStrategy;
 import org.mapstruct.ReportingPolicy;
 
 @Mapper(unmappedSourcePolicy = ReportingPolicy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
-public interface CollaboratorMapper {
+public interface CollaboratorMapperInfra {
 
   CollaboratorEntity toEntity(CollaboratorDTO dto);
 

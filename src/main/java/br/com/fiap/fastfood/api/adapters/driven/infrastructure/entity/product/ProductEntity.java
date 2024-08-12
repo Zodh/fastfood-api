@@ -9,8 +9,6 @@ import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;

@@ -1,28 +1,25 @@
 package br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.adapter;
 
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.product.MenuProductEntity;
-import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.MenuProductMapper;
+import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.MenuProductMapperInfra;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.product.MenuProductRepository;
 import br.com.fiap.fastfood.api.core.application.dto.product.MenuProductDTO;
-import br.com.fiap.fastfood.api.core.domain.model.product.MenuProduct;
 import br.com.fiap.fastfood.api.core.application.port.repository.MenuProductRepositoryPort;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Component
 public class MenuProductRepositoryAdapterImpl implements MenuProductRepositoryPort {
 
   private final MenuProductRepository repository;
-  private final MenuProductMapper mapper;
+  private final MenuProductMapperInfra mapper;
 
   @Autowired
   public MenuProductRepositoryAdapterImpl(MenuProductRepository repository,
-                                          MenuProductMapper mapper) {
+      MenuProductMapperInfra mapper) {
     this.repository = repository;
     this.mapper = mapper;
   }
@@ -64,7 +61,8 @@ public class MenuProductRepositoryAdapterImpl implements MenuProductRepositoryPo
 
   @Override
   public List<Long> fetchProductsRelatedToProduct(Long productId) {
-    return repository.fetchProductsByIngredient(productId).stream().distinct().collect(Collectors.toList());
+    return repository.fetchProductsByIngredient(productId).stream().distinct()
+        .collect(Collectors.toList());
   }
 
   @Override

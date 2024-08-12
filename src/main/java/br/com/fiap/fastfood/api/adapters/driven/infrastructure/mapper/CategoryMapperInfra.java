@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Mapper(unmappedSourcePolicy = ReportingPolicy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
-public interface CategoryMapper {
+public interface CategoryMapperInfra {
 
   @Mapping(source = "entity.categoryProducts", target = "products", qualifiedByName = "mapListToDTO")
   CategoryDTO toDTO(CategoryEntity entity);

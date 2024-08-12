@@ -2,6 +2,7 @@ package br.com.fiap.fastfood.api.core.application.service;
 
 import br.com.fiap.fastfood.api.core.application.dto.collaborator.CollaboratorDTO;
 import br.com.fiap.fastfood.api.core.application.dto.customer.CustomerDTO;
+import br.com.fiap.fastfood.api.core.application.dto.followup.FollowUpStateEnum;
 import br.com.fiap.fastfood.api.core.application.dto.invoice.InvoiceDTO;
 import br.com.fiap.fastfood.api.core.application.dto.order.OrderDTO;
 import br.com.fiap.fastfood.api.core.application.dto.product.OrderProductDTO;
@@ -15,6 +16,7 @@ import br.com.fiap.fastfood.api.core.application.mapper.OrderMapperApp;
 import br.com.fiap.fastfood.api.core.application.mapper.OrderMapperAppImpl;
 import br.com.fiap.fastfood.api.core.application.mapper.OrderProductMapperApp;
 import br.com.fiap.fastfood.api.core.application.mapper.OrderProductMapperAppImpl;
+import br.com.fiap.fastfood.api.core.application.policy.FollowUpPolicy;
 import br.com.fiap.fastfood.api.core.application.policy.OrderInvoicePolicy;
 import br.com.fiap.fastfood.api.core.application.exception.ApplicationException;
 import br.com.fiap.fastfood.api.core.application.exception.NotFoundException;
@@ -30,6 +32,8 @@ import br.com.fiap.fastfood.api.core.domain.model.product.OrderProduct;
 import br.com.fiap.fastfood.api.core.application.port.inbound.service.CustomerServicePort;
 import br.com.fiap.fastfood.api.core.application.port.inbound.service.OrderProductServicePort;
 import br.com.fiap.fastfood.api.core.application.port.inbound.service.OrderServicePort;
+import br.com.fiap.fastfood.api.core.domain.port.outbound.EmailSenderPort;
+import java.util.List;
 import java.util.Objects;
 import org.apache.commons.lang3.StringUtils;
 
@@ -44,8 +48,10 @@ public class OrderServicePortImpl implements OrderServicePort {
   private final CustomerMapperApp customerMapperApp;
   private final CollaboratorMapperApp collaboratorMapperApp;
   private final InvoiceMapperApp invoiceMapperApp;
+  private final EmailSenderPort emailSenderPort;
+  private final FollowUpPolicy followUpPolicy;
 
-  public OrderServicePortImpl(OrderRepositoryPort orderRepositoryPort, CustomerServicePort customerServicePort, OrderProductServicePort orderProductServicePort, OrderInvoicePolicy orderInvoicePolicy) {
+  public OrderServicePortImpl(OrderRepositoryPort orderRepositoryPort, CustomerServicePort customerServicePort, OrderProductServicePort orderProductServicePort, OrderInvoicePolicy orderInvoicePolicy, EmailSenderPort emailSenderPort, FollowUpPolicy followUpPolicy) {
     this.orderRepositoryPort = orderRepositoryPort;
     this.customerServicePort = customerServicePort;
     this.orderProductServicePort = orderProductServicePort;
@@ -55,6 +61,8 @@ public class OrderServicePortImpl implements OrderServicePort {
     this.customerMapperApp = new CustomerMapperAppImpl();
     this.collaboratorMapperApp = new CollaboratorMapperAppImpl();
     this.invoiceMapperApp = new InvoiceMapperAppImpl();
+    this.emailSenderPort = emailSenderPort;
+    this.followUpPolicy = followUpPolicy;
   }
 
   @Override
@@ -72,7 +80,7 @@ public class OrderServicePortImpl implements OrderServicePort {
   public OrderDTO includeOrderProduct(Long orderId, OrderProductDTO orderProductDTO) {
     OrderDTO orderDTO = getById(orderId);
     Order order = orderMapperApp.toDomain(orderDTO);
-    order.setState(orderMapperApp.mapStateImpl(orderDTO.getState(), order));
+    order.changeState(orderMapperApp.mapStateImpl(orderDTO.getState(), order));
     OrderProductDTO detailedDTO = orderProductServicePort.create(orderDTO, orderProductDTO);
     OrderProduct detailed = orderProductMapperApp.toDomain(detailedDTO);
     OrderAggregate aggregate = new OrderAggregate(order);
@@ -95,7 +103,7 @@ public class OrderServicePortImpl implements OrderServicePort {
   public OrderDTO removeOrderProduct(Long orderId, Long orderProductId) {
     OrderDTO orderDTO = getById(orderId);
     Order order = orderMapperApp.toDomain(orderDTO);
-    order.setState(orderMapperApp.mapStateImpl(orderDTO.getState(), order));
+    order.changeState(orderMapperApp.mapStateImpl(orderDTO.getState(), order));
     OrderAggregate aggregate = new OrderAggregate(order);
     aggregate.removeOrderProduct(orderProductId);
     orderProductServicePort.delete(orderProductId);
@@ -107,7 +115,7 @@ public class OrderServicePortImpl implements OrderServicePort {
   public void cancel(Long orderId) {
     OrderDTO orderDTO = getById(orderId);
     Order order = orderMapperApp.toDomain(orderDTO);
-    order.setState(orderMapperApp.mapStateImpl(orderDTO.getState(), order));
+    order.changeState(orderMapperApp.mapStateImpl(orderDTO.getState(), order));
     OrderAggregate aggregate = new OrderAggregate(order);
     aggregate.cancelOrder();
     OrderDTO updatedOrderDTO = orderMapperApp.toDTO(order);
@@ -119,7 +127,7 @@ public class OrderServicePortImpl implements OrderServicePort {
   public OrderDTO confirm(Long orderId) {
     OrderDTO orderDTO = getById(orderId);
     Order order = orderMapperApp.toDomain(orderDTO);
-    order.setState(orderMapperApp.mapStateImpl(orderDTO.getState(), order));
+    order.changeState(orderMapperApp.mapStateImpl(orderDTO.getState(), order));
     OrderAggregate aggregate = new OrderAggregate(order);
     aggregate.confirmOrder();
     OrderDTO updatedOrder = orderMapperApp.toDTO(order);
@@ -129,51 +137,109 @@ public class OrderServicePortImpl implements OrderServicePort {
   }
 
   @Override
-  public void turnReadyToPrepare(Long orderId) {
+  public OrderDTO includeOptional(Long orderId, Long orderProductId, OrderProductDTO optionalDTO) {
+    // Fetch order and check if can add optional into it
     OrderDTO orderDTO = getById(orderId);
     Order order = orderMapperApp.toDomain(orderDTO);
-    order.setState(orderMapperApp.mapStateImpl(orderDTO.getState(), order));
-    EstablishmentAggregate aggregate = new EstablishmentAggregate(order);
-    aggregate.turnReadyToPrepare();
+    order.changeState(orderMapperApp.mapStateImpl(orderDTO.getState(), order));
+    OrderAggregate aggregate = new OrderAggregate(order);
+    aggregate.includeOptionalInProduct();
+
+    // Include optional
+    orderProductServicePort.includeOptional(orderDTO, orderProductId, optionalDTO);
+
+    // Fetch order with optional, update price and save.
+    OrderDTO orderWithNewOptionalDTO = getById(orderId);
+    Order orderWithNewOptional = orderMapperApp.toDomain(orderWithNewOptionalDTO);
+    orderWithNewOptional.changeState(orderMapperApp.mapStateImpl(orderWithNewOptionalDTO.getState(), orderWithNewOptional));
+    orderWithNewOptional.calculatePrice();
+    OrderDTO result = orderMapperApp.toDTO(orderWithNewOptional);
+    return save(result);
+  }
+
+  @Override
+  public OrderDTO removeOptional(Long orderId, Long orderProductId, Long optionalId) {
+    OrderDTO orderDTO = getById(orderId);
+    Order order = orderMapperApp.toDomain(orderDTO);
+    order.changeState(orderMapperApp.mapStateImpl(orderDTO.getState(), order));
+    OrderAggregate aggregate = new OrderAggregate(order);
+    aggregate.removeOptionalFromProduct();
+
+    orderProductServicePort.removeOptional(orderDTO, orderProductId, optionalId);
+
+    // Fetch order with optional, update price and save.
+    OrderDTO orderWithoutOptionalDTO = getById(orderId);
+    Order orderWithoutOptional = orderMapperApp.toDomain(orderWithoutOptionalDTO);
+    orderWithoutOptional.changeState(orderMapperApp.mapStateImpl(orderWithoutOptionalDTO.getState(), orderWithoutOptional));
+    orderWithoutOptional.calculatePrice();
+    OrderDTO result = orderMapperApp.toDTO(orderWithoutOptional);
+    return save(result);
+  }
+
+  @Override
+  public OrderDTO updateShouldRemoveIngredient(Long orderId, Long orderProductId, Long ingredientId,
+      boolean shouldRemove) {
+    OrderDTO orderDTO = getById(orderId);
+    Order order = orderMapperApp.toDomain(orderDTO);
+    order.changeState(orderMapperApp.mapStateImpl(orderDTO.getState(), order));
+    OrderAggregate aggregate = new OrderAggregate(order);
+    aggregate.updateShouldRemoveIngredient(orderProductId, ingredientId, shouldRemove);
+
+    // The ingredient doesnt contains the order reference in itself
+    OrderProduct orderProduct = order.findProductById(orderProductId);
+    OrderProductDTO orderProductDTO = orderProductMapperApp.toDto(orderProduct);
+
+    OrderProduct ingredient = orderProduct.findIngredientById(ingredientId);
+    OrderProductDTO ingredientDTO = orderProductMapperApp.toDto(ingredient);
+
+    orderProductServicePort.save(ingredientDTO);
+
     OrderDTO updatedOrder = orderMapperApp.toDTO(order);
-    save(updatedOrder);
+    OrderDTO persistedOrder = orderRepositoryPort.save(updatedOrder);
+    orderProductServicePort.save(persistedOrder, orderProductDTO);
+
+    return getById(orderId);
+  }
+
+  @Override
+  public List<OrderDTO> findAll() {
+    return orderRepositoryPort.findAll();
   }
 
   @Override
   public void prepare(Long orderId) {
     OrderDTO orderDTO = getById(orderId);
     Order order = orderMapperApp.toDomain(orderDTO);
-    order.setState(orderMapperApp.mapStateImpl(orderDTO.getState(), order));
+    order.changeState(orderMapperApp.mapStateImpl(orderDTO.getState(), order));
     EstablishmentAggregate aggregate = new EstablishmentAggregate(order);
     aggregate.initializePreparation();
     OrderDTO updatedOrder = orderMapperApp.toDTO(order);
-    orderRepositoryPort.save(updatedOrder);
-    // Politica de follow up.
+    OrderDTO persisted = orderRepositoryPort.save(updatedOrder);
+    followUpPolicy.updateOrderInFollowUp(persisted, FollowUpStateEnum.IN_PREPARATION);
   }
 
   @Override
   public void turnReadyToPick(Long orderId) {
     OrderDTO orderDTO = getById(orderId);
     Order order = orderMapperApp.toDomain(orderDTO);
-    order.setState(orderMapperApp.mapStateImpl(orderDTO.getState(), order));
-    EstablishmentAggregate aggregate = new EstablishmentAggregate(order);
+    order.changeState(orderMapperApp.mapStateImpl(orderDTO.getState(), order));
+    EstablishmentAggregate aggregate = new EstablishmentAggregate(order, emailSenderPort);
     aggregate.setReadyToCollection();
     OrderDTO updatedOrder = orderMapperApp.toDTO(order);
-    orderRepositoryPort.save(updatedOrder);
-    // Politica de follow up.
-    // Send notification.
+    OrderDTO persisted = orderRepositoryPort.save(updatedOrder);
+    followUpPolicy.updateOrderInFollowUp(persisted, FollowUpStateEnum.READY);
   }
 
   @Override
   public void finish(Long orderId) {
     OrderDTO orderDTO = getById(orderId);
     Order order = orderMapperApp.toDomain(orderDTO);
-    order.setState(orderMapperApp.mapStateImpl(orderDTO.getState(), order));
+    order.changeState(orderMapperApp.mapStateImpl(orderDTO.getState(), order));
     EstablishmentAggregate aggregate = new EstablishmentAggregate(order);
     aggregate.finishOrder();
     OrderDTO updatedOrder = orderMapperApp.toDTO(order);
-    orderRepositoryPort.save(updatedOrder);
-    // Politica de follow up.
+    OrderDTO persisted = orderRepositoryPort.save(updatedOrder);
+    followUpPolicy.updateOrderInFollowUp(persisted, FollowUpStateEnum.FINISHED);
   }
 
   private OrderDTO save(OrderDTO orderDTO) {

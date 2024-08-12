@@ -19,11 +19,13 @@ public class OrderProductDTO {
     private String name;
     private String description;
     private BigDecimal price;
+    private BigDecimal cost;
     private Long preparationTimeInMillis;
     private int quantity;
     private List<OrderProductDTO> ingredients;
     private List<OrderProductDTO> optionals;
     private boolean optional;
     private boolean ingredient;
+    protected boolean shouldRemove;
 
 }

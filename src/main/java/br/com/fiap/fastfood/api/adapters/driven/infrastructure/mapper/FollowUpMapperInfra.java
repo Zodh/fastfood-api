@@ -1,15 +1,16 @@
 package br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper;
 
-import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.invoice.InvoiceVendorEntity;
-import br.com.fiap.fastfood.api.core.application.dto.invoice.InvoiceVendorDTO;
+import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.followup.FollowUpEntity;
+import br.com.fiap.fastfood.api.core.application.dto.followup.FollowUpDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValueCheckStrategy;
 import org.mapstruct.ReportingPolicy;
 
 @Mapper(unmappedSourcePolicy = ReportingPolicy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
-public interface InvoiceVendorMapper {
+public interface FollowUpMapperInfra {
 
-    InvoiceVendorEntity toEntity(InvoiceVendorDTO dto);
-    InvoiceVendorDTO toDTO(InvoiceVendorEntity entity);
+  FollowUpDTO toDTO(FollowUpEntity entity);
+
+  FollowUpEntity toEntity(FollowUpDTO dto);
 
 }

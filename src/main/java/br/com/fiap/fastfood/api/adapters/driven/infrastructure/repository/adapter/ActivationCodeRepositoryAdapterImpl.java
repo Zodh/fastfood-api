@@ -1,9 +1,9 @@
-package br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.person.activation;
+package br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.adapter;
 
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.person.activation.ActivationCodeEntity;
-import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.ActivationCodeMapper;
+import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.ActivationCodeMapperInfra;
+import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.person.activation.ActivationCodeRepository;
 import br.com.fiap.fastfood.api.core.application.dto.customer.activation.ActivationCodeDTO;
-import br.com.fiap.fastfood.api.core.domain.model.person.activation.ActivationCode;
 import br.com.fiap.fastfood.api.core.application.port.repository.ActivationCodeRepositoryPort;
 import java.util.Optional;
 import java.util.UUID;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 public class ActivationCodeRepositoryAdapterImpl implements ActivationCodeRepositoryPort {
 
   private final ActivationCodeRepository repository;
-  private final ActivationCodeMapper mapper;
+  private final ActivationCodeMapperInfra mapper;
 
   @Override
   public Optional<ActivationCodeDTO> findById(UUID identifier) {

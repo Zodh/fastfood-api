@@ -35,4 +35,16 @@ public class OrderAggregate {
     root.getState().cancelOrder();
   }
 
+  public void includeOptionalInProduct() {
+    root.getState().includeOptionalInProduct();
+  }
+
+  public void removeOptionalFromProduct() {
+    root.getState().removeOptionalFromProduct();
+  }
+
+  public void updateShouldRemoveIngredient(Long productId, Long ingredientId, boolean shouldRemove) {
+    root.getState().updateIngredientRemoval(productId, ingredientId, shouldRemove);
+  }
+
 }

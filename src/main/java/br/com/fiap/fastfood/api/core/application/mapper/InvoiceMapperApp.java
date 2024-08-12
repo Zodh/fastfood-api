@@ -76,7 +76,7 @@ public interface InvoiceMapperApp {
   default Order mapOrder(OrderDTO orderDTO) {
     OrderMapperApp orderMapperApp = new OrderMapperAppImpl();
     Order order = orderMapperApp.toDomain(orderDTO);
-    order.setState(orderMapperApp.mapStateImpl(orderDTO.getState(), order));
+    order.changeState(orderMapperApp.mapStateImpl(orderDTO.getState(), order));
     return order;
   }
 

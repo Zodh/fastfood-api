@@ -51,8 +51,8 @@ public class OrderProduct extends Product {
     public void calculatePrice() {
         BigDecimal basePrice = Optional.ofNullable(menuProduct.getPrice()).orElse(BigDecimal.ZERO);
         BigDecimal optionalsPrice = Optional.ofNullable(optionals).orElse(new ArrayList<>()).stream()
-            .filter(opt -> Objects.nonNull(opt) && Objects.nonNull(opt.getPrice()))
-            .map(op -> op.getPrice().multiply(new BigDecimal(op.getQuantity())))
+            .filter(opt -> Objects.nonNull(opt) && Objects.nonNull(opt.getPrice()) && opt.getPrice().compareTo(BigDecimal.ZERO) >= 0)
+            .map(opt -> opt.getMenuProduct().getPrice().multiply(new BigDecimal(opt.getQuantity())))
             .reduce(BigDecimal.ZERO, BigDecimal::add);
         if (quantity == 0) {
             quantity = 1;
@@ -118,6 +118,11 @@ public class OrderProduct extends Product {
                 ingredient.getId(), id)).findFirst().orElseThrow(() -> new DomainException(
                 new ErrorDetail("orderProduct.ingredients",
                     "Não foi encontrado um ingrediente com o id informado!")));
+    }
+
+    public void removeOptional(Long optionalId) {
+        this.optionals = Optional.ofNullable(this.optionals).orElse(Collections.emptyList()).stream().filter(op -> Objects.nonNull(op) && !Objects.equals(
+            op.getId(), optionalId)).collect(Collectors.toList());
     }
 
 }

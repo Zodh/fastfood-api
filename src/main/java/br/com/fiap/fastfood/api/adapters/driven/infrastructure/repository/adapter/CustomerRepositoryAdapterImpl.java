@@ -1,8 +1,8 @@
 package br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.adapter;
 
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.person.CustomerEntity;
+import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.CustomerMapperInfra;
 import br.com.fiap.fastfood.api.core.application.dto.customer.DocumentTypeEnum;
-import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.CustomerMapper;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.person.CustomerRepository;
 import br.com.fiap.fastfood.api.core.application.dto.customer.CustomerDTO;
 import br.com.fiap.fastfood.api.core.application.port.repository.CustomerRepositoryPort;
@@ -14,11 +14,11 @@ import org.springframework.stereotype.Component;
 public class CustomerRepositoryAdapterImpl implements CustomerRepositoryPort {
 
   private final CustomerRepository repository;
-  private final CustomerMapper mapper;
+  private final CustomerMapperInfra mapper;
 
   @Autowired
   public CustomerRepositoryAdapterImpl(CustomerRepository repository,
-      CustomerMapper mapper) {
+      CustomerMapperInfra mapper) {
     this.repository = repository;
     this.mapper = mapper;
   }

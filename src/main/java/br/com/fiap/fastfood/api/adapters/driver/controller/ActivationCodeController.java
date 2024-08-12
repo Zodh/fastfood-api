@@ -3,7 +3,7 @@ package br.com.fiap.fastfood.api.adapters.driver.controller;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.email.ActivationCodeLinkGenerator;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.email.EmailSender;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.adapter.CustomerRepositoryAdapterImpl;
-import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.person.activation.ActivationCodeRepositoryAdapterImpl;
+import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.adapter.ActivationCodeRepositoryAdapterImpl;
 import br.com.fiap.fastfood.api.core.application.service.CustomerServicePortImpl;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;

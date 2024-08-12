@@ -1,14 +1,13 @@
 package br.com.fiap.fastfood.api.adapters.driver.controller;
 
-import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.CategoryMapper;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.adapter.CategoryRepositoryAdapterImpl;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.adapter.MenuProductRepositoryAdapterImpl;
 import br.com.fiap.fastfood.api.core.application.dto.category.CategoryDTO;
 import br.com.fiap.fastfood.api.core.application.dto.category.CategoryResponseDTO;
+import br.com.fiap.fastfood.api.core.application.port.inbound.service.CategoryServicePort;
 import br.com.fiap.fastfood.api.core.application.port.inbound.service.MenuProductServicePort;
 import br.com.fiap.fastfood.api.core.application.service.CategoryServicePortImpl;
 import br.com.fiap.fastfood.api.core.application.service.MenuProductServicePortImpl;
-import br.com.fiap.fastfood.api.core.application.port.inbound.service.CategoryServicePort;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,14 +27,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class CategoryController {
 
   private final CategoryServicePort categoryServicePort;
-  private final CategoryMapper mapper;
 
   @Autowired
   public CategoryController(
-      MenuProductRepositoryAdapterImpl menuProductRepositoryAdapter, CategoryRepositoryAdapterImpl categoryRepositoryAdapter, CategoryMapper mapper) {
-    MenuProductServicePort menuProductServicePort = new MenuProductServicePortImpl(menuProductRepositoryAdapter);
-    this.categoryServicePort = new CategoryServicePortImpl(menuProductServicePort, categoryRepositoryAdapter);
-    this.mapper = mapper;
+      MenuProductRepositoryAdapterImpl menuProductRepositoryAdapter,
+      CategoryRepositoryAdapterImpl categoryRepositoryAdapter) {
+    MenuProductServicePort menuProductServicePort = new MenuProductServicePortImpl(
+        menuProductRepositoryAdapter);
+    this.categoryServicePort = new CategoryServicePortImpl(menuProductServicePort,
+        categoryRepositoryAdapter);
   }
 
   @GetMapping

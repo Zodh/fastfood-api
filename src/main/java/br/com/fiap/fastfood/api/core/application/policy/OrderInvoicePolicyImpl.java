@@ -1,5 +1,6 @@
 package br.com.fiap.fastfood.api.core.application.policy;
 
+import br.com.fiap.fastfood.api.core.application.dto.followup.FollowUpStateEnum;
 import br.com.fiap.fastfood.api.core.application.dto.invoice.InvoiceDTO;
 import br.com.fiap.fastfood.api.core.application.dto.order.OrderDTO;
 import br.com.fiap.fastfood.api.core.application.mapper.InvoiceMapperApp;
@@ -21,12 +22,14 @@ public class OrderInvoicePolicyImpl implements OrderInvoicePolicy {
   private final OrderRepositoryPort orderRepositoryPort;
   private final InvoiceMapperApp invoiceMapperApp;
   private final OrderMapperApp orderMapperApp;
+  private final FollowUpPolicy followUpPolicy;
 
-  public OrderInvoicePolicyImpl(InvoiceRepositoryPort invoiceRepositoryPort, OrderRepositoryPort orderRepositoryPort) {
+  public OrderInvoicePolicyImpl(InvoiceRepositoryPort invoiceRepositoryPort, OrderRepositoryPort orderRepositoryPort, FollowUpPolicy followUpPolicy) {
     this.invoiceRepositoryPort = invoiceRepositoryPort;
     this.orderRepositoryPort = orderRepositoryPort;
     this.invoiceMapperApp = new InvoiceMapperAppImpl();
     this.orderMapperApp = new OrderMapperAppImpl();
+    this.followUpPolicy = followUpPolicy;
   }
 
   @Override
@@ -42,7 +45,7 @@ public class OrderInvoicePolicyImpl implements OrderInvoicePolicy {
     InvoiceAggregate invoiceAggregate = new InvoiceAggregate();
     this.cancelOrderInvoice(orderDTO);
     Order order = orderMapperApp.toDomain(orderDTO);
-    order.setState(orderMapperApp.mapStateImpl(orderDTO.getState(), order));
+    order.changeState(orderMapperApp.mapStateImpl(orderDTO.getState(), order));
     Invoice invoice = invoiceAggregate.createInvoice(order);
     InvoiceDTO validInvoice = invoiceMapperApp.toDto(invoice);
     orderDTO.setInvoice(invoiceRepositoryPort.save(validInvoice));
@@ -51,12 +54,13 @@ public class OrderInvoicePolicyImpl implements OrderInvoicePolicy {
   @Override
   public void defineOrderEligibleToPreparation(OrderDTO orderDTO) {
     Order order = orderMapperApp.toDomain(orderDTO);
-    order.setState(orderMapperApp.mapStateImpl(orderDTO.getState(), order));
+    order.changeState(orderMapperApp.mapStateImpl(orderDTO.getState(), order));
     EstablishmentAggregate aggregate = new EstablishmentAggregate(order);
     aggregate.turnReadyToPrepare();
     OrderDTO orderReadyToPreparation = orderMapperApp.toDTO(order);
-    orderRepositoryPort.save(orderReadyToPreparation);
-    // Politica de follow up.
+    OrderDTO persisted = orderRepositoryPort.save(orderReadyToPreparation);
+    followUpPolicy.updateOrderInFollowUp(persisted,
+        FollowUpStateEnum.RECEIVED);
   }
 
 }
