@@ -24,6 +24,9 @@ public abstract class OrderState {
   public abstract void finish();
   public abstract void setCustomer(Customer customer);
   public abstract void setCollaborator(Collaborator collaborator);
+  public abstract void includeOptionalInProduct();
+  public abstract void removeOptionalFromProduct();
+  public abstract void updateIngredientRemoval(Long productId, Long ingredientId, boolean shouldRemove);
 
   public abstract OrderStateEnum getDescription();
 

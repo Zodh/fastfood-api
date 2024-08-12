@@ -2,44 +2,45 @@ package br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.adapt
 
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.order.OrderEntity;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.product.OrderProductEntity;
-import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.OrderMapper;
-import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.OrderMapperImpl;
-import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.OrderProductMapper;
-import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.OrderProductMapperImpl;
+import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.OrderMapperInfra;
+import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.OrderMapperInfraImpl;
+import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.OrderProductMapperInfra;
+import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.OrderProductMapperInfraImpl;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.product.OrderProductRepository;
-import br.com.fiap.fastfood.api.core.application.ports.repository.OrderProductRepositoryPort;
-import br.com.fiap.fastfood.api.core.domain.model.order.Order;
-import br.com.fiap.fastfood.api.core.domain.model.product.OrderProduct;
+import br.com.fiap.fastfood.api.core.application.dto.order.OrderDTO;
+import br.com.fiap.fastfood.api.core.application.dto.product.OrderProductDTO;
+import br.com.fiap.fastfood.api.core.application.port.repository.OrderProductRepositoryPort;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class OrderProductRepositoryAdapterImpl implements OrderProductRepositoryPort {
 
   private final OrderProductRepository repository;
-  private final OrderProductMapper orderProductMapper;
-  private final OrderMapper orderMapper;
+  private final OrderProductMapperInfra orderProductMapperInfra;
+  private final OrderMapperInfra orderMapperInfra;
 
   @Autowired
   public OrderProductRepositoryAdapterImpl(OrderProductRepository repository) {
     this.repository = repository;
-    this.orderProductMapper = new OrderProductMapperImpl();
-    this.orderMapper = new OrderMapperImpl();
+    this.orderProductMapperInfra = new OrderProductMapperInfraImpl();
+    this.orderMapperInfra = new OrderMapperInfraImpl();
   }
 
   @Override
-  public Optional<OrderProduct> findById(Long identifier) {
+  public Optional<OrderProductDTO> findById(Long identifier) {
     Optional<OrderProductEntity> entity = repository.findById(identifier);
-    return entity.map(orderProductMapper::toDomain);
+    return entity.map(orderProductMapperInfra::toDTO);
   }
 
   @Override
-  public OrderProduct save(OrderProduct data) {
-    OrderProductEntity entity = orderProductMapper.toEntity(data);
+  public OrderProductDTO save(OrderProductDTO data) {
+    OrderProductEntity entity = orderProductMapperInfra.toEntity(data);
     OrderProductEntity persistedEntity = repository.save(entity);
-    return orderProductMapper.toDomain(persistedEntity);
+    return orderProductMapperInfra.toDTO(persistedEntity);
   }
 
   @Override
@@ -49,12 +50,12 @@ public class OrderProductRepositoryAdapterImpl implements OrderProductRepository
   }
 
   @Override
-  public OrderProduct save(Order order, OrderProduct orderProduct) {
-    OrderEntity orderEntity = orderMapper.toEntity(order);
-    OrderProductEntity orderProductEntity = orderProductMapper.toEntity(orderProduct);
+  public OrderProductDTO save(OrderDTO order, OrderProductDTO orderProduct) {
+    OrderEntity orderEntity = orderMapperInfra.toEntity(order);
+    OrderProductEntity orderProductEntity = orderProductMapperInfra.toEntity(orderProduct);
     orderProductEntity.setOrder(orderEntity);
     OrderProductEntity persistedOrderProductEntity = repository.save(orderProductEntity);
-    return orderProductMapper.toDomain(persistedOrderProductEntity);
+    return orderProductMapperInfra.toDTO(persistedOrderProductEntity);
   }
 
   @Override
@@ -68,6 +69,7 @@ public class OrderProductRepositoryAdapterImpl implements OrderProductRepository
   }
 
   @Override
+  @Transactional
   public void deleteAllById(List<Long> ids) {
     repository.deleteAllById(ids);
   }

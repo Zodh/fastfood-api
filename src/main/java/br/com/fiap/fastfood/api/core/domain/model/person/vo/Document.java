@@ -14,9 +14,9 @@ public class Document {
   private DocumentType type;
   private final Matcher matcher;
 
-  public Document(String value) {
+  public Document(String value, String documentType) {
     this.value = value;
-    this.type = DocumentType.CPF;
+    this.type = DocumentType.valueOf(documentType);
     this.matcher = Pattern.compile(type.getRegex()).matcher(value);
   }
 

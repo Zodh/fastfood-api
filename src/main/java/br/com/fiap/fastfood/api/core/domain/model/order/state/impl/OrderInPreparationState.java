@@ -45,7 +45,7 @@ public class OrderInPreparationState extends OrderState {
 
   @Override
   public void setReadyToCollection() {
-    this.order.changeState(new OrderPickupReadyState(this.order));
+    this.order.changeState(new OrderReadyState(this.order));
   }
 
   @Override
@@ -61,6 +61,21 @@ public class OrderInPreparationState extends OrderState {
   @Override
   public void setCollaborator(Collaborator collaborator) {
     throw new OrderOperationNotAllowedException();
+  }
+
+  @Override
+  public void includeOptionalInProduct() {
+    throw new OrderOperationNotAllowedException();
+  }
+
+  @Override
+  public void removeOptionalFromProduct() {
+    new OrderOperationNotAllowedException();
+  }
+
+  @Override
+  public void updateIngredientRemoval(Long productId, Long ingredientId, boolean shouldRemove) {
+    new OrderOperationNotAllowedException();
   }
 
   @Override

@@ -35,7 +35,7 @@ public class OrderAwaitingPaymentState extends OrderState {
 
   @Override
   public void setAwaitingPreparation() {
-    this.order.changeState(new OrderAwaitingPreparationState(this.order));
+    this.order.changeState(new OrderReceivedState(this.order));
   }
 
   @Override
@@ -61,6 +61,21 @@ public class OrderAwaitingPaymentState extends OrderState {
   @Override
   public void setCollaborator(Collaborator collaborator) {
     throw new OrderOperationNotAllowedException();
+  }
+
+  @Override
+  public void includeOptionalInProduct() {
+    throw new OrderOperationNotAllowedException();
+  }
+
+  @Override
+  public void removeOptionalFromProduct() {
+    new OrderOperationNotAllowedException();
+  }
+
+  @Override
+  public void updateIngredientRemoval(Long productId, Long ingredientId, boolean shouldRemove) {
+    new OrderOperationNotAllowedException();
   }
 
   @Override

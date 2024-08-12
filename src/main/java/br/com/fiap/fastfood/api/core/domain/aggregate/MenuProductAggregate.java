@@ -5,8 +5,8 @@ import br.com.fiap.fastfood.api.core.domain.exception.ErrorDetail;
 import br.com.fiap.fastfood.api.core.domain.model.product.MenuProduct;
 import br.com.fiap.fastfood.api.core.domain.model.product.MenuProductValidator;
 import java.util.List;
+import java.util.Objects;
 import lombok.Data;
-import org.springframework.util.CollectionUtils;
 
 @Data
 public class MenuProductAggregate {
@@ -22,7 +22,7 @@ public class MenuProductAggregate {
 
   public void create() {
     List<ErrorDetail> errors = menuProductValidator.validate(root);
-    if (!CollectionUtils.isEmpty(errors)) {
+    if (Objects.nonNull(errors) && !errors.isEmpty()) {
       throw new DomainException(errors);
     }
   }
@@ -30,7 +30,7 @@ public class MenuProductAggregate {
   public void update(MenuProduct current) {
     root.setId(current.getId());
     List<ErrorDetail> errors = menuProductValidator.validate(root);
-    if (!CollectionUtils.isEmpty(errors)) {
+    if (Objects.nonNull(errors) && !errors.isEmpty()) {
       throw new DomainException(errors);
     }
   }

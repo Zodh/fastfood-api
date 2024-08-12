@@ -13,7 +13,6 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 import lombok.NoArgsConstructor;
-import org.springframework.util.CollectionUtils;
 
 @Data
 @AllArgsConstructor
@@ -27,7 +26,7 @@ public class InvoiceAggregate {
             throw new DomainException(new ErrorDetail("order", "Não é possível criar um pagamento para um pedido nulo ou sem um preço definido!"));
         }
         BigDecimal paidAmount = BigDecimal.ZERO;
-        if (!CollectionUtils.isEmpty(order.getInvoices()) && order.getInvoices().stream().anyMatch(i -> i.getState() instanceof InvoicePaidState)) {
+        if (Objects.nonNull(order.getInvoices()) && !order.getInvoices().isEmpty() && order.getInvoices().stream().anyMatch(i -> i.getState() instanceof InvoicePaidState)) {
             paidAmount = order.getInvoices().stream()
                 .filter(i -> Objects.nonNull(i) && Objects.nonNull(i.getState())
                     && i.getState() instanceof InvoicePaidState && Objects.nonNull(i.getPrice()))
@@ -45,8 +44,7 @@ public class InvoiceAggregate {
         return invoice;
     }
 
-    public Invoice pay() {
+    public void pay() {
         invoice.getState().payInvoice();
-        return invoice;
     }
 }

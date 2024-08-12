@@ -35,20 +35,16 @@ public class OrderAggregate {
     root.getState().cancelOrder();
   }
 
-  public void turnReadyToPrepare() {
-    root.getState().setAwaitingPreparation();
+  public void includeOptionalInProduct() {
+    root.getState().includeOptionalInProduct();
   }
 
-  public void initializePreparation() {
-    root.getState().initializePreparation();
+  public void removeOptionalFromProduct() {
+    root.getState().removeOptionalFromProduct();
   }
 
-  public void setReadyToCollection() {
-    root.getState().setReadyToCollection();
-  }
-
-  public void finishOrder () {
-    root.getState().finish();
+  public void updateShouldRemoveIngredient(Long productId, Long ingredientId, boolean shouldRemove) {
+    root.getState().updateIngredientRemoval(productId, ingredientId, shouldRemove);
   }
 
 }

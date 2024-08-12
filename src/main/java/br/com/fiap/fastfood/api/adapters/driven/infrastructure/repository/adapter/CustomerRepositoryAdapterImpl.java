@@ -1,12 +1,11 @@
 package br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.adapter;
 
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.person.CustomerEntity;
-import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.person.DocumentTypeEnum;
-import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.CustomerMapper;
+import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.CustomerMapperInfra;
+import br.com.fiap.fastfood.api.core.application.dto.customer.DocumentTypeEnum;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.person.CustomerRepository;
-import br.com.fiap.fastfood.api.core.domain.model.person.Customer;
-import br.com.fiap.fastfood.api.core.domain.model.person.vo.Document;
-import br.com.fiap.fastfood.api.core.application.ports.repository.CustomerRepositoryPort;
+import br.com.fiap.fastfood.api.core.application.dto.customer.CustomerDTO;
+import br.com.fiap.fastfood.api.core.application.port.repository.CustomerRepositoryPort;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,25 +14,25 @@ import org.springframework.stereotype.Component;
 public class CustomerRepositoryAdapterImpl implements CustomerRepositoryPort {
 
   private final CustomerRepository repository;
-  private final CustomerMapper mapper;
+  private final CustomerMapperInfra mapper;
 
   @Autowired
   public CustomerRepositoryAdapterImpl(CustomerRepository repository,
-      CustomerMapper mapper) {
+      CustomerMapperInfra mapper) {
     this.repository = repository;
     this.mapper = mapper;
   }
 
   @Override
-  public Optional<Customer> findById(Long identifier) {
+  public Optional<CustomerDTO> findById(Long identifier) {
     Optional<CustomerEntity> entityOpt = repository.findById(identifier);
-    return entityOpt.map(mapper::toDomain);
+    return entityOpt.map(mapper::toDTO);
   }
 
   @Override
-  public Customer save(Customer data) {
+  public CustomerDTO save(CustomerDTO data) {
     CustomerEntity entity = mapper.toEntity(data);
-    return mapper.toDomain(repository.save(entity));
+    return mapper.toDTO(repository.save(entity));
   }
 
   @Override
@@ -47,16 +46,15 @@ public class CustomerRepositoryAdapterImpl implements CustomerRepositoryPort {
   }
 
   @Override
-  public Optional<Customer> findByEmail(String email) {
+  public Optional<CustomerDTO> findByEmail(String email) {
     Optional<CustomerEntity> entityOpt = repository.findByEmail(email);
-    return entityOpt.map(mapper::toDomain);
+    return entityOpt.map(mapper::toDTO);
   }
 
   @Override
-  public Optional<Customer> findByDocument(Document document) {
-    Optional<CustomerEntity> entityOpt = repository.findByDocument(document.getValue(),
-        DocumentTypeEnum.valueOf(document.getType().name()));
-    return entityOpt.map(mapper::toDomain);
+  public Optional<CustomerDTO> findByDocument(String documentNumber, DocumentTypeEnum documentType) {
+    Optional<CustomerEntity> entityOpt = repository.findByDocument(documentNumber, documentType);
+    return entityOpt.map(mapper::toDTO);
   }
 
   @Override

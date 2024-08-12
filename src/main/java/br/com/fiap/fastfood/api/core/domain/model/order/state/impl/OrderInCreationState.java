@@ -89,6 +89,34 @@ public class OrderInCreationState extends OrderState {
   }
 
   @Override
+  public void includeOptionalInProduct() {
+    // Do nothing.
+  }
+
+  @Override
+  public void removeOptionalFromProduct() {
+    // Do nothing.
+  }
+
+  @Override
+  public void updateIngredientRemoval(Long productId, Long ingredientId, boolean shouldRemove) {
+    OrderProduct product = this.order.findProductById(productId);
+    OrderProduct ingredient = product.findIngredientById(ingredientId);
+    if (product.getIngredients().stream().filter(i -> Objects.nonNull(i) && !i.isShouldRemove()).count() == 1 && shouldRemove) {
+      throw new DomainException(new ErrorDetail("order.products.ingredients", "O produto deve conter ao menos um ingrediente!"));
+    }
+    ingredient.setShouldRemove(shouldRemove);
+
+    ingredient.calculateCost();
+    ingredient.calculatePrice();
+
+    product.calculateCost();
+    product.calculatePrice();
+
+    this.order.calculatePrice();
+  }
+
+  @Override
   public OrderStateEnum getDescription() {
     return OrderStateEnum.IN_CREATION;
   }

@@ -1,69 +1,51 @@
 package br.com.fiap.fastfood.api.core.application.service;
 
-import br.com.fiap.fastfood.api.core.application.event.payment.PaymentEvent;
-import br.com.fiap.fastfood.api.core.application.event.payment.PaymentOperationEnum;
-import br.com.fiap.fastfood.api.core.application.ports.repository.InvoiceRepositoryPort;
+import br.com.fiap.fastfood.api.core.application.dto.invoice.InvoiceDTO;
+import br.com.fiap.fastfood.api.core.application.dto.order.OrderDTO;
+import br.com.fiap.fastfood.api.core.application.mapper.InvoiceMapperApp;
+import br.com.fiap.fastfood.api.core.application.mapper.InvoiceMapperAppImpl;
+import br.com.fiap.fastfood.api.core.application.mapper.OrderMapperApp;
+import br.com.fiap.fastfood.api.core.application.mapper.OrderMapperAppImpl;
+import br.com.fiap.fastfood.api.core.application.policy.OrderInvoicePolicy;
+import br.com.fiap.fastfood.api.core.application.port.repository.InvoiceRepositoryPort;
 import br.com.fiap.fastfood.api.core.domain.aggregate.InvoiceAggregate;
 import br.com.fiap.fastfood.api.core.domain.model.invoice.Invoice;
+import br.com.fiap.fastfood.api.core.application.port.inbound.service.InvoiceServicePort;
 import br.com.fiap.fastfood.api.core.domain.model.order.Order;
-import br.com.fiap.fastfood.api.core.domain.ports.inbound.InvoiceServicePort;
 import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.TimeUnit;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.lang.NonNull;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
 
-@Service
 public class InvoiceServicePortImpl implements InvoiceServicePort {
 
     private final InvoiceRepositoryPort repository;
-    @Value("${invoice.expiration.time}")
-    private int invoiceExpirationTime;
-    private final ApplicationEventPublisher eventPublisher;
+    private final OrderInvoicePolicy orderInvoicePolicy;
+    private final InvoiceMapperApp invoiceMapperApp;
+    private final OrderMapperApp orderMapperApp;
 
-    @Autowired
-    public InvoiceServicePortImpl(InvoiceRepositoryPort repository, ApplicationEventPublisher eventPublisher) {
-        this.eventPublisher = eventPublisher;
+    public InvoiceServicePortImpl(InvoiceRepositoryPort repository, OrderInvoicePolicy orderInvoicePolicy) {
         this.repository = repository;
+        this.orderInvoicePolicy = orderInvoicePolicy;
+        this.invoiceMapperApp = new InvoiceMapperAppImpl();
+        this.orderMapperApp = new OrderMapperAppImpl();
     }
 
     @Override
-    public Invoice create(Order order) {
-        InvoiceAggregate invoiceAggregate = new InvoiceAggregate();
-        cancelAllInvoicesRelatedToOrder(order);
-        Invoice invoice = invoiceAggregate.createInvoice(order);
-        return repository.save(invoice);
-    }
+    public InvoiceDTO executeFakeCheckout(OrderDTO orderDTO) {
+        Order order = orderMapperApp.toDomain(orderDTO);
+        Invoice invoice = order.getInvoice();
 
-    @Override
-    public Invoice executeFakeCheckout(Order order) {
-        InvoiceAggregate invoiceAggregate = new InvoiceAggregate(order.getInvoice());
-        Invoice invoice = invoiceAggregate.pay();
-        Invoice result = repository.save(invoice);
-        eventPublisher.publishEvent(new PaymentEvent(this, order, PaymentOperationEnum.PAY));
+        InvoiceAggregate invoiceAggregate = new InvoiceAggregate(invoice);
+        invoiceAggregate.pay();
+
+        InvoiceDTO paidInvoice = invoiceMapperApp.toDto(invoice);
+        InvoiceDTO result = repository.save(paidInvoice);
+
+        orderInvoicePolicy.defineOrderEligibleToPreparation(orderDTO);
         return result;
     }
 
     @Override
-    public void cancelAllInvoicesRelatedToOrder(@NonNull Order order) {
-        if (Objects.nonNull(order.getId()) && order.getId() > 0 && order.hasInvoice()) {
-            repository.cancelPendingInvoicesByOrder(order.getId());
-        }
-    }
-
-    @Override
-    public List<Invoice> getInvoicesByOrder(Long orderId) {
+    public List<InvoiceDTO> getInvoicesByOrder(Long orderId) {
         return repository.findByOrderId(orderId);
-    }
-
-
-    @Scheduled(fixedDelay = 30, timeUnit = TimeUnit.SECONDS)
-    public void expireOldInvoices() {
-        repository.expireOldInvoices(invoiceExpirationTime);
     }
 
 }
