@@ -26,7 +26,7 @@ public class MenuProductRepositoryAdapterImpl implements MenuProductRepositoryPo
 
   @Override
   public Optional<MenuProductDTO> findById(Long identifier) {
-    Optional<MenuProductEntity> menuProductEntityOpt = repository.findById(identifier);
+    Optional<MenuProductEntity> menuProductEntityOpt = repository.findByIdAndActiveIsTrue(identifier);
     return menuProductEntityOpt.map(mapper::toDTO);
   }
 
@@ -43,7 +43,7 @@ public class MenuProductRepositoryAdapterImpl implements MenuProductRepositoryPo
     if (menuProductEntityOpt.isEmpty()) {
       return false;
     }
-    repository.deleteById(identifier);
+    repository.updateActive(identifier, false);
     return true;
   }
 

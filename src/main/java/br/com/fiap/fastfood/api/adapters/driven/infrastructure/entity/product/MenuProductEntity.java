@@ -20,4 +20,7 @@ public class MenuProductEntity extends ProductEntity {
     )
     protected List<MenuProductEntity> ingredients;
 
+    @Column(name = "active")
+    protected boolean active;
+
 }
