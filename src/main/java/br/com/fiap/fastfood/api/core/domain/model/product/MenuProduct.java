@@ -27,6 +27,7 @@ import org.springframework.util.CollectionUtils;
 public class MenuProduct extends Product {
 
     protected List<MenuProduct> ingredients;
+    protected boolean active;
 
     @Override
     public BigDecimal getCost() {

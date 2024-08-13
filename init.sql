@@ -127,6 +127,7 @@ CREATE TABLE public.menu_product (
                                      updated_at timestamp(6) NULL,
                                      description varchar(255) NULL,
                                      "name" varchar(255) NULL,
+                                     active bool NULL,
                                      CONSTRAINT menu_product_pkey PRIMARY KEY (id)
 );
 
@@ -177,6 +178,7 @@ CREATE TABLE public.campaign_product (
                                          updated_at timestamp(6) NULL,
                                          description varchar(255) NULL,
                                          "name" varchar(255) NULL,
+                                         active bool NULL,
                                          CONSTRAINT campaign_product_pkey PRIMARY KEY (id),
                                          CONSTRAINT fkmxbi858du9wywnrtpon2lfmbm FOREIGN KEY (campaign_id) REFERENCES public.campaign(id)
 );
@@ -308,22 +310,22 @@ CREATE TABLE public.order_product_optional (
                                                CONSTRAINT fkmvtwrsxapsas4s1u5la69l93x FOREIGN KEY (order_optional_id) REFERENCES public.order_product(id)
 );
 
-INSERT INTO public.menu_product ("cost",ingredient,optional,price,quantity,created_at,id,preparation_time,updated_at,description,"name") VALUES
-                                                                                                                                             (0.80,true,true,1.00,1,'2024-08-12 20:00:51.497',1,60000,NULL,NULL,'Hamburguer'),
-                                                                                                                                             (0.30,true,true,0.50,1,'2024-08-12 20:01:08.070',2,NULL,NULL,NULL,'Mustard'),
-                                                                                                                                             (0.05,true,true,0.50,1,'2024-08-12 20:01:19.647',3,NULL,NULL,NULL,'Ketchup'),
-                                                                                                                                             (0.50,true,true,0.80,1,'2024-08-12 20:01:33.020',4,NULL,NULL,NULL,'Bread'),
-                                                                                                                                             (1.65,false,false,15.50,1,'2024-08-12 20:01:35.983',5,150000,NULL,NULL,'Hyper Burger'),
-                                                                                                                                             (0.50,true,false,2.50,1,'2024-08-12 20:06:20.570',6,0,NULL,NULL,'Água'),
-                                                                                                                                             (0.15,true,true,1.00,1,'2024-08-12 20:07:46.816',7,30000,NULL,NULL,'Limão'),
-                                                                                                                                             (0.90,true,true,1.50,1,'2024-08-12 20:08:15.114',8,60000,NULL,NULL,'Morango'),
-                                                                                                                                             (0.90,true,true,1.50,1,'2024-08-12 20:08:39.972',9,60000,NULL,NULL,'Amora'),
-                                                                                                                                             (2.45,false,false,13.00,1,'2024-08-12 20:10:13.518',10,180000,NULL,NULL,'Pink Lemonade');
-INSERT INTO public.menu_product ("cost",ingredient,optional,price,quantity,created_at,id,preparation_time,updated_at,description,"name") VALUES
-                                                                                                                                             (2.00,true,false,4.00,1,'2024-08-12 22:14:11.589',11,240000,NULL,NULL,'Batata'),
-                                                                                                                                             (2.50,true,false,10.00,1,'2024-08-12 22:15:26.349',12,180000,NULL,'Batata e oleo!','Batata Frita'),
-                                                                                                                                             (2.50,true,false,8.00,1,'2024-08-12 22:17:55.462',13,0,NULL,'Glace, glace e mais glace!','Bolinho de pote'),
-                                                                                                                                             (2.50,false,false,20.00,1,'2024-08-12 22:18:54.881',14,120000,NULL,'Glace, glace e mais glace (com sorvete incluso)!','Petit Gateou');
+INSERT INTO public.menu_product ("cost",ingredient,optional,price,quantity,created_at,id,preparation_time,updated_at,description,"name", "active") VALUES
+                                                                                                                                             (0.80,true,true,1.00,1,'2024-08-12 20:00:51.497',1,60000,NULL,NULL,'Hamburguer', true),
+                                                                                                                                             (0.30,true,true,0.50,1,'2024-08-12 20:01:08.070',2,NULL,NULL,NULL,'Mustard', true),
+                                                                                                                                             (0.05,true,true,0.50,1,'2024-08-12 20:01:19.647',3,NULL,NULL,NULL,'Ketchup', true),
+                                                                                                                                             (0.50,true,true,0.80,1,'2024-08-12 20:01:33.020',4,NULL,NULL,NULL,'Bread', true),
+                                                                                                                                             (1.65,false,false,15.50,1,'2024-08-12 20:01:35.983',5,150000,NULL,NULL,'Hyper Burger', true),
+                                                                                                                                             (0.50,true,false,2.50,1,'2024-08-12 20:06:20.570',6,0,NULL,NULL,'Água', true),
+                                                                                                                                             (0.15,true,true,1.00,1,'2024-08-12 20:07:46.816',7,30000,NULL,NULL,'Limão', true),
+                                                                                                                                             (0.90,true,true,1.50,1,'2024-08-12 20:08:15.114',8,60000,NULL,NULL,'Morango', true),
+                                                                                                                                             (0.90,true,true,1.50,1,'2024-08-12 20:08:39.972',9,60000,NULL,NULL,'Amora', true),
+                                                                                                                                             (2.45,false,false,13.00,1,'2024-08-12 20:10:13.518',10,180000,NULL,NULL,'Pink Lemonade', true);
+INSERT INTO public.menu_product ("cost",ingredient,optional,price,quantity,created_at,id,preparation_time,updated_at,description,"name", "active") VALUES
+                                                                                                                                             (2.00,true,false,4.00,1,'2024-08-12 22:14:11.589',11,240000,NULL,NULL,'Batata', true),
+                                                                                                                                             (2.50,true,false,10.00,1,'2024-08-12 22:15:26.349',12,180000,NULL,'Batata e oleo!','Batata Frita', true),
+                                                                                                                                             (2.50,true,false,8.00,1,'2024-08-12 22:17:55.462',13,0,NULL,'Glace, glace e mais glace!','Bolinho de pote', true),
+                                                                                                                                             (2.50,false,false,20.00,1,'2024-08-12 22:18:54.881',14,120000,NULL,'Glace, glace e mais glace (com sorvete incluso)!','Petit Gateou', true);
 
 
 

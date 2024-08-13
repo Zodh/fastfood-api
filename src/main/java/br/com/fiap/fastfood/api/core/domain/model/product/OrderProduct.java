@@ -40,12 +40,13 @@ public class OrderProduct extends Product {
         BigDecimal optionalsCost = CollectionUtils.isEmpty(optionals) ? BigDecimal.ZERO :
             optionals.stream()
                 .filter(op -> Objects.nonNull(op) && Objects.nonNull(op.getCost()))
-                .map(op -> op.getCost().multiply(BigDecimal.valueOf(op.getQuantity())))
+                .map(Product::getCost)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         if (quantity == 0) {
             quantity = 1;
         }
-        this.cost = ingredientCost.add(optionalsCost).multiply(BigDecimal.valueOf(quantity));
+        BigDecimal productCost = ingredientCost.add(optionalsCost);
+        this.cost = productCost.multiply(BigDecimal.valueOf(quantity));
     }
 
     public void calculatePrice() {

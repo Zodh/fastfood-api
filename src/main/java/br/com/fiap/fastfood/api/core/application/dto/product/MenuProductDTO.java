@@ -11,15 +11,16 @@ import java.util.List;
 @Builder(access = AccessLevel.PUBLIC)
 public class MenuProductDTO {
 
-    private Long id;
-    private String name;
-    private String description;
-    private BigDecimal price;
-    private Long preparationTimeInMillis;
-    private int quantity;
-    private BigDecimal cost;
-    private List<MenuProductDTO> ingredients;
-    private boolean optional;
-    private boolean ingredient;
+    protected Long id;
+    protected String name;
+    protected String description;
+    protected BigDecimal price;
+    protected Long preparationTimeInMillis;
+    protected int quantity;
+    protected BigDecimal cost;
+    protected List<MenuProductDTO> ingredients;
+    protected boolean optional;
+    protected boolean ingredient;
+    protected boolean active;
 
 }
