@@ -20,5 +20,5 @@ public class CustomerDTO {
   private String documentNumber;
   private DocumentTypeEnum documentType;
   private LocalDate birthdate;
-
+  private boolean active;
 }
