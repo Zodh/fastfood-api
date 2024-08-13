@@ -8,7 +8,9 @@ services:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - 5432:5432
+    restart: on-failure
   fastfood-api:
+    restart: on-failure
     depends_on:
       - fastfood-database
     build:
