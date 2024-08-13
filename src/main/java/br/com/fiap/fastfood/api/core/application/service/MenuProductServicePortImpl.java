@@ -56,6 +56,7 @@ public class MenuProductServicePortImpl implements MenuProductServicePort {
   public void remove(Long id) {
     MenuProductDTO target = this.getById(id);
     List<Long> productsThatUseTarget = repository.fetchProductsRelatedToProduct(target.getId());
+    // TODO: deixar cancelar apenas se não for o unico produto ativo de algum outro produto. Criado em: 13/08/2024 ás 12:43:51.
     boolean removed = repository.delete(target.getId());
 
     // After remove target product, we need to check if other product used it as optional or ingredient.
