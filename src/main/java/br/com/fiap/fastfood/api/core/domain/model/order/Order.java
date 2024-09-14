@@ -8,13 +8,14 @@ import br.com.fiap.fastfood.api.core.domain.model.invoice.state.impl.InvoicePend
 import br.com.fiap.fastfood.api.core.domain.model.order.state.OrderState;
 import br.com.fiap.fastfood.api.core.domain.model.person.Collaborator;
 import br.com.fiap.fastfood.api.core.domain.model.person.Customer;
-import br.com.fiap.fastfood.api.core.domain.model.product.OrderProduct;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+
+import br.com.fiap.fastfood.api.domain.entity.product.OrderProduct;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.util.CollectionUtils;

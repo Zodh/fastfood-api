@@ -1,5 +1,6 @@
 package br.com.fiap.fastfood.api.core.application.dto.followup;
 
+import br.com.fiap.fastfood.api.core.application.dto.followup.FollowUpStateEnum;
 import br.com.fiap.fastfood.api.core.application.dto.order.OrderDTO;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

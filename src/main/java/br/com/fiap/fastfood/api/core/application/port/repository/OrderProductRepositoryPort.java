@@ -1,7 +1,7 @@
 package br.com.fiap.fastfood.api.core.application.port.repository;
 
 import br.com.fiap.fastfood.api.core.application.dto.order.OrderDTO;
-import br.com.fiap.fastfood.api.core.application.dto.product.OrderProductDTO;
+import br.com.fiap.fastfood.api.application.dto.product.OrderProductDTO;
 import br.com.fiap.fastfood.api.core.application.port.BaseRepository;
 import java.util.List;
 

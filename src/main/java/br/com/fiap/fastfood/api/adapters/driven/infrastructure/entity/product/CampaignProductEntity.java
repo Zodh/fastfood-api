@@ -1,6 +1,7 @@
 package br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.product;
 
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.campaign.CampaignEntity;
+import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.product.MenuProductEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;

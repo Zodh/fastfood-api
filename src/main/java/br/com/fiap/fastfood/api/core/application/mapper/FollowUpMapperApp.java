@@ -4,6 +4,8 @@ import br.com.fiap.fastfood.api.core.application.dto.followup.FollowUpDTO;
 import br.com.fiap.fastfood.api.core.application.dto.followup.FollowUpStateEnum;
 import br.com.fiap.fastfood.api.core.application.dto.order.OrderDTO;
 import br.com.fiap.fastfood.api.core.application.exception.ApplicationException;
+import br.com.fiap.fastfood.api.core.application.mapper.OrderMapperApp;
+import br.com.fiap.fastfood.api.core.application.mapper.OrderMapperAppImpl;
 import br.com.fiap.fastfood.api.core.domain.model.followup.FollowUp;
 import br.com.fiap.fastfood.api.core.domain.model.followup.state.FollowUpState;
 import br.com.fiap.fastfood.api.core.domain.model.followup.state.impl.OrderFinishedFollowUpState;
@@ -26,7 +28,7 @@ public interface FollowUpMapperApp {
 
   @Named("mapOrder")
   default Order mapOrder(OrderDTO dto) {
-    OrderMapperApp orderMapperApp = new OrderMapperAppImpl();
+    br.com.fiap.fastfood.api.core.application.mapper.OrderMapperApp orderMapperApp = new OrderMapperAppImpl();
     Order order = orderMapperApp.toDomain(dto);
     order.changeState(orderMapperApp.mapStateImpl(dto.getState(), order));
     return order;

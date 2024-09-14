@@ -4,7 +4,7 @@ import br.com.fiap.fastfood.api.core.application.dto.collaborator.CollaboratorDT
 import br.com.fiap.fastfood.api.core.application.dto.customer.CustomerDTO;
 import br.com.fiap.fastfood.api.core.application.dto.invoice.InvoiceDTO;
 import br.com.fiap.fastfood.api.core.application.dto.order.OrderDTO;
-import br.com.fiap.fastfood.api.core.application.dto.product.OrderProductDTO;
+import br.com.fiap.fastfood.api.application.dto.product.OrderProductDTO;
 import br.com.fiap.fastfood.api.core.domain.model.invoice.Invoice;
 import br.com.fiap.fastfood.api.core.domain.model.invoice.state.impl.InvoicePendingState;
 import br.com.fiap.fastfood.api.core.domain.model.order.Order;
@@ -20,13 +20,14 @@ import br.com.fiap.fastfood.api.core.domain.model.order.state.impl.OrderReadySta
 import br.com.fiap.fastfood.api.core.domain.model.order.state.impl.OrderReceivedState;
 import br.com.fiap.fastfood.api.core.domain.model.person.Collaborator;
 import br.com.fiap.fastfood.api.core.domain.model.person.Customer;
-import br.com.fiap.fastfood.api.core.domain.model.product.OrderProduct;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import br.com.fiap.fastfood.api.domain.entity.product.OrderProduct;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;

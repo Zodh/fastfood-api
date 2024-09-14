@@ -1,6 +1,8 @@
 package br.com.fiap.fastfood.api.core.application.dto.customer;
 
 import java.time.LocalDate;
+
+import br.com.fiap.fastfood.api.core.application.dto.customer.DocumentTypeEnum;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

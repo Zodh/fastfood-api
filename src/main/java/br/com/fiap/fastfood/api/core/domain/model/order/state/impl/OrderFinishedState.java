@@ -3,9 +3,11 @@ package br.com.fiap.fastfood.api.core.domain.model.order.state.impl;
 import br.com.fiap.fastfood.api.core.domain.model.order.Order;
 import br.com.fiap.fastfood.api.core.domain.model.order.OrderStateEnum;
 import br.com.fiap.fastfood.api.core.domain.model.order.state.OrderState;
+import br.com.fiap.fastfood.api.core.domain.model.order.state.impl.OrderOperationNotAllowedException;
 import br.com.fiap.fastfood.api.core.domain.model.person.Collaborator;
+
 import br.com.fiap.fastfood.api.core.domain.model.person.Customer;
-import br.com.fiap.fastfood.api.core.domain.model.product.OrderProduct;
+import br.com.fiap.fastfood.api.domain.entity.product.OrderProduct;
 
 public class OrderFinishedState extends OrderState {
 

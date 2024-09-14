@@ -7,7 +7,7 @@ import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.product.Or
 import br.com.fiap.fastfood.api.core.application.dto.collaborator.CollaboratorDTO;
 import br.com.fiap.fastfood.api.core.application.dto.customer.CustomerDTO;
 import br.com.fiap.fastfood.api.core.application.dto.order.OrderDTO;
-import br.com.fiap.fastfood.api.core.application.dto.product.OrderProductDTO;
+import br.com.fiap.fastfood.api.application.dto.product.OrderProductDTO;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

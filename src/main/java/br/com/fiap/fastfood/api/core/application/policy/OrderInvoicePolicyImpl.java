@@ -7,6 +7,8 @@ import br.com.fiap.fastfood.api.core.application.mapper.InvoiceMapperApp;
 import br.com.fiap.fastfood.api.core.application.mapper.InvoiceMapperAppImpl;
 import br.com.fiap.fastfood.api.core.application.mapper.OrderMapperApp;
 import br.com.fiap.fastfood.api.core.application.mapper.OrderMapperAppImpl;
+import br.com.fiap.fastfood.api.core.application.policy.FollowUpPolicy;
+import br.com.fiap.fastfood.api.core.application.policy.OrderInvoicePolicy;
 import br.com.fiap.fastfood.api.core.application.port.repository.InvoiceRepositoryPort;
 import br.com.fiap.fastfood.api.core.application.port.repository.OrderRepositoryPort;
 import br.com.fiap.fastfood.api.core.domain.aggregate.EstablishmentAggregate;
@@ -22,7 +24,7 @@ public class OrderInvoicePolicyImpl implements OrderInvoicePolicy {
   private final OrderRepositoryPort orderRepositoryPort;
   private final InvoiceMapperApp invoiceMapperApp;
   private final OrderMapperApp orderMapperApp;
-  private final FollowUpPolicy followUpPolicy;
+  private final br.com.fiap.fastfood.api.core.application.policy.FollowUpPolicy followUpPolicy;
 
   public OrderInvoicePolicyImpl(InvoiceRepositoryPort invoiceRepositoryPort, OrderRepositoryPort orderRepositoryPort, FollowUpPolicy followUpPolicy) {
     this.invoiceRepositoryPort = invoiceRepositoryPort;

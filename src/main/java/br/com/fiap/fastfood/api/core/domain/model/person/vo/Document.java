@@ -2,6 +2,8 @@ package br.com.fiap.fastfood.api.core.domain.model.person.vo;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import br.com.fiap.fastfood.api.core.domain.model.person.vo.DocumentType;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.util.StringUtils;

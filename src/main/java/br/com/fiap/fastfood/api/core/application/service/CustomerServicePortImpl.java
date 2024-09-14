@@ -8,6 +8,7 @@ import br.com.fiap.fastfood.api.core.application.mapper.CustomerMapperAppImpl;
 import br.com.fiap.fastfood.api.core.application.port.outbound.ActivationCodeLinkGeneratorPort;
 import br.com.fiap.fastfood.api.core.application.port.repository.ActivationCodeRepositoryPort;
 import br.com.fiap.fastfood.api.core.application.port.repository.CustomerRepositoryPort;
+import br.com.fiap.fastfood.api.core.application.service.ActivationCodeService;
 import br.com.fiap.fastfood.api.core.domain.aggregate.ServiceAggregate;
 import br.com.fiap.fastfood.api.core.domain.model.person.Customer;
 import br.com.fiap.fastfood.api.core.domain.model.person.PersonValidator;
@@ -20,7 +21,7 @@ public class CustomerServicePortImpl implements CustomerServicePort {
 
   private final CustomerRepositoryPort repository;
   private final EmailSenderPort emailSender;
-  private final ActivationCodeService activationCodeService;
+  private final br.com.fiap.fastfood.api.core.application.service.ActivationCodeService activationCodeService;
   private final PersonValidator personValidator;
   private final CustomerMapperApp customerMapperApp;
 

@@ -2,6 +2,8 @@ package br.com.fiap.fastfood.api.core.application.mapper;
 
 import br.com.fiap.fastfood.api.core.application.dto.invoice.InvoiceDTO;
 import br.com.fiap.fastfood.api.core.application.dto.order.OrderDTO;
+import br.com.fiap.fastfood.api.core.application.mapper.OrderMapperApp;
+import br.com.fiap.fastfood.api.core.application.mapper.OrderMapperAppImpl;
 import br.com.fiap.fastfood.api.core.domain.exception.InvoiceStateException;
 import br.com.fiap.fastfood.api.core.domain.model.invoice.Invoice;
 import br.com.fiap.fastfood.api.core.domain.model.invoice.state.InvoiceState;

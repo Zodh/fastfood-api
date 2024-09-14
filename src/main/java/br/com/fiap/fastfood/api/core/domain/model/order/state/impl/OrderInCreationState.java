@@ -7,11 +7,12 @@ import br.com.fiap.fastfood.api.core.domain.model.order.OrderStateEnum;
 import br.com.fiap.fastfood.api.core.domain.model.order.state.OrderState;
 import br.com.fiap.fastfood.api.core.domain.model.person.Collaborator;
 import br.com.fiap.fastfood.api.core.domain.model.person.Customer;
-import br.com.fiap.fastfood.api.core.domain.model.product.OrderProduct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import br.com.fiap.fastfood.api.domain.entity.product.OrderProduct;
 import org.springframework.util.CollectionUtils;
 
 public class OrderInCreationState extends OrderState {

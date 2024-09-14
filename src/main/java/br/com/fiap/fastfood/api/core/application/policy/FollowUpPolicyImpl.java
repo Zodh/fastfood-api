@@ -5,6 +5,7 @@ import br.com.fiap.fastfood.api.core.application.dto.followup.FollowUpStateEnum;
 import br.com.fiap.fastfood.api.core.application.dto.order.OrderDTO;
 import br.com.fiap.fastfood.api.core.application.mapper.FollowUpMapperApp;
 import br.com.fiap.fastfood.api.core.application.mapper.FollowUpMapperAppImpl;
+import br.com.fiap.fastfood.api.core.application.policy.FollowUpPolicy;
 import br.com.fiap.fastfood.api.core.application.port.repository.FollowUpRepositoryPort;
 import br.com.fiap.fastfood.api.core.domain.aggregate.FollowUpAggregate;
 import br.com.fiap.fastfood.api.core.domain.model.followup.FollowUp;

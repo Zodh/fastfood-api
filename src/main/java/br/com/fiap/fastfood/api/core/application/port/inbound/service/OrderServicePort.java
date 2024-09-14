@@ -3,7 +3,7 @@ package br.com.fiap.fastfood.api.core.application.port.inbound.service;
 import br.com.fiap.fastfood.api.core.application.dto.collaborator.CollaboratorDTO;
 import br.com.fiap.fastfood.api.core.application.dto.customer.CustomerDTO;
 import br.com.fiap.fastfood.api.core.application.dto.order.OrderDTO;
-import br.com.fiap.fastfood.api.core.application.dto.product.OrderProductDTO;
+import br.com.fiap.fastfood.api.application.dto.product.OrderProductDTO;
 import java.util.List;
 
 public interface OrderServicePort {

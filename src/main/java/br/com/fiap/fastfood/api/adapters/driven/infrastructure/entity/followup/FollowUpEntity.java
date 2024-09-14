@@ -1,5 +1,6 @@
 package br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.followup;
 
+import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.followup.FollowUpStateEnum;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.order.OrderEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

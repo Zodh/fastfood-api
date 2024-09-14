@@ -5,7 +5,7 @@ import br.com.fiap.fastfood.api.core.application.dto.customer.CustomerDTO;
 import br.com.fiap.fastfood.api.core.application.dto.followup.FollowUpStateEnum;
 import br.com.fiap.fastfood.api.core.application.dto.invoice.InvoiceDTO;
 import br.com.fiap.fastfood.api.core.application.dto.order.OrderDTO;
-import br.com.fiap.fastfood.api.core.application.dto.product.OrderProductDTO;
+import br.com.fiap.fastfood.api.application.dto.product.OrderProductDTO;
 import br.com.fiap.fastfood.api.core.application.mapper.CollaboratorMapperApp;
 import br.com.fiap.fastfood.api.core.application.mapper.CollaboratorMapperAppImpl;
 import br.com.fiap.fastfood.api.core.application.mapper.CustomerMapperApp;
@@ -28,13 +28,14 @@ import br.com.fiap.fastfood.api.core.domain.model.invoice.Invoice;
 import br.com.fiap.fastfood.api.core.domain.model.order.Order;
 import br.com.fiap.fastfood.api.core.domain.model.person.Collaborator;
 import br.com.fiap.fastfood.api.core.domain.model.person.Customer;
-import br.com.fiap.fastfood.api.core.domain.model.product.OrderProduct;
 import br.com.fiap.fastfood.api.core.application.port.inbound.service.CustomerServicePort;
 import br.com.fiap.fastfood.api.core.application.port.inbound.service.OrderProductServicePort;
 import br.com.fiap.fastfood.api.core.application.port.inbound.service.OrderServicePort;
 import br.com.fiap.fastfood.api.core.domain.port.outbound.EmailSenderPort;
 import java.util.List;
 import java.util.Objects;
+
+import br.com.fiap.fastfood.api.domain.entity.product.OrderProduct;
 import org.apache.commons.lang3.StringUtils;
 
 public class OrderServicePortImpl implements OrderServicePort {

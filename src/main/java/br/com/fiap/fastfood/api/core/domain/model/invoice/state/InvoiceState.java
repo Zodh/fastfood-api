@@ -1,6 +1,8 @@
 package br.com.fiap.fastfood.api.core.domain.model.invoice.state;
 
 import br.com.fiap.fastfood.api.core.domain.model.invoice.Invoice;
+import br.com.fiap.fastfood.api.core.domain.model.invoice.state.InvoiceStateEnum;
+
 import java.math.BigDecimal;
 
 public abstract class InvoiceState {

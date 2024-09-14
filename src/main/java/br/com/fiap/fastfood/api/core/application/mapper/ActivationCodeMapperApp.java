@@ -2,6 +2,8 @@ package br.com.fiap.fastfood.api.core.application.mapper;
 
 import br.com.fiap.fastfood.api.core.application.dto.customer.CustomerDTO;
 import br.com.fiap.fastfood.api.core.application.dto.customer.activation.ActivationCodeDTO;
+import br.com.fiap.fastfood.api.core.application.mapper.CustomerMapperApp;
+import br.com.fiap.fastfood.api.core.application.mapper.CustomerMapperAppImpl;
 import br.com.fiap.fastfood.api.core.domain.model.person.Customer;
 import br.com.fiap.fastfood.api.core.domain.model.person.activation.ActivationCode;
 import org.mapstruct.Mapper;

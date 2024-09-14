@@ -3,6 +3,10 @@ package br.com.fiap.fastfood.api.core.domain.model.invoice.state.impl;
 import br.com.fiap.fastfood.api.core.domain.model.invoice.state.InvoiceStateEnum;
 import br.com.fiap.fastfood.api.core.domain.model.invoice.Invoice;
 import br.com.fiap.fastfood.api.core.domain.model.invoice.state.InvoiceState;
+import br.com.fiap.fastfood.api.core.domain.model.invoice.state.impl.InvoiceCancelledState;
+import br.com.fiap.fastfood.api.core.domain.model.invoice.state.impl.InvoiceExpiredState;
+import br.com.fiap.fastfood.api.core.domain.model.invoice.state.impl.InvoicePaidState;
+
 import java.math.BigDecimal;
 import java.util.Objects;
 

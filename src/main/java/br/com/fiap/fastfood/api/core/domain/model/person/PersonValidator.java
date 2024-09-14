@@ -7,10 +7,12 @@ import br.com.fiap.fastfood.api.core.domain.model.Validator;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+import br.com.fiap.fastfood.api.core.domain.model.person.Person;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 
-public class PersonValidator implements Validator<Person> {
+public class PersonValidator implements Validator<br.com.fiap.fastfood.api.core.domain.model.person.Person> {
 
   @Override
   public List<ErrorDetail> validate(Person person) {

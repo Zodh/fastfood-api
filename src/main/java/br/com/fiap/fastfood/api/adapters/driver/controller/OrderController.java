@@ -5,7 +5,7 @@ import br.com.fiap.fastfood.api.adapters.driven.infrastructure.email.EmailSender
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.adapter.CustomerRepositoryAdapterImpl;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.adapter.FollowUpRepositoryAdapterImpl;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.adapter.InvoiceRepositoryAdapterImpl;
-import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.adapter.MenuProductRepositoryAdapterImpl;
+import br.com.fiap.fastfood.api.interfaces.adapter.gateway.MenuProductRepositoryGatewayImpl;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.adapter.OrderProductRepositoryAdapterImpl;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.adapter.OrderRepositoryAdapterImpl;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.repository.adapter.ActivationCodeRepositoryAdapterImpl;
@@ -13,14 +13,14 @@ import br.com.fiap.fastfood.api.core.application.dto.invoice.InvoiceDTO;
 import br.com.fiap.fastfood.api.core.application.dto.order.CreateOrderRequestDTO;
 import br.com.fiap.fastfood.api.core.application.dto.order.OrderDTO;
 import br.com.fiap.fastfood.api.core.application.dto.order.PaidOrderResponseDTO;
-import br.com.fiap.fastfood.api.core.application.dto.product.OrderProductDTO;
+import br.com.fiap.fastfood.api.application.dto.product.OrderProductDTO;
 import br.com.fiap.fastfood.api.core.application.policy.FollowUpPolicyImpl;
 import br.com.fiap.fastfood.api.core.application.policy.OrderInvoicePolicyImpl;
 import br.com.fiap.fastfood.api.core.application.port.inbound.service.InvoiceServicePort;
 import br.com.fiap.fastfood.api.core.application.port.inbound.service.OrderServicePort;
 import br.com.fiap.fastfood.api.core.application.service.CustomerServicePortImpl;
 import br.com.fiap.fastfood.api.core.application.service.InvoiceServicePortImpl;
-import br.com.fiap.fastfood.api.core.application.service.MenuProductServicePortImpl;
+import br.com.fiap.fastfood.api.application.usecase.service.impl.MenuProductServiceImpl;
 import br.com.fiap.fastfood.api.core.application.service.OrderProductServicePortImpl;
 import br.com.fiap.fastfood.api.core.application.service.OrderServicePortImpl;
 import java.util.List;
@@ -52,17 +52,17 @@ public class OrderController {
       ActivationCodeRepositoryAdapterImpl activationCodeRepositoryAdapter,
       ActivationCodeLinkGenerator activationCodeLinkGenerator,
       OrderProductRepositoryAdapterImpl orderProductRepositoryAdapter,
-      MenuProductRepositoryAdapterImpl menuProductRepositoryAdapter,
+      MenuProductRepositoryGatewayImpl menuProductRepositoryAdapter,
       InvoiceRepositoryAdapterImpl invoiceRepositoryAdapter,
       FollowUpRepositoryAdapterImpl followUpRepositoryAdapter
   ) {
     CustomerServicePortImpl customerServicePortImpl = new CustomerServicePortImpl(
         customerRepositoryAdapter, emailSenderAdapter, activationCodeRepositoryAdapter,
         activationCodeLinkGenerator);
-    MenuProductServicePortImpl menuProductServicePortImpl = new MenuProductServicePortImpl(
+    MenuProductServiceImpl menuProductServiceImpl = new MenuProductServiceImpl(
         menuProductRepositoryAdapter);
     OrderProductServicePortImpl orderProductServicePort = new OrderProductServicePortImpl(
-        orderProductRepositoryAdapter, menuProductServicePortImpl);
+        orderProductRepositoryAdapter, menuProductServiceImpl);
     FollowUpPolicyImpl followUpPolicy = new FollowUpPolicyImpl(followUpRepositoryAdapter);
     OrderInvoicePolicyImpl orderInvoicePolicyPort = new OrderInvoicePolicyImpl(
         invoiceRepositoryAdapter, orderRepositoryAdapter, followUpPolicy);

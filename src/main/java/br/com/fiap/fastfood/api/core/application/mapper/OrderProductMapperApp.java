@@ -1,13 +1,15 @@
 package br.com.fiap.fastfood.api.core.application.mapper;
 
-import br.com.fiap.fastfood.api.core.application.dto.product.MenuProductDTO;
-import br.com.fiap.fastfood.api.core.application.dto.product.OrderProductDTO;
-import br.com.fiap.fastfood.api.core.domain.model.product.MenuProduct;
-import br.com.fiap.fastfood.api.core.domain.model.product.OrderProduct;
+import br.com.fiap.fastfood.api.application.dto.product.MenuProductDTO;
+import br.com.fiap.fastfood.api.application.dto.product.OrderProductDTO;
+import br.com.fiap.fastfood.api.application.usecase.mapper.MenuProductMapperApp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import br.com.fiap.fastfood.api.domain.entity.product.MenuProduct;
+import br.com.fiap.fastfood.api.domain.entity.product.OrderProduct;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;

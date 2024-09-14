@@ -2,6 +2,7 @@ package br.com.fiap.fastfood.api.core.domain.model.invoice;
 
 import br.com.fiap.fastfood.api.core.domain.exception.DomainException;
 import br.com.fiap.fastfood.api.core.domain.exception.ErrorDetail;
+import br.com.fiap.fastfood.api.core.domain.model.invoice.InvoiceVendor;
 import br.com.fiap.fastfood.api.core.domain.model.invoice.state.InvoiceState;
 import br.com.fiap.fastfood.api.core.domain.model.order.Order;
 import lombok.AllArgsConstructor;

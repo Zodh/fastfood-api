@@ -3,7 +3,7 @@ package br.com.fiap.fastfood.api.core.application.dto.order;
 import br.com.fiap.fastfood.api.core.application.dto.collaborator.CollaboratorDTO;
 import br.com.fiap.fastfood.api.core.application.dto.customer.CustomerDTO;
 import br.com.fiap.fastfood.api.core.application.dto.invoice.InvoiceDTO;
-import br.com.fiap.fastfood.api.core.application.dto.product.OrderProductDTO;
+import br.com.fiap.fastfood.api.application.dto.product.OrderProductDTO;
 import br.com.fiap.fastfood.api.core.domain.model.order.OrderStateEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.math.BigDecimal;

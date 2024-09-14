@@ -3,7 +3,8 @@ package br.com.fiap.fastfood.api.core.domain.aggregate;
 import br.com.fiap.fastfood.api.core.domain.exception.DomainException;
 import br.com.fiap.fastfood.api.core.domain.exception.ErrorDetail;
 import br.com.fiap.fastfood.api.core.domain.model.order.Order;
-import br.com.fiap.fastfood.api.core.domain.model.product.OrderProduct;
+import br.com.fiap.fastfood.api.domain.entity.product.OrderProduct;
+
 import java.util.Objects;
 
 public class OrderAggregate {

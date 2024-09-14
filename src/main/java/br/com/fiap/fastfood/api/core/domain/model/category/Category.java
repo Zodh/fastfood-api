@@ -1,7 +1,8 @@
 package br.com.fiap.fastfood.api.core.domain.model.category;
 
-import br.com.fiap.fastfood.api.core.domain.model.product.MenuProduct;
 import java.util.List;
+
+import br.com.fiap.fastfood.api.domain.entity.product.MenuProduct;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

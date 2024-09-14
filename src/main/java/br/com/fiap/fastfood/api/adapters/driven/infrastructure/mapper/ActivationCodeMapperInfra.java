@@ -2,6 +2,8 @@ package br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper;
 
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.person.CustomerEntity;
 import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.person.activation.ActivationCodeEntity;
+import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.CustomerMapperInfra;
+import br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.CustomerMapperInfraImpl;
 import br.com.fiap.fastfood.api.core.application.dto.customer.CustomerDTO;
 import br.com.fiap.fastfood.api.core.application.dto.customer.activation.ActivationCodeDTO;
 import org.mapstruct.Mapper;
@@ -18,7 +20,7 @@ public interface ActivationCodeMapperInfra {
 
   @Named("mapCustomerEntity")
   default CustomerEntity mapCustomerEntity(CustomerDTO dto) {
-    CustomerMapperInfra customerMapperInfra = new CustomerMapperInfraImpl();
+    br.com.fiap.fastfood.api.adapters.driven.infrastructure.mapper.CustomerMapperInfra customerMapperInfra = new CustomerMapperInfraImpl();
     return customerMapperInfra.toEntity(dto);
   }
 
