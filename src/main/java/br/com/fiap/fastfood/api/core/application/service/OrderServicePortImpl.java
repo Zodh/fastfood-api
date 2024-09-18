@@ -35,7 +35,7 @@ import br.com.fiap.fastfood.api.core.domain.port.outbound.EmailSenderPort;
 import java.util.List;
 import java.util.Objects;
 
-import br.com.fiap.fastfood.api.domain.entity.product.OrderProduct;
+import br.com.fiap.fastfood.api.entities.product.OrderProduct;
 import org.apache.commons.lang3.StringUtils;
 
 public class OrderServicePortImpl implements OrderServicePort {

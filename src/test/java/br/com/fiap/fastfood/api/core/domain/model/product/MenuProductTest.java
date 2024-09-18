@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 
-import br.com.fiap.fastfood.api.domain.entity.product.MenuProduct;
+import br.com.fiap.fastfood.api.entities.product.MenuProduct;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

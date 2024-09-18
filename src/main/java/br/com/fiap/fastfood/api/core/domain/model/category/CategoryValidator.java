@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import br.com.fiap.fastfood.api.domain.entity.category.Category;
+import br.com.fiap.fastfood.api.entities.category.Category;
 import org.apache.commons.lang3.StringUtils;
 
 public class CategoryValidator implements Validator<Category> {

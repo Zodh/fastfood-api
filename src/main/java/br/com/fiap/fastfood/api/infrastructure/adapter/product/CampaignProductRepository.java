@@ -1,6 +1,6 @@
 package br.com.fiap.fastfood.api.infrastructure.adapter.product;
 
-import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.product.CampaignProductEntity;
+import br.com.fiap.fastfood.api.adaptersOld.driven.infrastructure.entity.product.CampaignProductEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

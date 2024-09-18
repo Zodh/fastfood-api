@@ -1,6 +1,6 @@
 package br.com.fiap.fastfood.api.infrastructure.adapter.category;
 
-import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.category.CategoryEntity;
+import br.com.fiap.fastfood.api.adaptersOld.driven.infrastructure.entity.category.CategoryEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

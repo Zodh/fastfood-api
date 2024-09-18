@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import br.com.fiap.fastfood.api.domain.entity.product.OrderProduct;
+import br.com.fiap.fastfood.api.entities.product.OrderProduct;
 import org.springframework.util.CollectionUtils;
 
 public class OrderInCreationState extends OrderState {

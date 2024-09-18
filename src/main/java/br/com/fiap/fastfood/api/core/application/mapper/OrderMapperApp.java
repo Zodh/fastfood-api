@@ -27,7 +27,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import br.com.fiap.fastfood.api.domain.entity.product.OrderProduct;
+import br.com.fiap.fastfood.api.entities.product.OrderProduct;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;

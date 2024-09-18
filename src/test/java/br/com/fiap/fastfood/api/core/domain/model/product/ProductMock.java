@@ -1,6 +1,6 @@
 package br.com.fiap.fastfood.api.core.domain.model.product;
 
-import br.com.fiap.fastfood.api.domain.entity.product.MenuProduct;
+import br.com.fiap.fastfood.api.entities.product.MenuProduct;
 
 import java.math.BigDecimal;
 import java.util.List;

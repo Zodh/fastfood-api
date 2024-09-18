@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import br.com.fiap.fastfood.api.domain.entity.product.OrderProduct;
+import br.com.fiap.fastfood.api.entities.product.OrderProduct;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.util.CollectionUtils;

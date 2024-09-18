@@ -4,7 +4,7 @@ import br.com.fiap.fastfood.api.core.domain.model.order.OrderStateEnum;
 import br.com.fiap.fastfood.api.core.domain.model.order.Order;
 import br.com.fiap.fastfood.api.core.domain.model.person.Collaborator;
 import br.com.fiap.fastfood.api.core.domain.model.person.Customer;
-import br.com.fiap.fastfood.api.domain.entity.product.OrderProduct;
+import br.com.fiap.fastfood.api.entities.product.OrderProduct;
 
 public abstract class OrderState {
 

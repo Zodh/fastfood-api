@@ -1,6 +1,6 @@
 package br.com.fiap.fastfood.api.infrastructure.adapter.product;
 
-import br.com.fiap.fastfood.api.adapters.driven.infrastructure.entity.product.OrderProductEntity;
+import br.com.fiap.fastfood.api.adaptersOld.driven.infrastructure.entity.product.OrderProductEntity;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
