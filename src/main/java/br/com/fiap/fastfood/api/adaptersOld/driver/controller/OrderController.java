@@ -18,11 +18,11 @@ import br.com.fiap.fastfood.api.core.application.policy.FollowUpPolicyImpl;
 import br.com.fiap.fastfood.api.core.application.policy.OrderInvoicePolicyImpl;
 import br.com.fiap.fastfood.api.core.application.port.inbound.service.InvoiceServicePort;
 import br.com.fiap.fastfood.api.core.application.port.inbound.service.OrderServicePort;
-import br.com.fiap.fastfood.api.core.application.service.CustomerServicePortImpl;
-import br.com.fiap.fastfood.api.core.application.service.InvoiceServicePortImpl;
+import br.com.fiap.fastfood.api.application.usecase.CustomerUseCase;
+import br.com.fiap.fastfood.api.application.usecase.InvoiceUseCase;
 import br.com.fiap.fastfood.api.application.service.impl.MenuProductServiceImpl;
 import br.com.fiap.fastfood.api.core.application.service.OrderProductServicePortImpl;
-import br.com.fiap.fastfood.api.core.application.service.OrderServicePortImpl;
+import br.com.fiap.fastfood.api.application.usecase.OrderUseCase;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -56,7 +56,7 @@ public class OrderController {
       InvoiceRepositoryAdapterImpl invoiceRepositoryAdapter,
       FollowUpRepositoryAdapterImpl followUpRepositoryAdapter
   ) {
-    CustomerServicePortImpl customerServicePortImpl = new CustomerServicePortImpl(
+    CustomerUseCase customerUseCase = new CustomerUseCase(
         customerRepositoryAdapter, emailSenderAdapter, activationCodeRepositoryAdapter,
         activationCodeLinkGenerator);
     MenuProductServiceImpl menuProductServiceImpl = new MenuProductServiceImpl(
@@ -66,9 +66,9 @@ public class OrderController {
     FollowUpPolicyImpl followUpPolicy = new FollowUpPolicyImpl(followUpRepositoryAdapter);
     OrderInvoicePolicyImpl orderInvoicePolicyPort = new OrderInvoicePolicyImpl(
         invoiceRepositoryAdapter, orderRepositoryAdapter, followUpPolicy);
-    this.orderServicePort = new OrderServicePortImpl(orderRepositoryAdapter,
-        customerServicePortImpl, orderProductServicePort, orderInvoicePolicyPort, emailSenderAdapter, followUpPolicy);
-    this.invoiceServicePort = new InvoiceServicePortImpl(invoiceRepositoryAdapter,
+    this.orderServicePort = new OrderUseCase(orderRepositoryAdapter,
+            customerUseCase, orderProductServicePort, orderInvoicePolicyPort, emailSenderAdapter, followUpPolicy);
+    this.invoiceServicePort = new InvoiceUseCase(invoiceRepositoryAdapter,
         orderInvoicePolicyPort);
   }
 

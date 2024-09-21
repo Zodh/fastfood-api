@@ -7,7 +7,7 @@ import br.com.fiap.fastfood.api.adaptersOld.driven.infrastructure.repository.ada
 import br.com.fiap.fastfood.api.core.application.dto.customer.CustomerDTO;
 import br.com.fiap.fastfood.api.core.application.dto.customer.DocumentTypeEnum;
 import br.com.fiap.fastfood.api.core.application.port.inbound.service.CustomerServicePort;
-import br.com.fiap.fastfood.api.core.application.service.CustomerServicePortImpl;
+import br.com.fiap.fastfood.api.application.usecase.CustomerUseCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +28,7 @@ public class CustomerController {
   public CustomerController(CustomerRepositoryAdapterImpl customerRepositoryAdapter,
       EmailSender emailSender, ActivationCodeRepositoryAdapterImpl activationCodeRepositoryAdapter,
       ActivationCodeLinkGenerator activationCodeLinkGenerator) {
-    this.customerServicePort = new CustomerServicePortImpl(customerRepositoryAdapter, emailSender,
+    this.customerServicePort = new CustomerUseCase(customerRepositoryAdapter, emailSender,
         activationCodeRepositoryAdapter, activationCodeLinkGenerator);
   }
 

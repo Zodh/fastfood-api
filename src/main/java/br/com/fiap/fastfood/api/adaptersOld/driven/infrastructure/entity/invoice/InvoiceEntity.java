@@ -1,7 +1,7 @@
 package br.com.fiap.fastfood.api.adaptersOld.driven.infrastructure.entity.invoice;
 
 import br.com.fiap.fastfood.api.adaptersOld.driven.infrastructure.entity.order.OrderEntity;
-import br.com.fiap.fastfood.api.core.domain.model.invoice.state.InvoiceStateEnum;
+import br.com.fiap.fastfood.api.entities.invoice.state.InvoiceStateEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

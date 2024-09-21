@@ -13,7 +13,6 @@ import br.com.fiap.fastfood.api.core.application.exception.NotFoundException;
 import br.com.fiap.fastfood.api.core.domain.exception.DomainException;
 import br.com.fiap.fastfood.api.core.domain.exception.ErrorDetail;
 import br.com.fiap.fastfood.api.entities.category.Category;
-import br.com.fiap.fastfood.api.entities.category.CategoryValidator;
 import br.com.fiap.fastfood.api.entities.product.MenuProduct;
 
 import java.util.List;
@@ -24,7 +23,6 @@ public class CategoryServiceImpl implements ICategoryService {
 
   private final IMenuProductService menuProductService;
   private final ICategoryRepositoryGateway repository;
-  private final CategoryValidator validator;
   private final CategoryMapperApp categoryMapperApp;
   private final MenuProductMapperApp menuProductMapperApp;
 
@@ -32,7 +30,6 @@ public class CategoryServiceImpl implements ICategoryService {
                              ICategoryRepositoryGateway repository) {
     this.menuProductService = IMenuProductService;
     this.repository = repository;
-    this.validator = new CategoryValidator();
     this.categoryMapperApp = new CategoryMapperAppImpl();
     this.menuProductMapperApp = new MenuProductMapperAppImpl();
   }
@@ -63,7 +60,7 @@ public class CategoryServiceImpl implements ICategoryService {
     Category category = categoryMapperApp.toDomain(dto);
     category.setProducts(menuProducts);
 
-    List<ErrorDetail> errors = validator.validate(category);
+    List<ErrorDetail> errors = category.validate(category);
     if (Objects.nonNull(errors) && !errors.isEmpty()) {
       throw new DomainException(errors);
     }
@@ -83,7 +80,7 @@ public class CategoryServiceImpl implements ICategoryService {
     updatedCategory.setProducts(menuProducts);
 
     updatedCategory.setId(current.getId());
-    List<ErrorDetail> errors = validator.validate(updatedCategory);
+    List<ErrorDetail> errors = updatedCategory.validate(updatedCategory);
 
     if (Objects.nonNull(errors) && !errors.isEmpty()) {
       throw new DomainException(errors);

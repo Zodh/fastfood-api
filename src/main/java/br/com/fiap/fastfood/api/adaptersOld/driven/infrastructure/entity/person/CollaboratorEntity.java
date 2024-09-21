@@ -1,6 +1,6 @@
 package br.com.fiap.fastfood.api.adaptersOld.driven.infrastructure.entity.person;
 
-import br.com.fiap.fastfood.api.core.domain.model.person.CollaboratorRoleEnum;
+import br.com.fiap.fastfood.api.entities.person.CollaboratorRoleEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

@@ -1,7 +1,7 @@
 package br.com.fiap.fastfood.api.core.application.mapper;
 
 import br.com.fiap.fastfood.api.core.application.dto.collaborator.CollaboratorDTO;
-import br.com.fiap.fastfood.api.core.domain.model.person.Collaborator;
+import br.com.fiap.fastfood.api.entities.person.Collaborator;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValueCheckStrategy;
 import org.mapstruct.ReportingPolicy;

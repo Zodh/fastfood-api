@@ -1,7 +1,7 @@
 package br.com.fiap.fastfood.api.core.application.mapper;
 
 import br.com.fiap.fastfood.api.core.application.dto.customer.CustomerIdentityDTO;
-import br.com.fiap.fastfood.api.core.domain.model.person.Customer;
+import br.com.fiap.fastfood.api.entities.person.Customer;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.NullValueCheckStrategy;

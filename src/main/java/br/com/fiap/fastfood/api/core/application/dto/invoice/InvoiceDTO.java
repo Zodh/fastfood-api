@@ -1,7 +1,7 @@
 package br.com.fiap.fastfood.api.core.application.dto.invoice;
 
 import br.com.fiap.fastfood.api.core.application.dto.order.OrderDTO;
-import br.com.fiap.fastfood.api.core.domain.model.invoice.state.InvoiceStateEnum;
+import br.com.fiap.fastfood.api.entities.invoice.state.InvoiceStateEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

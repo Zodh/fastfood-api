@@ -2,14 +2,13 @@ package br.com.fiap.fastfood.api.core.domain.aggregate;
 
 import br.com.fiap.fastfood.api.core.domain.exception.DomainException;
 import br.com.fiap.fastfood.api.core.domain.exception.ErrorDetail;
-import br.com.fiap.fastfood.api.core.domain.model.followup.FollowUp;
+import br.com.fiap.fastfood.api.entities.followup.FollowUp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class FollowUpAggregate {
 

@@ -7,15 +7,18 @@ import br.com.fiap.fastfood.api.core.application.mapper.InvoiceMapperApp;
 import br.com.fiap.fastfood.api.core.application.mapper.InvoiceMapperAppImpl;
 import br.com.fiap.fastfood.api.core.application.mapper.OrderMapperApp;
 import br.com.fiap.fastfood.api.core.application.mapper.OrderMapperAppImpl;
-import br.com.fiap.fastfood.api.core.application.policy.FollowUpPolicy;
-import br.com.fiap.fastfood.api.core.application.policy.OrderInvoicePolicy;
 import br.com.fiap.fastfood.api.core.application.port.repository.InvoiceRepositoryPort;
 import br.com.fiap.fastfood.api.core.application.port.repository.OrderRepositoryPort;
-import br.com.fiap.fastfood.api.core.domain.aggregate.EstablishmentAggregate;
-import br.com.fiap.fastfood.api.core.domain.aggregate.InvoiceAggregate;
-import br.com.fiap.fastfood.api.core.domain.model.invoice.Invoice;
-import br.com.fiap.fastfood.api.core.domain.model.invoice.state.InvoiceStateEnum;
-import br.com.fiap.fastfood.api.core.domain.model.order.Order;
+import br.com.fiap.fastfood.api.core.domain.exception.DomainException;
+import br.com.fiap.fastfood.api.core.domain.exception.ErrorDetail;
+import br.com.fiap.fastfood.api.entities.invoice.Invoice;
+import br.com.fiap.fastfood.api.entities.invoice.state.InvoiceStateEnum;
+import br.com.fiap.fastfood.api.entities.invoice.state.impl.InvoicePaidState;
+import br.com.fiap.fastfood.api.entities.invoice.state.impl.InvoicePendingState;
+import br.com.fiap.fastfood.api.entities.order.Order;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class OrderInvoicePolicyImpl implements OrderInvoicePolicy {
@@ -44,11 +47,12 @@ public class OrderInvoicePolicyImpl implements OrderInvoicePolicy {
 
   @Override
   public void generateOrderInvoice(OrderDTO orderDTO) {
-    InvoiceAggregate invoiceAggregate = new InvoiceAggregate();
     this.cancelOrderInvoice(orderDTO);
     Order order = orderMapperApp.toDomain(orderDTO);
     order.changeState(orderMapperApp.mapStateImpl(orderDTO.getState(), order));
-    Invoice invoice = invoiceAggregate.createInvoice(order);
+
+    Invoice invoice = this.createInvoice(order);
+
     InvoiceDTO validInvoice = invoiceMapperApp.toDto(invoice);
     orderDTO.setInvoice(invoiceRepositoryPort.save(validInvoice));
   }
@@ -57,12 +61,36 @@ public class OrderInvoicePolicyImpl implements OrderInvoicePolicy {
   public void defineOrderEligibleToPreparation(OrderDTO orderDTO) {
     Order order = orderMapperApp.toDomain(orderDTO);
     order.changeState(orderMapperApp.mapStateImpl(orderDTO.getState(), order));
-    EstablishmentAggregate aggregate = new EstablishmentAggregate(order);
-    aggregate.turnReadyToPrepare();
+
+    order.getState().setAwaitingPreparation();
+
     OrderDTO orderReadyToPreparation = orderMapperApp.toDTO(order);
     OrderDTO persisted = orderRepositoryPort.save(orderReadyToPreparation);
     followUpPolicy.updateOrderInFollowUp(persisted,
         FollowUpStateEnum.RECEIVED);
+  }
+
+  public Invoice createInvoice(Order order) {
+    if (Objects.isNull(order) || Objects.isNull(order.getPrice())) {
+      throw new DomainException(new ErrorDetail("order", "Não é possível criar um pagamento para um pedido nulo ou sem um preço definido!"));
+    }
+    BigDecimal paidAmount = BigDecimal.ZERO;
+    if (Objects.nonNull(order.getInvoices()) && !order.getInvoices().isEmpty() && order.getInvoices().stream().anyMatch(i -> i.getState() instanceof InvoicePaidState)) {
+      paidAmount = order.getInvoices().stream()
+              .filter(i -> Objects.nonNull(i) && Objects.nonNull(i.getState())
+                      && i.getState() instanceof InvoicePaidState && Objects.nonNull(i.getPrice()))
+              .map(Invoice::getPrice)
+              .reduce(BigDecimal.ZERO, BigDecimal::add);
+      if (paidAmount.compareTo(order.getPrice()) > 0) {
+        throw new DomainException(new ErrorDetail("order.price", "O valor pago é maior do que o valor do pedido! Contate um administrador!"));
+      }
+    }
+    Invoice invoice = new Invoice();
+    invoice.changeState(new InvoicePendingState(invoice));
+    invoice.getState().setPrice(order.getPrice().subtract(paidAmount));
+    invoice.setOrder(order);
+    invoice.setCreatedAt(LocalDateTime.now());
+    return invoice;
   }
 
 }

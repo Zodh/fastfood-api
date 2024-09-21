@@ -4,7 +4,7 @@ import br.com.fiap.fastfood.api.core.application.dto.collaborator.CollaboratorDT
 import br.com.fiap.fastfood.api.core.application.dto.customer.CustomerDTO;
 import br.com.fiap.fastfood.api.core.application.dto.invoice.InvoiceDTO;
 import br.com.fiap.fastfood.api.application.dto.product.OrderProductDTO;
-import br.com.fiap.fastfood.api.core.domain.model.order.OrderStateEnum;
+import br.com.fiap.fastfood.api.entities.order.OrderStateEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

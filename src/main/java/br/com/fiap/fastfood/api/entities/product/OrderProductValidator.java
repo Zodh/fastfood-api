@@ -1,7 +1,7 @@
 package br.com.fiap.fastfood.api.entities.product;
 
 import br.com.fiap.fastfood.api.core.domain.exception.ErrorDetail;
-import br.com.fiap.fastfood.api.core.domain.model.Validator;
+import br.com.fiap.fastfood.api.entities.Validator;
 
 import java.util.List;
 import java.util.Objects;
