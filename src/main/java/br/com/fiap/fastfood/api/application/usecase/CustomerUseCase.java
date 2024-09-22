@@ -13,6 +13,7 @@ import br.com.fiap.fastfood.api.core.domain.exception.DomainException;
 import br.com.fiap.fastfood.api.core.domain.exception.ErrorDetail;
 import br.com.fiap.fastfood.api.core.domain.port.outbound.EmailSenderPort;
 import br.com.fiap.fastfood.api.entities.person.Customer;
+import br.com.fiap.fastfood.api.entities.person.PersonValidator;
 import br.com.fiap.fastfood.api.entities.person.vo.Document;
 
 import java.util.List;
@@ -50,7 +51,7 @@ public class CustomerUseCase implements CustomerServicePort {
         customerDTO.getDocumentType()).isPresent();
     Customer customer = customerMapperApp.toDomain(customerDTO);
 
-    List<ErrorDetail> errorDetails = customer.validate(customer);
+    List<ErrorDetail> errorDetails = new PersonValidator().validate(customer);
     if (!errorDetails.isEmpty()) {
       throw new DomainException(errorDetails);
     }

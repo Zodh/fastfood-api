@@ -3,12 +3,10 @@ package br.com.fiap.fastfood.api.application.service.impl;
 import br.com.fiap.fastfood.api.application.dto.category.CategoryDTO;
 import br.com.fiap.fastfood.api.application.dto.product.MenuProductDTO;
 import br.com.fiap.fastfood.api.application.gateway.mapper.CategoryMapperApp;
-import br.com.fiap.fastfood.api.application.usecase.mapper.CategoryMapperAppImpl;
 import br.com.fiap.fastfood.api.application.gateway.mapper.MenuProductMapperApp;
-import br.com.fiap.fastfood.api.application.usecase.mapper.MenuProductMapperAppImpl;
 import br.com.fiap.fastfood.api.application.gateway.repository.ICategoryRepositoryGateway;
-import br.com.fiap.fastfood.api.application.service.ICategoryService;
-import br.com.fiap.fastfood.api.application.service.IMenuProductService;
+import br.com.fiap.fastfood.api.application.service.CategoryService;
+import br.com.fiap.fastfood.api.application.service.MenuProductService;
 import br.com.fiap.fastfood.api.core.application.exception.NotFoundException;
 import br.com.fiap.fastfood.api.core.domain.exception.DomainException;
 import br.com.fiap.fastfood.api.core.domain.exception.ErrorDetail;
@@ -19,19 +17,19 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class CategoryServiceImpl implements ICategoryService {
+public class CategoryServiceImpl implements CategoryService {
 
-  private final IMenuProductService menuProductService;
+  private final MenuProductService menuProductService;
   private final ICategoryRepositoryGateway repository;
   private final CategoryMapperApp categoryMapperApp;
   private final MenuProductMapperApp menuProductMapperApp;
 
-  public CategoryServiceImpl(IMenuProductService IMenuProductService,
-                             ICategoryRepositoryGateway repository) {
-    this.menuProductService = IMenuProductService;
+  public CategoryServiceImpl(MenuProductService menuProductService,
+                             ICategoryRepositoryGateway repository, CategoryMapperApp categoryMapperApp, MenuProductMapperApp menuProductMapperApp) {
+    this.menuProductService = menuProductService;
     this.repository = repository;
-    this.categoryMapperApp = new CategoryMapperAppImpl();
-    this.menuProductMapperApp = new MenuProductMapperAppImpl();
+    this.categoryMapperApp = categoryMapperApp;
+    this.menuProductMapperApp = menuProductMapperApp;
   }
 
   @Override

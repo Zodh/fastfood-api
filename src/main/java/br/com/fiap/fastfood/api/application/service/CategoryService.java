@@ -3,7 +3,7 @@ package br.com.fiap.fastfood.api.application.service;
 import br.com.fiap.fastfood.api.application.dto.category.CategoryDTO;
 import java.util.List;
 
-public interface ICategoryService {
+public interface CategoryService {
 
   List<CategoryDTO> getAll();
   CategoryDTO getById(Long id);

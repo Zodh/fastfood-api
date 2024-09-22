@@ -3,8 +3,7 @@ package br.com.fiap.fastfood.api.application.service.impl;
 import br.com.fiap.fastfood.api.application.dto.product.MenuProductDTO;
 import br.com.fiap.fastfood.api.application.gateway.mapper.MenuProductMapperApp;
 import br.com.fiap.fastfood.api.application.gateway.repository.IMenuProductRepositoryGateway;
-import br.com.fiap.fastfood.api.application.usecase.mapper.MenuProductMapperAppImpl;
-import br.com.fiap.fastfood.api.application.service.IMenuProductService;
+import br.com.fiap.fastfood.api.application.service.MenuProductService;
 import br.com.fiap.fastfood.api.core.application.exception.NotFoundException;
 import br.com.fiap.fastfood.api.core.domain.exception.DomainException;
 import br.com.fiap.fastfood.api.core.domain.exception.ErrorDetail;
@@ -16,18 +15,18 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class MenuProductServiceImpl implements IMenuProductService {
+public class MenuProductServiceImpl implements MenuProductService {
 
   private final IMenuProductRepositoryGateway repository;
   private final MenuProductValidator validator;
   private final MenuProductMapperApp menuProductMapperApp;
 
   public MenuProductServiceImpl(
-      IMenuProductRepositoryGateway repository
+      IMenuProductRepositoryGateway repository, MenuProductMapperApp menuProductMapperApp
   ) {
     this.repository = repository;
     this.validator = new MenuProductValidator();
-    this.menuProductMapperApp = new MenuProductMapperAppImpl();
+    this.menuProductMapperApp = menuProductMapperApp;
   }
 
   @Override

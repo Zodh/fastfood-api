@@ -9,6 +9,8 @@ import br.com.fiap.fastfood.api.adapters.gateway.MenuProductRepositoryGatewayImp
 import br.com.fiap.fastfood.api.adaptersOld.driven.infrastructure.repository.adapter.OrderProductRepositoryAdapterImpl;
 import br.com.fiap.fastfood.api.adaptersOld.driven.infrastructure.repository.adapter.OrderRepositoryAdapterImpl;
 import br.com.fiap.fastfood.api.adaptersOld.driven.infrastructure.repository.adapter.ActivationCodeRepositoryAdapterImpl;
+import br.com.fiap.fastfood.api.application.gateway.mapper.MenuProductMapperApp;
+import br.com.fiap.fastfood.api.application.gateway.mapper.MenuProductMapperAppImpl;
 import br.com.fiap.fastfood.api.core.application.dto.invoice.InvoiceDTO;
 import br.com.fiap.fastfood.api.core.application.dto.order.CreateOrderRequestDTO;
 import br.com.fiap.fastfood.api.core.application.dto.order.OrderDTO;
@@ -59,10 +61,11 @@ public class OrderController {
     CustomerUseCase customerUseCase = new CustomerUseCase(
         customerRepositoryAdapter, emailSenderAdapter, activationCodeRepositoryAdapter,
         activationCodeLinkGenerator);
+    MenuProductMapperApp menuProductMapperApp = new MenuProductMapperAppImpl();
     MenuProductServiceImpl menuProductServiceImpl = new MenuProductServiceImpl(
-        menuProductRepositoryAdapter);
+        menuProductRepositoryAdapter, menuProductMapperApp);
     OrderProductServicePortImpl orderProductServicePort = new OrderProductServicePortImpl(
-        orderProductRepositoryAdapter, menuProductServiceImpl);
+        orderProductRepositoryAdapter, menuProductServiceImpl, menuProductMapperApp);
     FollowUpPolicyImpl followUpPolicy = new FollowUpPolicyImpl(followUpRepositoryAdapter);
     OrderInvoicePolicyImpl orderInvoicePolicyPort = new OrderInvoicePolicyImpl(
         invoiceRepositoryAdapter, orderRepositoryAdapter, followUpPolicy);

@@ -3,6 +3,7 @@ package br.com.fiap.fastfood.api.core.application.mapper;
 import br.com.fiap.fastfood.api.application.dto.product.MenuProductDTO;
 import br.com.fiap.fastfood.api.application.dto.product.OrderProductDTO;
 import br.com.fiap.fastfood.api.application.gateway.mapper.MenuProductMapperApp;
+import br.com.fiap.fastfood.api.application.gateway.mapper.MenuProductMapperAppImpl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

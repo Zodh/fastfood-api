@@ -5,13 +5,12 @@ import br.com.fiap.fastfood.api.application.dto.product.MenuProductDTO;
 import br.com.fiap.fastfood.api.application.dto.product.OrderProductDTO;
 import br.com.fiap.fastfood.api.core.application.exception.NotFoundException;
 import br.com.fiap.fastfood.api.application.gateway.mapper.MenuProductMapperApp;
-import br.com.fiap.fastfood.api.core.application.mapper.MenuProductMapperAppImpl;
 import br.com.fiap.fastfood.api.core.application.mapper.OrderProductMapperApp;
 import br.com.fiap.fastfood.api.core.application.mapper.OrderProductMapperAppImpl;
 import br.com.fiap.fastfood.api.core.application.port.repository.OrderProductRepositoryPort;
 import br.com.fiap.fastfood.api.core.domain.exception.DomainException;
 import br.com.fiap.fastfood.api.core.domain.exception.ErrorDetail;
-import br.com.fiap.fastfood.api.application.service.IMenuProductService;
+import br.com.fiap.fastfood.api.application.service.MenuProductService;
 import br.com.fiap.fastfood.api.core.application.port.inbound.service.OrderProductServicePort;
 import br.com.fiap.fastfood.api.entities.product.MenuProduct;
 import br.com.fiap.fastfood.api.entities.product.OrderProduct;
@@ -25,17 +24,17 @@ import java.util.stream.Collectors;
 
 public class OrderProductServicePortImpl implements OrderProductServicePort {
 
-    private final IMenuProductService IMenuProductService;
+    private final MenuProductService menuProductService;
     private final OrderProductRepositoryPort orderProductRepository;
     private final OrderProductValidator orderProductValidator = new OrderProductValidator();
     private final OrderProductMapperApp orderProductMapperApp;
     private final MenuProductMapperApp menuProductMapperApp;
 
-    public OrderProductServicePortImpl(OrderProductRepositoryPort orderProductRepository, IMenuProductService IMenuProductService) {
+    public OrderProductServicePortImpl(OrderProductRepositoryPort orderProductRepository, MenuProductService menuProductService, MenuProductMapperApp menuProductMapperApp) {
         this.orderProductRepository = orderProductRepository;
-        this.IMenuProductService = IMenuProductService;
+        this.menuProductService = menuProductService;
         this.orderProductMapperApp = new OrderProductMapperAppImpl();
-        this.menuProductMapperApp = new MenuProductMapperAppImpl();
+        this.menuProductMapperApp = menuProductMapperApp;
     }
 
     @Override
@@ -171,7 +170,7 @@ public class OrderProductServicePortImpl implements OrderProductServicePort {
                 "O produto do menu escolhido deve ser informado!"));
         }
 
-        MenuProductDTO menuProductDTO = IMenuProductService.getById(orderProductDTO.getMenuProduct().getId());
+        MenuProductDTO menuProductDTO = menuProductService.getById(orderProductDTO.getMenuProduct().getId());
         orderProductDTO.setMenuProduct(menuProductDTO);
 
         OrderProduct orderProduct = orderProductMapperApp.toDomain(orderProductDTO);
@@ -185,7 +184,7 @@ public class OrderProductServicePortImpl implements OrderProductServicePort {
         OrderProduct orderProduct = orderProductMapperApp.toDomain(orderProductDTO);
         if (Objects.nonNull(orderProduct.getOptionals()) && !orderProduct.getOptionals().isEmpty()) {
             List<Long> ids = orderProduct.getOptionals().stream().map(op -> op.getMenuProduct().getId()).toList();
-            Map<Long, MenuProduct> optionalsById = IMenuProductService.findAllById(ids).stream().collect(Collectors.toMap(
+            Map<Long, MenuProduct> optionalsById = menuProductService.findAllById(ids).stream().collect(Collectors.toMap(
                 MenuProductDTO::getId, menuProductMapperApp::toDomain));
             orderProduct.getOptionals().forEach(op -> {
                 op.setMenuProduct(optionalsById.get(op.getMenuProduct().getId()));

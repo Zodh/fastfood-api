@@ -3,7 +3,8 @@ package br.com.fiap.fastfood.api.adapters.controller;
 import br.com.fiap.fastfood.api.adapters.gateway.MenuProductRepositoryGatewayImpl;
 import br.com.fiap.fastfood.api.application.dto.product.MenuProductDTO;
 import br.com.fiap.fastfood.api.application.dto.product.MenuProductResponseDTO;
-import br.com.fiap.fastfood.api.application.service.IMenuProductService;
+import br.com.fiap.fastfood.api.application.gateway.mapper.MenuProductMapperAppImpl;
+import br.com.fiap.fastfood.api.application.service.MenuProductService;
 import br.com.fiap.fastfood.api.application.service.impl.MenuProductServiceImpl;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -23,12 +24,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/menu-products")
 public class MenuProductController {
 
-  private final IMenuProductService menuProductService;
+  private final MenuProductService menuProductService;
 
   @Autowired
   public MenuProductController(
       MenuProductRepositoryGatewayImpl menuProductRepositoryAdapter) {
-    this.menuProductService = new MenuProductServiceImpl(menuProductRepositoryAdapter);
+    this.menuProductService = new MenuProductServiceImpl(menuProductRepositoryAdapter, new MenuProductMapperAppImpl());
   }
 
   @GetMapping
