@@ -29,3 +29,14 @@ Na pasta do projeto, execute o comando: `docker-compose up`.
 Um arquivo com todas as requisições (Postman) foi adicionado na raiz do projeto. Contudo, para seguir conforme o solicitado, disponibilizamos as APIs do projeto no swagger abaixo:
 
 Acessar http://localhost:8080/swagger-ui/index.html#/ quando a aplicação estiver rodando.
+
+## TODO
+
+Discutir sobre:
+
+Use Case;
+Services;
+
+Felipe: cada use case deve ser especialista (fazer apenas uma coisa), e o use case deve ser usado/oferecido dentro das services (que são um aglomerado de funções);
+
+Robson: cada service é especialista em regras da entidade, não lida com use cases e nem repositórios. A service é CRU, apenas gerencia as regras da PRÓPRIA entidade.

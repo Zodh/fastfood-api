@@ -2,7 +2,7 @@ package br.com.fiap.fastfood.api.entities.person;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import br.com.fiap.fastfood.api.core.domain.exception.ErrorDetail;
+import br.com.fiap.fastfood.api.entities.exception.ErrorDetail;
 import br.com.fiap.fastfood.api.entities.person.vo.Document;
 import br.com.fiap.fastfood.api.entities.person.vo.Email;
 import br.com.fiap.fastfood.api.entities.person.vo.PhoneNumber;

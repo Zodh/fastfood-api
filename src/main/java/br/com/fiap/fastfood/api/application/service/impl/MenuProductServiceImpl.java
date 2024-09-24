@@ -4,9 +4,9 @@ import br.com.fiap.fastfood.api.application.dto.product.MenuProductDTO;
 import br.com.fiap.fastfood.api.application.gateway.mapper.MenuProductMapperApp;
 import br.com.fiap.fastfood.api.application.gateway.repository.IMenuProductRepositoryGateway;
 import br.com.fiap.fastfood.api.application.service.MenuProductService;
-import br.com.fiap.fastfood.api.core.application.exception.NotFoundException;
-import br.com.fiap.fastfood.api.core.domain.exception.DomainException;
-import br.com.fiap.fastfood.api.core.domain.exception.ErrorDetail;
+import br.com.fiap.fastfood.api.application.exception.NotFoundException;
+import br.com.fiap.fastfood.api.entities.exception.DomainException;
+import br.com.fiap.fastfood.api.entities.exception.ErrorDetail;
 import br.com.fiap.fastfood.api.entities.product.MenuProduct;
 import br.com.fiap.fastfood.api.entities.product.MenuProductValidator;
 

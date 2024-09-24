@@ -1,7 +1,7 @@
 package br.com.fiap.fastfood.api.entities.invoice.state.impl;
 
 import br.com.fiap.fastfood.api.entities.invoice.state.InvoiceStateEnum;
-import br.com.fiap.fastfood.api.core.domain.exception.InvoiceStateException;
+import br.com.fiap.fastfood.api.entities.exception.InvoiceStateException;
 import br.com.fiap.fastfood.api.entities.invoice.Invoice;
 import br.com.fiap.fastfood.api.entities.invoice.state.InvoiceState;
 import java.math.BigDecimal;

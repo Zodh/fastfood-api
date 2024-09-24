@@ -3,7 +3,7 @@ package br.com.fiap.fastfood.api.entities.person;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertThrows;
 
-import br.com.fiap.fastfood.api.core.domain.exception.DomainException;
+import br.com.fiap.fastfood.api.entities.exception.DomainException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

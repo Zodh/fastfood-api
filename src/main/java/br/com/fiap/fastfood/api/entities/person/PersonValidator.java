@@ -2,7 +2,7 @@ package br.com.fiap.fastfood.api.entities.person;
 
 import static java.util.Objects.isNull;
 
-import br.com.fiap.fastfood.api.core.domain.exception.ErrorDetail;
+import br.com.fiap.fastfood.api.entities.exception.ErrorDetail;
 import br.com.fiap.fastfood.api.entities.Validator;
 import java.time.LocalDate;
 import java.util.ArrayList;

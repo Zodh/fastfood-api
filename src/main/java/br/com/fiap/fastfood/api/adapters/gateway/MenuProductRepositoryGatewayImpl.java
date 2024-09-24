@@ -1,8 +1,8 @@
 package br.com.fiap.fastfood.api.adapters.gateway;
 
-import br.com.fiap.fastfood.api.adaptersOld.driven.infrastructure.entity.product.MenuProductEntity;
-import br.com.fiap.fastfood.api.adapters.presenter.mapper.MenuProductMapperInfra;
-import br.com.fiap.fastfood.api.infrastructure.adapter.product.MenuProductRepository;
+import br.com.fiap.fastfood.api.infrastructure.dao.entity.product.MenuProductEntity;
+import br.com.fiap.fastfood.api.adapters.mapper.MenuProductMapperInfra;
+import br.com.fiap.fastfood.api.infrastructure.dao.repository.product.MenuProductRepository;
 import br.com.fiap.fastfood.api.application.dto.product.MenuProductDTO;
 import br.com.fiap.fastfood.api.application.gateway.repository.IMenuProductRepositoryGateway;
 import java.util.List;

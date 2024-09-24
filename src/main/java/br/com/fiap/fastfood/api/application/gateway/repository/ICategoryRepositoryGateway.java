@@ -1,12 +1,11 @@
 package br.com.fiap.fastfood.api.application.gateway.repository;
 
 import br.com.fiap.fastfood.api.application.dto.category.CategoryDTO;
-import br.com.fiap.fastfood.api.core.application.port.BaseRepository;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface ICategoryRepositoryGateway extends BaseRepository<CategoryDTO, Long> {
+public interface ICategoryRepositoryGateway extends BaseRepositoryGateway<CategoryDTO, Long> {
 
     List<CategoryDTO> getAll();
 

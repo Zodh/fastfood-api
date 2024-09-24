@@ -1,7 +1,7 @@
 package br.com.fiap.fastfood.api.entities.order.state.impl;
 
-import br.com.fiap.fastfood.api.core.domain.exception.DomainException;
-import br.com.fiap.fastfood.api.core.domain.exception.ErrorDetail;
+import br.com.fiap.fastfood.api.entities.exception.DomainException;
+import br.com.fiap.fastfood.api.entities.exception.ErrorDetail;
 import br.com.fiap.fastfood.api.entities.order.Order;
 import br.com.fiap.fastfood.api.entities.order.OrderStateEnum;
 import br.com.fiap.fastfood.api.entities.order.state.OrderState;

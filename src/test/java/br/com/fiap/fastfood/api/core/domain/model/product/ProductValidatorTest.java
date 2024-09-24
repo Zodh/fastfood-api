@@ -3,8 +3,8 @@ package br.com.fiap.fastfood.api.core.domain.model.product;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import br.com.fiap.fastfood.api.core.domain.exception.DomainException;
-import br.com.fiap.fastfood.api.core.domain.exception.ErrorDetail;
+import br.com.fiap.fastfood.api.entities.exception.DomainException;
+import br.com.fiap.fastfood.api.entities.exception.ErrorDetail;
 import java.math.BigDecimal;
 import java.util.List;
 

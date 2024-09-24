@@ -1,6 +1,6 @@
 package br.com.fiap.fastfood.api.entities.product;
 
-import br.com.fiap.fastfood.api.core.domain.exception.ErrorDetail;
+import br.com.fiap.fastfood.api.entities.exception.ErrorDetail;
 import br.com.fiap.fastfood.api.entities.Validator;
 
 import java.math.BigDecimal;

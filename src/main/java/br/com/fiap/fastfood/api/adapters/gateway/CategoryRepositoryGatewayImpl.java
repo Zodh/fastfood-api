@@ -1,8 +1,8 @@
 package br.com.fiap.fastfood.api.adapters.gateway;
 
-import br.com.fiap.fastfood.api.adaptersOld.driven.infrastructure.entity.category.CategoryEntity;
-import br.com.fiap.fastfood.api.adapters.presenter.mapper.CategoryMapperInfra;
-import br.com.fiap.fastfood.api.infrastructure.adapter.category.CategoryRepository;
+import br.com.fiap.fastfood.api.infrastructure.dao.entity.category.CategoryEntity;
+import br.com.fiap.fastfood.api.adapters.mapper.CategoryMapperInfra;
+import br.com.fiap.fastfood.api.infrastructure.dao.repository.category.CategoryRepository;
 import br.com.fiap.fastfood.api.application.dto.category.CategoryDTO;
 import br.com.fiap.fastfood.api.application.gateway.repository.ICategoryRepositoryGateway;
 import org.springframework.beans.factory.annotation.Autowired;

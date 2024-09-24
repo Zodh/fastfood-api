@@ -1,7 +1,7 @@
 package br.com.fiap.fastfood.api.entities.invoice;
 
-import br.com.fiap.fastfood.api.core.domain.exception.DomainException;
-import br.com.fiap.fastfood.api.core.domain.exception.ErrorDetail;
+import br.com.fiap.fastfood.api.entities.exception.DomainException;
+import br.com.fiap.fastfood.api.entities.exception.ErrorDetail;
 import br.com.fiap.fastfood.api.entities.invoice.state.InvoiceState;
 import br.com.fiap.fastfood.api.entities.order.Order;
 import lombok.AllArgsConstructor;

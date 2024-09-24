@@ -1,9 +1,9 @@
 package br.com.fiap.fastfood.api.adapters.controller.advice;
 
-import br.com.fiap.fastfood.api.core.application.dto.ErrorDetailDTO;
-import br.com.fiap.fastfood.api.core.application.dto.ErrorResponseDTO;
-import br.com.fiap.fastfood.api.core.application.exception.NotFoundException;
-import br.com.fiap.fastfood.api.core.domain.exception.DomainException;
+import br.com.fiap.fastfood.api.application.dto.ErrorDetailDTO;
+import br.com.fiap.fastfood.api.application.dto.ErrorResponseDTO;
+import br.com.fiap.fastfood.api.application.exception.NotFoundException;
+import br.com.fiap.fastfood.api.entities.exception.DomainException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
