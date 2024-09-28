@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastfood-database
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fastfood-database
+  template:
+    metadata:
+      labels:
+        app: fastfood-database
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:latest
+          envFrom:
+            - configMapRef:
+                name: fastfood-config
+            - secretRef:
+                name: fastfood-secret
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: postgres-data
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: postgres-data
+          persistentVolumeClaim:
+            claimName: postgres-pvc
