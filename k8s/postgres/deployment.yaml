@@ -1,8 +1,9 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: fastfood-database
 spec:
+  serviceName: "fastfood-database"
   replicas: 1
   selector:
     matchLabels:
@@ -15,17 +16,20 @@ spec:
       containers:
         - name: postgres
           image: postgres:latest
-          envFrom:
-            - configMapRef:
-                name: fastfood-config
-            - secretRef:
-                name: fastfood-secret
-          ports:
-            - containerPort: 5432
+          env:
+            - name: POSTGRES_USER
+              value: "postgres"
+            - name: POSTGRES_PASSWORD
+              value: "postgrespw"
           volumeMounts:
-            - name: postgres-data
+            - name: postgres-storage
               mountPath: /var/lib/postgresql/data
+            - name: init-sql-volume
+              mountPath: /docker-entrypoint-initdb.d/  # Diretório de inicialização do PostgreSQL
       volumes:
-        - name: postgres-data
+        - name: postgres-storage
           persistentVolumeClaim:
             claimName: postgres-pvc
+        - name: init-sql-volume
+          hostPath:                     # Monta o arquivo init.sql do host
+            path: /docker-entrypoint-initdb.d/init.sql # Altere para o caminho correto do arquivo
