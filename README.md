@@ -24,6 +24,25 @@ Este projeto é o trabalho feito pelo time 15 para solucionar o desafio técnico
 
 Na pasta do projeto, execute o comando: `docker-compose up`.
 
+## Rodando projeto pelo K8S
+
+Lembre-se de ter o kubectl instalado em sua máquina, e caso queira criar clusters Kubernetes locais usando o Docker,
+você pode utilizar o **kind**.
+
+Na pasta `k8s/develop`, execute os comandos em sequência:
+
+`kubectl apply -f fastfood-secret.yaml`
+
+`kubectl apply -f fastfood-db-statefulset.yaml`
+
+`kubectl apply -f fastfood-db-service.yaml`
+
+`kubectl apply -f fastfood-api-deployment.yaml`
+
+`kubectl apply -f fastfood-api-service.yaml`
+
+Para conseguir realizar as requisições em sua máquina, digite o comando: `kubectl port-forward <NOME_DO_POD> 8080:8080`.
+
 ## Verificando APIs do projeto
 
 Um arquivo com todas as requisições (Postman) foi adicionado na raiz do projeto. Contudo, para seguir conforme o solicitado, disponibilizamos as APIs do projeto no swagger abaixo:

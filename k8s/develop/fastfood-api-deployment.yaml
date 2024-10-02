@@ -27,23 +27,15 @@ spec:
             - name: FASTFOOD_DATABASE_USER
               valueFrom:
                 secretKeyRef:
-                  name: postgres-secret
+                  name: fastfood-secret
                   key: POSTGRES_USER
             - name: FASTFOOD_DATABASE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: postgres-secret
+                  name: fastfood-secret
                   key: POSTGRES_PASSWORD
             - name: FASTFOOD_MAIL_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: fastfood-mail-secret
+                  name: fastfood-secret
                   key: FASTFOOD_MAIL_PASSWORD
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: fastfood-mail-secret
-type: Opaque
-data:
-  FASTFOOD_MAIL_PASSWORD: dGR2ZSBlcHhpIHVpbWwgcm5zdQ==
