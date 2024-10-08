@@ -2,6 +2,8 @@ package br.com.fiap.fastfood.api.core.domain.model.product;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import br.com.fiap.fastfood.api.entities.product.MenuProduct;
+import br.com.fiap.fastfood.api.entities.product.OrderProduct;
 import java.math.BigDecimal;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
