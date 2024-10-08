@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: fastfood-db
+spec:
+  serviceName: "fastfood-db"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fastfood-db
+  template:
+    metadata:
+      labels:
+        app: fastfood-db
+    spec:
+      containers:
+        - name: fastfood-db
+          image: guilhermemmnn/fastfood-db:latest
+          ports:
+            - containerPort: 5432
+              name: postgres
+          volumeMounts:
+            - name: fastfood-db-data
+              mountPath: /var/lib/postgresql/data
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: fastfood-secret
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: fastfood-secret
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_DB
+              value: "postgres"
+  volumeClaimTemplates:
+    - metadata:
+        name: fastfood-db-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 5Gi

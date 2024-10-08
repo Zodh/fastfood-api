@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastfood-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: fastfood-api
+  template:
+    metadata:
+      labels:
+        app: fastfood-api
+    spec:
+      containers:
+        - name: fastfood-api
+          image: guilhermemmnn/fastfood-api:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: FASTFOOD_DATABASE_URL
+              value: "jdbc:postgresql://fastfood-db:5432/postgres"
+            - name: FASTFOOD_API_PORT
+              value: "8080"
+            - name: FASTFOOD_API_ENVIRONMENT
+              value: "dev-local"
+            - name: FASTFOOD_DATABASE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: fastfood-secret
+                  key: POSTGRES_USER
+            - name: FASTFOOD_DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: fastfood-secret
+                  key: POSTGRES_PASSWORD
+            - name: FASTFOOD_MAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: fastfood-secret
+                  key: FASTFOOD_MAIL_PASSWORD
