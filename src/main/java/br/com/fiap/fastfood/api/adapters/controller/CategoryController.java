@@ -25,13 +25,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@RequestMapping("/categories")
+
 public class CategoryController {
 
   private final CategoryService categoryService;
 
-  @Autowired
+
   public CategoryController(
       MenuProductRepositoryGatewayImpl menuProductRepositoryAdapter,
       CategoryRepositoryGatewayImpl categoryRepositoryAdapter) {
@@ -42,15 +41,15 @@ public class CategoryController {
         categoryRepositoryAdapter, new CategoryMapperAppImpl(), menuProductMapperApp);
   }
 
-  @GetMapping
-  public ResponseEntity<CategoryResponseDTO> getAll() {
+
+  public CategoryResponseDTO getAll() {
     List<CategoryDTO> allCategories = categoryService.getAll();
     CategoryResponseDTO response = new CategoryResponseDTO(allCategories);
-    return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    return response;
   }
 
-  @GetMapping("/{identifier}")
-  public ResponseEntity<CategoryDTO> getByIdOrName(@PathVariable String identifier) {
+
+  public CategoryDTO getByIdOrName(String identifier) {
     CategoryDTO categoryDTO;
     try {
       Long id = Long.parseLong(identifier);
@@ -58,25 +57,21 @@ public class CategoryController {
     } catch (NumberFormatException e) {
       categoryDTO = categoryService.getByName(identifier);
     }
-    return ResponseEntity.status(HttpStatus.CREATED).body(categoryDTO);
+    return categoryDTO;
   }
 
-  @PostMapping
-  public ResponseEntity<Void> create(@Valid @RequestBody CategoryDTO categoryDTO) {
+
+  public void create(CategoryDTO categoryDTO) {
     categoryService.create(categoryDTO);
-    return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
-  @PutMapping("/{id}")
-  public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody CategoryDTO categoryDTO) {
+
+  public void update(Long id, CategoryDTO categoryDTO) {
     categoryService.update(id, categoryDTO);
-    return ResponseEntity.status(HttpStatus.OK).build();
   }
 
-  @DeleteMapping("/{id}")
-  public ResponseEntity<Void> delete(@PathVariable Long id) {
+  public void delete(Long id) {
     categoryService.remove(id);
-    return ResponseEntity.status(HttpStatus.OK).build();
   }
 
 }
