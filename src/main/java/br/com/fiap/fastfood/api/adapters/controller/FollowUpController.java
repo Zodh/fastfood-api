@@ -10,8 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@RequestMapping("/follow-up")
+
 public class FollowUpController {
 
   private final FollowUpService followUpService;
@@ -20,8 +19,7 @@ public class FollowUpController {
     this.followUpService = new FollowUpServiceImpl(followUpRepositoryAdapter);
   }
 
-  @GetMapping
-  public ResponseEntity<List<FollowUpResponseDTO>> getFollowUp() {
-    return ResponseEntity.ok(followUpService.findAll());
+  public List<FollowUpResponseDTO> getFollowUp() {
+    return followUpService.findAll();
   }
 }

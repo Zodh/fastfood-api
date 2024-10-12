@@ -18,29 +18,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@RequestMapping("/activation-code")
+
 public class ActivationCodeController {
 
   private final CustomerUseCaseImpl customerUseCaseImpl;
 
-  @Autowired
+
   public ActivationCodeController(CustomerRepositoryAdapterImpl customerRepositoryAdapter, EmailSenderGatewayImpl emailSenderGatewayImpl, ActivationCodeRepositoryAdapterImpl activationCodeRepositoryAdapter, ActivationCodeLinkGeneratorGatewayImpl activationCodeLinkGeneratorGatewayImpl) {
     this.customerUseCaseImpl = new CustomerUseCaseImpl(customerRepositoryAdapter,
         emailSenderGatewayImpl, activationCodeRepositoryAdapter,
         activationCodeLinkGeneratorGatewayImpl, new ActivationCodeMapperAppImpl(), new CustomerMapperAppImpl());
   }
 
-  @GetMapping(value = "/{code}")
-  public ResponseEntity<Void> activate(@PathVariable UUID code) {
+
+  public void activate(UUID code) {
     customerUseCaseImpl.activate(code);
-    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
   }
 
-  @PostMapping(value = "/generate")
-  public ResponseEntity<Void> generate(@RequestParam(value = "email") String email) {
+
+  public void generate(String email) {
     customerUseCaseImpl.resendActivationCode(email);
-    return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
 }
