@@ -6,7 +6,8 @@ spec:
   selector:
     app: fastfood-api
   ports:
-    - protocol: TCP
-      port: 80
+    - port: 8080
+      protocol: TCP
       targetPort: 8080
-  type: ClusterIP
+      nodePort: 32100
+  type: NodePort

@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payment-api
+  template:
+    metadata:
+      labels:
+        app: payment-api
+    spec:
+      containers:
+        - name: payment-api
+          image: zodh/payment-api:1.0.0
+          ports:
+            - containerPort: 8081
+          env:
+            - name: FASTFOOD_DATABASE_URL
+              value: "jdbc:postgresql://fastfood-db:5432/postgres"
+            - name: FASTFOOD_DATABASE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: fastfood-secret
+                  key: POSTGRES_USER
+            - name: FASTFOOD_DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: fastfood-secret
+                  key: POSTGRES_PASSWORD
