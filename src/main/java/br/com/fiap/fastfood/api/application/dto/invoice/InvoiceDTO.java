@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class InvoiceDTO {
 
-  private int id;
+  private Long id;
   private InvoiceStateEnum state;
   private BigDecimal price;
   private LocalDateTime createdAt;

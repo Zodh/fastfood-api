@@ -9,6 +9,10 @@ import br.com.fiap.fastfood.api.adapters.gateway.MenuProductRepositoryGatewayImp
 import br.com.fiap.fastfood.api.adapters.gateway.OrderProductRepositoryAdapterImpl;
 import br.com.fiap.fastfood.api.adapters.gateway.OrderRepositoryAdapterImpl;
 import br.com.fiap.fastfood.api.adapters.gateway.ActivationCodeRepositoryAdapterImpl;
+import br.com.fiap.fastfood.api.adapters.gateway.link.ApplicationServerLinkGenerator;
+import br.com.fiap.fastfood.api.adapters.gateway.payment.CreatePaymentRequest;
+import br.com.fiap.fastfood.api.adapters.gateway.payment.PaymentGeneratorGateway;
+import br.com.fiap.fastfood.api.adapters.gateway.payment.QrCodePaymentGeneratorGatewayImpl;
 import br.com.fiap.fastfood.api.application.gateway.mapper.ActivationCodeMapperAppImpl;
 import br.com.fiap.fastfood.api.application.gateway.mapper.CollaboratorMapperAppImpl;
 import br.com.fiap.fastfood.api.application.gateway.mapper.CustomerMapperApp;
@@ -36,9 +40,15 @@ import br.com.fiap.fastfood.api.application.usecase.OrderUseCase;
 import br.com.fiap.fastfood.api.application.usecase.impl.CustomerUseCaseImpl;
 import br.com.fiap.fastfood.api.application.service.impl.MenuProductServiceImpl;
 import br.com.fiap.fastfood.api.application.service.impl.OrderProductServiceImpl;
+import br.com.fiap.fastfood.api.infrastructure.config.PaymentApiConfig;
+import java.awt.image.BufferedImage;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,6 +59,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 @RestController
 @RequestMapping("/orders")
@@ -56,6 +67,9 @@ public class OrderController {
 
   private final OrderUseCase orderUseCase;
   private final InvoiceUseCase invoiceUseCase;
+  private final PaymentGeneratorGateway<BufferedImage, CreatePaymentRequest>  paymentGenerator;
+  private final PaymentApiConfig paymentApiConfig;
+  private final ApplicationServerLinkGenerator applicationServerLinkGenerator;
 
   @Autowired
   public OrderController(
@@ -67,7 +81,10 @@ public class OrderController {
       OrderProductRepositoryAdapterImpl orderProductRepositoryAdapter,
       MenuProductRepositoryGatewayImpl menuProductRepositoryAdapter,
       InvoiceRepositoryAdapterImpl invoiceRepositoryAdapter,
-      FollowUpRepositoryAdapterImpl followUpRepositoryAdapter
+      FollowUpRepositoryAdapterImpl followUpRepositoryAdapter,
+       RestTemplate restTemplate,
+      PaymentApiConfig paymentApiConfig,
+      ApplicationServerLinkGenerator applicationServerLinkGenerator
   ) {
     CustomerMapperApp customerMapperApp = new CustomerMapperAppImpl();
     CustomerUseCaseImpl customerUseCaseImpl = new CustomerUseCaseImpl(
@@ -89,6 +106,9 @@ public class OrderController {
         emailSenderGatewayImplAdapter, followUpPolicy);
     this.invoiceUseCase = new InvoiceUseCaseImpl(invoiceRepositoryAdapter,
         orderInvoicePolicyPort, invoiceMapperAppImpl, orderMapperAppImpl);
+    this.paymentGenerator = new QrCodePaymentGeneratorGatewayImpl(restTemplate);
+    this.paymentApiConfig = paymentApiConfig;
+    this.applicationServerLinkGenerator = applicationServerLinkGenerator;
   }
 
   @GetMapping
@@ -117,13 +137,20 @@ public class OrderController {
     return ResponseEntity.status(HttpStatus.OK).body(orderDTO);
   }
 
-  @PatchMapping("/{id}/confirm")
-  public ResponseEntity<OrderDTO> confirmOrder(@PathVariable Long id) {
+  @PatchMapping(value = "/{id}/confirm", produces = MediaType.IMAGE_JPEG_VALUE)
+  public ResponseEntity<BufferedImage> confirmOrder(@PathVariable Long id) {
     OrderDTO confirmedOrder = orderUseCase.confirm(id);
-    return ResponseEntity.status(HttpStatus.OK).body(confirmedOrder);
+    CreatePaymentRequest createPaymentRequest = new CreatePaymentRequest(
+        confirmedOrder.getInvoice().getId(),
+        confirmedOrder.getId(),
+        confirmedOrder.getPrice(),
+        "BRL",
+        confirmedOrder.getProducts().stream().filter(co -> Objects.nonNull(co) && StringUtils.isNotBlank(co.getName())).map(co -> String.format("%dx - %s", co.getQuantity(), co.getName())).collect(
+            Collectors.joining(", ")), applicationServerLinkGenerator.generate() + String.format("/orders/%d/pay", confirmedOrder.getId()), null);
+    return ResponseEntity.status(HttpStatus.OK).body(paymentGenerator.generate(createPaymentRequest, paymentApiConfig.getPaymentUrl()));
   }
 
-  @PatchMapping("/{id}/pay")
+  @GetMapping("/{id}/pay")
   public ResponseEntity<PaidOrderResponseDTO> executeFakeCheckout(@PathVariable Long id) {
     OrderDTO orderDTO = orderUseCase.getById(id);
     invoiceUseCase.executeFakeCheckout(orderDTO);
