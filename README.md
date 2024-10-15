@@ -17,13 +17,13 @@ Este projeto é o trabalho feito pelo time 15 para solucionar o desafio técnico
 ### Desenho da arquitetura
 
 #### K8S
-![K8S](.\k8s\k8s_diagrama.png)
+![K8S](k8sdiagram.png)
 
 #### AWS
-![AWS](.\aws\aws_diagrama.drawio.png)
+![AWS](awsdiagram.drawio.png)
 
 #### Negócio
-![C4](.\c4\system_diagrama.drawio.png)
+![C4](systemdiagram.png)
 
 ### Rodando projeto pelo K8S
 Lembre-se de ter o kubectl instalado em sua máquina, e caso queira criar clusters Kubernetes locais usando o Docker,
