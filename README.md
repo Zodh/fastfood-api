@@ -2,6 +2,8 @@
 
 Nome da equipe: Grupo 60
 
+[Apresentação do projeto no youtube](https://www.youtube.com/watch?v=6UqZ5yKJFNg&ab_channel=ZodhinJava)
+
 ### Contato dos participantes do projeto: 
 
 - Discord: Felipe Carvalho - RM357341 / @ifelipedev
