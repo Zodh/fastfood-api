@@ -19,4 +19,15 @@ services:
     env_file: ./src/main/resources/dev-docker.env
     ports:
       - 8080:8080
+  payment-api:
+    restart: on-failure
+    depends_on:
+      - fastfood-database
+    build:
+      context: ./../payment-api
+      dockerfile: ./../payment-api/Dockerfile
+    env_file:
+      - ./src/main/resources/dev-docker.env
+    ports:
+      - 8081:8081
 
