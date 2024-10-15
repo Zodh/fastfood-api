@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: fastfood-db
-          image: guilhermemmnn/fastfood-db:latest
+          image: zodh/fastfood-db:1.0.0
           ports:
             - containerPort: 5432
               name: postgres

@@ -310,6 +310,24 @@ CREATE TABLE public.order_product_optional (
                                                CONSTRAINT fkmvtwrsxapsas4s1u5la69l93x FOREIGN KEY (order_optional_id) REFERENCES public.order_product(id)
 );
 
+CREATE TABLE public.payment (
+                                id int8 NOT NULL,
+                                amount numeric(38, 2) NULL,
+                                callback_url varchar(255) NULL,
+                                created_at timestamp(6) NULL,
+                                currency varchar(255) NULL,
+                                payment_description varchar(255) NULL,
+                                due_at timestamp(6) NULL,
+                                external_payment_id int8 NULL,
+                                external_product_id int8 NULL,
+                                payer_id int8 NULL,
+                                receiver_id int8 NULL,
+                                status varchar(255) NULL,
+                                updated_at timestamp(6) NULL,
+                                CONSTRAINT payment_pkey PRIMARY KEY (id),
+                                CONSTRAINT payment_status_check CHECK (((status)::text = ANY ((ARRAY['PENDING'::character varying, 'PAID'::character varying, 'EXPIRED'::character varying])::text[])))
+);
+
 INSERT INTO public.menu_product ("cost",ingredient,optional,price,quantity,created_at,id,preparation_time,updated_at,description,"name", "active") VALUES
                                                                                                                                              (0.80,true,true,1.00,1,'2024-08-12 20:00:51.497',1,60000,NULL,NULL,'Hamburguer', true),
                                                                                                                                              (0.30,true,true,0.50,1,'2024-08-12 20:01:08.070',2,NULL,NULL,NULL,'Mustard', true),
@@ -460,6 +478,14 @@ CREATE SEQUENCE public.person_entity_seq
 
 -- DROP SEQUENCE public.product_entity_seq;
 
+CREATE SEQUENCE public.payment_seq
+    INCREMENT BY 50
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    START 1
+	CACHE 1
+	NO CYCLE;
+
 CREATE SEQUENCE public.product_entity_seq
     INCREMENT BY 50
     MINVALUE 1
@@ -467,3 +493,4 @@ CREATE SEQUENCE public.product_entity_seq
     START 1
 	NO CYCLE;
 select setval('product_entity_seq',  (SELECT coalesce((MAX(id)), 1) FROM (select id from public.menu_product mp union select id from public.order_product op) as products));
+
