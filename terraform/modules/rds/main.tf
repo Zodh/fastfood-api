@@ -32,6 +32,18 @@ resource "aws_db_instance" "rds" {
   tags = {
     Name = "MyRDSInstance"
   }
+
+  # Provisionador para rodar o script init.sql
+  provisioner "local-exec" {
+    command = <<EOT
+      PGPASSWORD="${data.kubernetes_secret.secrets.data.POSTGRES_PASSWORD}" psql \
+        --host=${aws_db_instance.rds.endpoint} \
+        --port=5432 \
+        --username=${data.kubernetes_secret.secrets.data.POSTGRES_USER} \
+        --dbname=postgres \
+        --file=./init.sql
+    EOT
+  }
 }
 
 # Criar o DB Subnet Group para o RDS (usando a subnet privada)

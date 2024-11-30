@@ -12,6 +12,10 @@ resource "aws_vpc" "eks_vpc" {
   }
 }
 
+data "aws_availability_zones" "available" {
+  state = "available"
+}
+
 # Criar uma subnet pública
 resource "aws_subnet" "eks_public_subnet" {
   vpc_id                  = aws_vpc.eks_vpc.id
@@ -74,31 +78,69 @@ resource "aws_route_table_association" "eks_private_subnet_association" {
 }
 
 # Criar o cluster EKS
-resource "aws_eks_cluster" "eks_cluster" {
-  name     = var.cluster_name
-  role_arn = "arn:aws:iam::397142877541:role/LabRole" #Cada fase deve ser alterado esse valor (IAM > Funções > LabRole) copie o ARN
+resource "aws_eks_cluster" "eks-cluster" {
+  name     = var.projectName
+  role_arn = var.labRole
 
   vpc_config {
-    subnet_ids = [
-      aws_subnet.eks_public_subnet.id,
-      aws_subnet.eks_private_subnet.id
-    ]
+    subnet_ids         = [aws_subnet.eks_public_subnet.id, aws_subnet.eks_private_subnet.id, aws_subnet.eks_private_subnet_2.id]
+    security_group_ids = [aws_security_group.eks_node_group_sg.id]
   }
 }
 
+resource "aws_security_group" "eks_node_group_sg" {
+  name        = "SG-${var.projectName}"
+  description = "Security group for EKS node group"
+  vpc_id      = aws_vpc.eks_vpc.id
+
+  ingress {
+    from_port   = 8080
+    to_port     = 8080
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_eks_access_policy_association" "eks-access-policy" {
+  cluster_name  = aws_eks_cluster.eks-cluster.name
+  policy_arn    = var.policyArn
+  principal_arn = var.principalArn
+
+  access_scope {
+    type = "cluster"
+  }
+}
+
+resource "aws_eks_access_entry" "eks-access-entry" {
+  cluster_name      = aws_eks_cluster.eks-cluster.name
+  principal_arn     = var.principalArn
+  kubernetes_groups = ["fiap"]
+  type              = "STANDARD"
+}
+
 # Criar o grupo de nós (worker nodes)
-resource "aws_eks_node_group" "eks_nodes" {
-  cluster_name    = aws_eks_cluster.eks_cluster.name
-  node_group_name = "${var.cluster_name}-node-group"
-  node_role_arn   = "arn:aws:iam::397142877541:role/LabRole" #Cada fase deve ser alterado esse valor (IAM > Funções > LabRole) copie o ARN
-  subnet_ids      = [
-    aws_subnet.eks_public_subnet.id,
-    aws_subnet.eks_private_subnet.id
-  ]
+resource "aws_eks_node_group" "eks-node" {
+  cluster_name    = aws_eks_cluster.eks-cluster.name
+  node_group_name = var.nodeGroup
+  node_role_arn   = var.labRole
+  subnet_ids      = [aws_subnet.eks_private_subnet.id]
+  disk_size       = 10
+  instance_types  = [var.instanceType]
 
   scaling_config {
-    desired_size = var.desired_capacity
-    max_size     = var.max_capacity
-    min_size     = var.min_capacity
+    desired_size = 2
+    min_size     = 1
+    max_size     = 3
+  }
+
+  update_config {
+    max_unavailable = 1
   }
 }

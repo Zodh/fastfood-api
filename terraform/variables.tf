@@ -10,14 +10,30 @@ variable "cluster_name" {
   default     = "fastfood-cluster"
 }
 
-variable "desired_capacity" {
-  default = 2
+variable "regionDefault" {
+  default = "us-east-1"
 }
 
-variable "min_capacity" {
-  default = 1
+variable "instanceType" {
+  default = "t3.micro"
 }
 
-variable "max_capacity" {
-  default = 3
+variable "projectName" {
+  default = "EKS-FIAP"
+}
+
+variable "labRole" {
+  default = "arn:aws:iam::397142877541:role/LabRole"
+}
+
+variable "principalArn" {
+  default = "arn:aws:iam::397142877541:role/voclabs"
+}
+
+variable "policyArn" {
+  default = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+}
+
+variable "nodeGroup" {
+  default = "fiap"
 }
