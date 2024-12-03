@@ -41,7 +41,7 @@ resource "aws_subnet" "eks_private_subnet" {
 resource "aws_subnet" "eks_private_subnet_2" {
   vpc_id                  = aws_vpc.eks_vpc.id
   cidr_block              = "10.0.3.0/24"  # Um novo bloco de IP
-  availability_zone       = "${var.aws_region}a"
+  availability_zone       = "${var.aws_region}c"
   tags = {
     Name = "eks-private-subnet-2"
   }
@@ -58,6 +58,12 @@ resource "aws_internet_gateway" "eks_igw" {
 # Criar a tabela de rotas para a subnet pública
 resource "aws_route_table" "eks_public_route_table" {
   vpc_id = aws_vpc.eks_vpc.id
+}
+
+resource "aws_route" "public_route" {
+  route_table_id         = aws_route_table.eks_public_route_table.id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.eks_igw.id
 }
 
 # Associa a tabela de rotas com a subnet pública
@@ -77,17 +83,6 @@ resource "aws_route_table_association" "eks_private_subnet_association" {
   route_table_id = aws_route_table.eks_private_route_table.id
 }
 
-# Criar o cluster EKS
-resource "aws_eks_cluster" "eks-cluster" {
-  name     = var.projectName
-  role_arn = var.labRole
-
-  vpc_config {
-    subnet_ids         = [aws_subnet.eks_public_subnet.id, aws_subnet.eks_private_subnet.id, aws_subnet.eks_private_subnet_2.id]
-    security_group_ids = [aws_security_group.eks_node_group_sg.id]
-  }
-}
-
 resource "aws_security_group" "eks_node_group_sg" {
   name        = "SG-${var.projectName}"
   description = "Security group for EKS node group"
@@ -100,6 +95,20 @@ resource "aws_security_group" "eks_node_group_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
@@ -108,31 +117,25 @@ resource "aws_security_group" "eks_node_group_sg" {
   }
 }
 
-resource "aws_eks_access_policy_association" "eks-access-policy" {
-  cluster_name  = aws_eks_cluster.eks-cluster.name
-  policy_arn    = var.policyArn
-  principal_arn = var.principalArn
+# Criar o cluster EKS
+resource "aws_eks_cluster" "eks-cluster" {
+  name     = var.projectName
+  role_arn = var.labRole
 
-  access_scope {
-    type = "cluster"
+  vpc_config {
+    subnet_ids         = [aws_subnet.eks_public_subnet.id, aws_subnet.eks_private_subnet.id, aws_subnet.eks_private_subnet_2.id]
+    security_group_ids = [aws_security_group.eks_node_group_sg.id]
   }
 }
 
-resource "aws_eks_access_entry" "eks-access-entry" {
-  cluster_name      = aws_eks_cluster.eks-cluster.name
-  principal_arn     = var.principalArn
-  kubernetes_groups = ["fiap"]
-  type              = "STANDARD"
-}
+resource "aws_eks_node_group" "eks_node_group" {
+  depends_on = [aws_eks_cluster.eks-cluster]
 
-# Criar o grupo de nós (worker nodes)
-resource "aws_eks_node_group" "eks-node" {
   cluster_name    = aws_eks_cluster.eks-cluster.name
-  node_group_name = var.nodeGroup
+  node_group_name = "eks-node-group-${var.projectName}"
   node_role_arn   = var.labRole
-  subnet_ids      = [aws_subnet.eks_private_subnet.id]
-  disk_size       = 10
-  instance_types  = [var.instanceType]
+  subnet_ids      = [aws_subnet.eks_public_subnet.id, aws_subnet.eks_private_subnet.id, aws_subnet.eks_private_subnet_2.id]
+  disk_size = 20
 
   scaling_config {
     desired_size = 2
@@ -140,7 +143,6 @@ resource "aws_eks_node_group" "eks-node" {
     max_size     = 3
   }
 
-  update_config {
-    max_unavailable = 1
-  }
+  instance_types = ["t3.medium"]
+  ami_type = "AL2_x86_64"
 }
