@@ -2,6 +2,20 @@ data "aws_db_instance" "rds" {
   db_instance_identifier = "mydb-instance"
 }
 
+data "aws_eks_cluster" "cluster" {
+  name = "fastfood-api"
+}
+
+data "aws_eks_cluster_auth" "cluster" {
+  name = data.aws_eks_cluster.cluster.name
+}
+
+provider "kubernetes" {
+  host                   = data.aws_eks_cluster.cluster.endpoint
+  cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority[0].data)
+  token                  = data.aws_eks_cluster_auth.cluster.token
+}
+
 # Deployment do FastFood API
 resource "kubernetes_manifest" "fastfood_deployment" {
   depends_on = [kubernetes_secret.fastfood_secret]  # Garante que o EKS seja provisionado antes do Kubernetes
@@ -11,6 +25,7 @@ resource "kubernetes_manifest" "fastfood_deployment" {
     kind       = "Deployment"
     metadata = {
       name = "fastfood-api"
+      namespace = "default"
     }
     spec = {
       replicas = 2
@@ -93,6 +108,7 @@ resource "kubernetes_manifest" "fastfood_service" {
     kind       = "Service"
     metadata = {
       name = "fastfood-api"
+      namespace = "default"
     }
     spec = {
       selector = {
@@ -116,6 +132,7 @@ resource "kubernetes_manifest" "fastfood_hpa" {
     kind       = "HorizontalPodAutoscaler"
     metadata = {
       name = "fastfood-api-hpa"
+      namespace = "default"
     }
     spec = {
       scaleTargetRef = {
@@ -151,46 +168,4 @@ resource "kubernetes_secret" "fastfood_secret" {
   }
 
   type = "Opaque"
-}
-
-# ============== API GATEWAY ==============
-
-# Criar o API Gateway
-resource "aws_apigatewayv2_api" "fastfood_api" {
-  name          = "fastfood-api"
-  protocol_type = "HTTP"
-}
-
-# Recurso para capturar o LoadBalancer criado pelo Kubernetes
-data "aws_lb" "fastfood_lb" {
-  depends_on = [kubernetes_manifest.fastfood_service]
-
-  # Filtrando o LoadBalancer pela tag criada pelo Kubernetes
-  filter {
-    name   = "tag:k8s.io/service-name"
-    values = ["fastfood-api"]
-  }
-}
-
-# Recurso para o API Gateway com a integração correta
-resource "aws_apigatewayv2_integration" "fastfood_integration" {
-  api_id             = aws_apigatewayv2_api.fastfood_api.id
-  integration_type   = "HTTP_PROXY"
-  integration_uri    = "http://${data.aws_lb.fastfood_lb.dns_name}:8080"
-  connection_type    = "INTERNET"
-  payload_format_version = "1.0"
-}
-
-# Criar rota para encaminhar requisições
-resource "aws_apigatewayv2_route" "fastfood_route" {
-  api_id    = aws_apigatewayv2_api.fastfood_api.id
-  route_key = "ANY /{proxy+}"  # Aceita todas as rotas e métodos HTTP
-  target    = "integrations/${aws_apigatewayv2_integration.fastfood_integration.id}"
-}
-
-# Configurar o estágio (deployment)
-resource "aws_apigatewayv2_stage" "fastfood_stage" {
-  api_id      = aws_apigatewayv2_api.fastfood_api.id
-  name        = "prod"
-  auto_deploy = true
 }

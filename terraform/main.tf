@@ -32,6 +32,7 @@ resource "aws_subnet" "eks_private_subnet" {
   vpc_id                  = aws_vpc.eks_vpc.id
   cidr_block              = "10.0.2.0/24"
   availability_zone       = "${var.aws_region}b"
+  map_public_ip_on_launch = true
   tags = {
     Name = "eks-private-subnet"
   }
@@ -42,6 +43,7 @@ resource "aws_subnet" "eks_private_subnet_2" {
   vpc_id                  = aws_vpc.eks_vpc.id
   cidr_block              = "10.0.3.0/24"  # Um novo bloco de IP
   availability_zone       = "${var.aws_region}c"
+  map_public_ip_on_launch = true
   tags = {
     Name = "eks-private-subnet-2"
   }
@@ -77,9 +79,20 @@ resource "aws_route_table" "eks_private_route_table" {
   vpc_id = aws_vpc.eks_vpc.id
 }
 
+resource "aws_route" "private_route" {
+  route_table_id         = aws_route_table.eks_private_route_table.id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.eks_igw.id
+}
+
 # Associa a tabela de rotas com a subnet privada
 resource "aws_route_table_association" "eks_private_subnet_association" {
   subnet_id      = aws_subnet.eks_private_subnet.id
+  route_table_id = aws_route_table.eks_private_route_table.id
+}
+
+resource "aws_route_table_association" "eks_private_subnet_association_2" {
+  subnet_id      = aws_subnet.eks_private_subnet_2.id
   route_table_id = aws_route_table.eks_private_route_table.id
 }
 
@@ -135,7 +148,7 @@ resource "aws_eks_node_group" "eks_node_group" {
   node_group_name = "eks-node-group-${var.projectName}"
   node_role_arn   = var.labRole
   subnet_ids      = [aws_subnet.eks_public_subnet.id, aws_subnet.eks_private_subnet.id, aws_subnet.eks_private_subnet_2.id]
-  disk_size = 20
+  disk_size       = 20
 
   scaling_config {
     desired_size = 2
