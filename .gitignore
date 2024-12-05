@@ -23,7 +23,6 @@ buildNumber.properties
 # Arquivos de estado do Terraform
 *.tfstate
 *.tfstate.backup
-*.lock.hcl
 
 # Logs e crash logs do Terraform
 crash.log
