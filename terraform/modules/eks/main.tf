@@ -10,6 +10,18 @@ data "aws_eks_cluster_auth" "cluster" {
   name = data.aws_eks_cluster.cluster.name
 }
 
+data "kubernetes_secret" "fastfood_secret" {
+  metadata {
+    name = "fastfood-secret"
+  }
+}
+
+locals {
+  postgres_user     = base64decode(data.kubernetes_secret.fastfood_secret.data["POSTGRES_USER"])
+  postgres_password = base64decode(data.kubernetes_secret.fastfood_secret.data["POSTGRES_PASSWORD"])
+  fastfood_mail_password = base64decode(data.kubernetes_secret.fastfood_secret.data["FASTFOOD_MAIL_PASSWORD"])
+}
+
 provider "kubernetes" {
   host                   = data.aws_eks_cluster.cluster.endpoint
   cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority[0].data)
@@ -18,8 +30,6 @@ provider "kubernetes" {
 
 # Deployment do FastFood API
 resource "kubernetes_manifest" "fastfood_deployment" {
-  depends_on = [kubernetes_secret.fastfood_secret]  # Garante que o EKS seja provisionado antes do Kubernetes
-
   manifest = {
     apiVersion = "apps/v1"
     kind       = "Deployment"
@@ -50,7 +60,7 @@ resource "kubernetes_manifest" "fastfood_deployment" {
             env = [
               {
                 name  = "FASTFOOD_DATABASE_URL"
-                value = "jdbc:postgresql://${data.aws_db_instance.rds.endpoint}:5432/${data.aws_db_instance.rds.db_name}"
+                value = "jdbc:postgresql://${data.aws_db_instance.rds.endpoint}/${data.aws_db_instance.rds.db_name}"
               },
               {
                 name  = "FASTFOOD_API_PORT"
@@ -62,30 +72,15 @@ resource "kubernetes_manifest" "fastfood_deployment" {
               },
               {
                 name = "FASTFOOD_DATABASE_USER"
-                valueFrom = {
-                  secretKeyRef = {
-                    name = kubernetes_secret.fastfood_secret.metadata[0].name
-                    key  = "POSTGRES_USER"
-                  }
-                }
+                value = local.postgres_user
               },
               {
                 name = "FASTFOOD_DATABASE_PASSWORD"
-                valueFrom = {
-                  secretKeyRef = {
-                    name = kubernetes_secret.fastfood_secret.metadata[0].name
-                    key  = "POSTGRES_PASSWORD"
-                  }
-                }
+                value = local.postgres_password
               },
               {
                 name = "FASTFOOD_MAIL_PASSWORD"
-                valueFrom = {
-                  secretKeyRef = {
-                    name = kubernetes_secret.fastfood_secret.metadata[0].name
-                    key  = "FASTFOOD_MAIL_PASSWORD"
-                  }
-                }
+                value = local.fastfood_mail_password
               },
               {
                 name  = "PAYMENT_API_URL"
@@ -101,8 +96,6 @@ resource "kubernetes_manifest" "fastfood_deployment" {
 
 # Deploy do Service
 resource "kubernetes_manifest" "fastfood_service" {
-  depends_on = [kubernetes_secret.fastfood_secret]  # Garante que o EKS seja provisionado antes do Kubernetes
-
   manifest = {
     apiVersion = "v1"
     kind       = "Service"
@@ -126,7 +119,6 @@ resource "kubernetes_manifest" "fastfood_service" {
 
 # Deploy do Horizontal Pod Autoscaler (HPA)
 resource "kubernetes_manifest" "fastfood_hpa" {
-  depends_on = [kubernetes_secret.fastfood_secret]  # Garante que o EKS seja provisionado antes do Kubernetes
   manifest = {
     apiVersion = "autoscaling/v2"
     kind       = "HorizontalPodAutoscaler"
@@ -154,18 +146,4 @@ resource "kubernetes_manifest" "fastfood_hpa" {
       }]
     }
   }
-}
-
-resource "kubernetes_secret" "fastfood_secret" {
-  metadata {
-    name = "fastfood-secret"
-  }
-
-  data = {
-    POSTGRES_USER          = base64encode(var.postgres_user)
-    POSTGRES_PASSWORD      = base64encode(var.postgres_password)
-    FASTFOOD_MAIL_PASSWORD = base64encode(var.fastfood_mail_password)
-  }
-
-  type = "Opaque"
 }

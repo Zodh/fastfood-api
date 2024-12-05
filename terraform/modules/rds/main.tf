@@ -1,3 +1,7 @@
+provider "aws" {
+  region = "us-east-1"  # Região do seu cluster
+}
+
 data "aws_eks_cluster" "cluster" {
   name = "fastfood-api"
 }
@@ -18,12 +22,18 @@ data "aws_vpc" "eks_vpc" {
     values = ["10.0.0.0/16"]
   }
 
-  tags = {
-    Name = "eks-vpc"
+  filter {
+    name   = "tag:Name"
+    values = ["eks-vpc"]
   }
 }
 
 data "aws_subnet" "eks_private_subnet" {
+  filter {
+    name   = "tag:Name"
+    values = ["eks-private-subnet"]
+  }
+
   filter {
     name   = "vpc-id"
     values = [data.aws_vpc.eks_vpc.id]
@@ -36,6 +46,11 @@ data "aws_subnet" "eks_private_subnet" {
 }
 
 data "aws_subnet" "eks_private_subnet2" {
+  filter {
+    name   = "tag:Name" # Filtro para a tag Name
+    values = ["eks-private-subnet-2"] # Nome exato da subnet
+  }
+
   filter {
     name   = "vpc-id"
     values = [data.aws_vpc.eks_vpc.id]
@@ -53,6 +68,11 @@ data "kubernetes_secret" "fastfood_secret" {
   }
 }
 
+locals {
+  postgres_user     = base64decode(data.kubernetes_secret.fastfood_secret.data["POSTGRES_USER"])
+  postgres_password = base64decode(data.kubernetes_secret.fastfood_secret.data["POSTGRES_PASSWORD"])
+}
+
 # Criar o RDS (por exemplo, um banco de dados MySQL)
 resource "aws_db_instance" "rds" {
   identifier        = "mydb-instance"
@@ -60,36 +80,27 @@ resource "aws_db_instance" "rds" {
   instance_class    = "db.t3.micro"
   allocated_storage = 20
   db_name           = "postgres"
-  username          = data.kubernetes_secret.fastfood_secret.data.POSTGRES_USER
-  password          = data.kubernetes_secret.fastfood_secret.data.POSTGRES_PASSWORD
+  username          = local.postgres_user
+  password          = local.postgres_password
   vpc_security_group_ids = [aws_security_group.rds_sg.id]
-  db_subnet_group_name = aws_db_subnet_group.rds_subnet_group.name
+  db_subnet_group_name = aws_db_subnet_group.rds_subnet.name
   multi_az          = false
-  publicly_accessible = false
+  publicly_accessible = true
+  skip_final_snapshot  = true
   tags = {
     Name = "MyRDSInstance"
   }
-
-  # Provisionador para rodar o script init.sql
-  provisioner "local-exec" {
-    command = <<EOT
-      PGPASSWORD="${data.kubernetes_secret.fastfood_secret.data.POSTGRES_PASSWORD}" psql \
-        --host=${aws_db_instance.rds.endpoint} \
-        --port=5432 \
-        --username=${data.kubernetes_secret.fastfood_secret.data.POSTGRES_USER} \
-        --dbname=postgres \
-        --file=./init.sql
-    EOT
-  }
 }
 
-# Criar o DB Subnet Group para o RDS (usando a subnet privada)
-resource "aws_db_subnet_group" "rds_subnet_group" {
-  name       = "my-rds-subnet-group"
-  subnet_ids = [data.aws_subnet.eks_private_subnet.id, data.aws_subnet.eks_private_subnet2.id]
+resource "aws_db_subnet_group" "rds_subnet" {
+  name       = "rds-subnet-group"
+  subnet_ids = [
+    data.aws_subnet.eks_private_subnet.id,
+    data.aws_subnet.eks_private_subnet2.id
+  ]
 
   tags = {
-    Name = "MyRDSSubnetGroup"
+    Name = "RDS Subnet Group"
   }
 }
 
@@ -108,7 +119,7 @@ resource "aws_security_group" "rds_sg" {
   }
 
   ingress {
-    cidr_blocks = ["10.0.0.0/16"]  # Permitir acesso de dentro da VPC
+    cidr_blocks = ["0.0.0.0/0"]  # Permitir acesso de dentro da VPC
     from_port   = 5432  # A porta do PostgreSQL
     to_port     = 5432  # A porta do PostgreSQL
     protocol    = "tcp"
