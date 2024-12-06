@@ -13,3 +13,8 @@ output "private_subnet_id_2" {
   value       = data.aws_subnet.eks_private_subnet2.id
   description = "O ID da segunda subnet privada criada"
 }
+
+output "rds_endpoint" {
+  value       = aws_db_instance.rds.endpoint
+  description = "Ip para fazer conexão com o banco"
+}

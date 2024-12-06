@@ -74,6 +74,17 @@ Postman: [Collection POSTMAN](fastfood-api%20-%20validation.postman_collection.j
 ### Aws Academy
 
 Para setar suas credenciais da aws, acesse o aws academy, clique em 'AWS Details' para pegar suas credenciais, depois
-abra a pasta: `C:/Users/gmeir/.aws/credentials`. (Elas duram 4 horas, depois é necessário repetir o passo a passo)
+jogue no arquivo: `C:/Users/gmeir/.aws/credentials`. (Elas duram 4 horas, depois é necessário repetir o passo a passo)
 
-Para cada fase, devemos mudar o `role_arn`.
+Para cada fase, devemos mudar o valor de `var.labRole`, para isso vá em IAM > Funções > LabRole (copie o ARN).
+
+Com isso, podemos executar os comandos `terraform init` e em seguida `terraform apply` na ordem abaixo:
+
+1° Em ./terraform
+
+2° Em ./terraform/modules/rds (Após subir o RDS, execute os scripts de `init.sql`, caso faça a conexão pelo Intellij
+clique com o botão direito em postgres > SQL Scripts > Run SQL Scripts...)
+
+3° Em ./terraform/modules/eks
+
+4° Em ./terraform/modules/lambda
