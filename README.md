@@ -91,3 +91,8 @@ Agora, rode os comandos: `aws eks --region us-east-1 update-kubeconfig --name fa
 `kubectl get svc` e pegue o valor de **EXTERNAL-IP**
 
 4° Em ./terraform/modules/lambda, adicione esse **EXTERNAL-IP** em `variables.tf` em externalIp e rode os comandos terraform.
+
+### Ajustar lambda
+
+Após modificar a lambda, no diretório `./terraform/modules/lambda` execute o comando: 
+`Compress-Archive -Path .\lambda_package\* -DestinationPath .\lambda_function.zip` e no .zip gerado, faça o upload na aws.
