@@ -2,6 +2,20 @@ provider "aws" {
   region = var.aws_region
 }
 
+resource "kubernetes_secret" "fastfood_secret" {
+  metadata {
+    name = "fastfood-secret"
+  }
+
+  data = {
+    POSTGRES_USER          = base64encode(var.postgres_user)
+    POSTGRES_PASSWORD      = base64encode(var.postgres_password)
+    FASTFOOD_MAIL_PASSWORD = base64encode(var.fastfood_mail_password)
+  }
+
+  type = "Opaque"
+}
+
 # Criar a VPC
 resource "aws_vpc" "eks_vpc" {
   cidr_block = "10.0.0.0/16"
@@ -158,18 +172,4 @@ resource "aws_eks_node_group" "eks_node_group" {
 
   instance_types = ["t3.medium"]
   ami_type = "AL2_x86_64"
-}
-
-resource "kubernetes_secret" "fastfood_secret" {
-  metadata {
-    name = "fastfood-secret"
-  }
-
-  data = {
-    POSTGRES_USER          = base64encode(var.postgres_user)
-    POSTGRES_PASSWORD      = base64encode(var.postgres_password)
-    FASTFOOD_MAIL_PASSWORD = base64encode(var.fastfood_mail_password)
-  }
-
-  type = "Opaque"
 }
