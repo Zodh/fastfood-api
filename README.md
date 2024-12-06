@@ -87,4 +87,7 @@ clique com o botão direito em postgres > SQL Scripts > Run SQL Scripts...)
 
 3° Em ./terraform/modules/eks
 
-4° Em ./terraform/modules/lambda
+Agora, rode os comandos: `aws eks --region us-east-1 update-kubeconfig --name fastfood-api` e em seguida:
+`kubectl get svc` e pegue o valor de **EXTERNAL-IP**
+
+4° Em ./terraform/modules/lambda, adicione esse **EXTERNAL-IP** em `variables.tf` em externalIp e rode os comandos terraform.

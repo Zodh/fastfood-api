@@ -1,26 +1,18 @@
-const AWS = require('aws-sdk');
 const axios = require('axios');
+const https = require('https');
 const { Client } = require('pg');
-
-// Inicializa o cliente EKS
-const eksClient = new AWS.EKS();
 
 // Configuração para o banco RDS
 const DB_HOST = process.env.DB_HOST || 'your-rds-endpoint.amazonaws.com';
 const DB_NAME = process.env.DB_NAME || 'your_database_name';
 const DB_USER = process.env.DB_USER || 'your_database_user';
 const DB_PASSWORD = process.env.DB_PASSWORD || 'your_database_password';
-const CLUSTER_NAME = process.env.CLUSTER_NAME || 'default-cluster';
+const EXTERNAL_IP = process.env.EXTERNAL_IP || 'default-elb';
 
-async function getEKSClusterEndpoint(clusterName) {
-    try {
-        const response = await eksClient.describeCluster({ name: clusterName }).promise();
-        return response.cluster.endpoint;
-    } catch (error) {
-        console.error('Erro ao obter o endpoint do cluster EKS:', error);
-        throw error;
-    }
-}
+// Configuração do agente HTTPS para ignorar validação de SSL
+const httpsAgent = new https.Agent({
+    rejectUnauthorized: false, // Ignora validação de certificados
+});
 
 async function validateUserExists(cpf) {
     const client = new Client({
@@ -28,6 +20,9 @@ async function validateUserExists(cpf) {
         database: DB_NAME,
         user: DB_USER,
         password: DB_PASSWORD,
+        ssl: {
+            rejectUnauthorized: false, // Se você deseja ignorar a verificação do certificado SSL
+        }
     });
 
     try {
@@ -44,8 +39,7 @@ async function validateUserExists(cpf) {
 }
 
 exports.lambdaHandler = async (event) => {
-    const clusterName = CLUSTER_NAME || 'default-cluster';
-    const eksEndpoint = await getEKSClusterEndpoint(clusterName);
+    const eksEndpoint = EXTERNAL_IP;
 
     // Extrair informações da solicitação do API Gateway
     const path = event.path;
@@ -80,16 +74,16 @@ exports.lambdaHandler = async (event) => {
         let response;
         switch (httpMethod) {
             case 'GET':
-                response = await axios.get(eksUrl, { params: queryString });
+                response = await axios.get(eksUrl, { params: queryString, httpsAgent });
                 break;
             case 'POST':
-                response = await axios.post(eksUrl, body);
+                response = await axios.post(eksUrl, body, { httpsAgent });
                 break;
             case 'DELETE':
-                response = await axios.delete(eksUrl, { params: queryString });
+                response = await axios.delete(eksUrl, { params: queryString, httpsAgent });
                 break;
             case 'PUT':
-                response = await axios.put(eksUrl, body);
+                response = await axios.put(eksUrl, body, { httpsAgent });
                 break;
             default:
                 return {
@@ -101,13 +95,19 @@ exports.lambdaHandler = async (event) => {
         // Retornar a resposta da API no EKS
         return {
             statusCode: response.status,
-            body: response.data,
+            body: JSON.stringify(response.data),
         };
     } catch (error) {
+        const statusCode = error.response ? error.response.status : 500;
+        const errorResponse = error.response ? error.response.data : { message: 'Erro inesperado' };
+
         console.error('Erro ao processar a solicitação:', error);
         return {
-            statusCode: 500,
-            body: JSON.stringify({ message: `Erro interno: ${error.message}` }),
+            statusCode: statusCode,
+            body: JSON.stringify({
+                message: `Erro ao processar a requisição: ${error.message}`,
+                response: errorResponse
+            }),
         };
     }
 };

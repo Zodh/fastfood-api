@@ -41,15 +41,14 @@ resource "aws_lambda_function" "eks_invoker" {
 
   environment {
     variables = {
-      CLUSTER_NAME = "fastfood-api"
+      EXTERNAL_IP  = var.externalIp
       DB_NAME      = "postgres"
-      DB_HOST      = data.aws_db_instance.rds.endpoint
+      DB_HOST      = split(":", data.aws_db_instance.rds.endpoint)[0]
       DB_USER      = local.postgres_user
       DB_PASSWORD  = local.postgres_password
     }
   }
 }
-
 
 # Cria recurso API Gateway
 resource "aws_api_gateway_rest_api" "eks_api" {
@@ -95,6 +94,6 @@ resource "aws_api_gateway_deployment" "eks_api_deployment" {
   stage_name  = "prod"
 
   depends_on = [
-    aws_api_gateway_method.proxy_method
+    aws_api_gateway_method.proxy_method, aws_api_gateway_integration.lambda_integration
   ]
 }
