@@ -76,25 +76,14 @@ Postman: [Collection POSTMAN](fastfood-api%20-%20validation.postman_collection.j
 Para setar suas credenciais da aws, acesse o aws academy, clique em 'AWS Details' para pegar suas credenciais, depois
 jogue no arquivo: `C:/Users/gmeir/.aws/credentials`. (Elas duram 4 horas, depois é necessário repetir o passo a passo)
 
-Para cada fase, devemos mudar o valor de `var.labRole`, para isso vá em IAM > Funções > LabRole (copie o ARN).
-
 Com isso, podemos executar os comandos `terraform init` e em seguida `terraform apply` na ordem abaixo:
 
-1° Em ./terraform
+1° Execute os comandos do terraform no projeto: https://github.com/Zodh/fastfood-infra-configuration
 
-2° Em ./terraform/modules/rds (Após subir o RDS, execute os scripts de `init.sql`, caso faça a conexão pelo Intellij
-clique com o botão direito em postgres > SQL Scripts > Run SQL Scripts...)
+2° Execute os comandos do terraform no projeto: https://github.com/Zodh/fastfood-rds-configuration
+(Após subir o RDS, execute os scripts de `init.sql`, caso faça a conexão pelo Intellij clique com o botão direito
+em public > postgres > SQL Scripts > Run SQL Scripts...)
 
-3° Em ./terraform/modules/eks
+3° Agora nesse projeto, abra o terminal em `./terraform/eks` e execute os comandos.
 
-Agora, rode os comandos: `aws eks --region us-east-1 update-kubeconfig --name fastfood-api` e em seguida:
-`kubectl get svc` e pegue o valor de **EXTERNAL-IP**
-
-4° Em ./terraform/modules/lambda, adicione esse **EXTERNAL-IP** em `variables.tf` em externalIp e rode os comandos terraform.
-
-Após executar o comando: `terraform apply`, será exibido no console a url para realizar as requisições em **api_gateway_endpoint =**
-
-### Ajustar lambda
-
-Após modificar a lambda, no diretório `./terraform/modules/lambda` execute o comando: 
-`Compress-Archive -Path .\lambda_package\* -DestinationPath .\lambda_function.zip` e no .zip gerado, faça o upload na aws.
+4° Execute os comandos do terraform no projeto: https://github.com/Zodh/fastfood-authorizer-api
