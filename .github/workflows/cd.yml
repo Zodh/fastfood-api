@@ -21,8 +21,8 @@ jobs:
 
       - name: Buildando a imagem e enviando para o dockerhub
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/spring-app:latest .
-          docker push ${{ secrets.DOCKER_USERNAME }}/spring-app:latest
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/fastfood-api:latest .
+          docker push ${{ secrets.DOCKER_USERNAME }}/fastfood-api:latest
 
       - name: Configurando as credenciais da AWS
         uses: aws-actions/configure-aws-credentials@v2
