@@ -29,7 +29,7 @@ resource "kubernetes_manifest" "fastfood_deployment" {
         spec = {
           containers = [{
             name  = "fastfood-api"
-            image = "zodh/fastfood-api:latest"
+            image = "guilhermemmnn/fastfood-api:latest"
             ports = [{
               containerPort = 8080
             }]
@@ -61,6 +61,10 @@ resource "kubernetes_manifest" "fastfood_deployment" {
               {
                 name  = "PAYMENT_API_URL"
                 value = "http://payment-api:8081/payments"
+              },
+              {
+                name  = "API_GATEWAY_URL"
+                value = "https://${data.aws_api_gateway_rest_api.eks_api.id}.execute-api.us-east-1.amazonaws.com/prod"
               }
             ]
           }]
