@@ -1,0 +1,46 @@
+name: CI for FastFood API
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the code from the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Setando java 21
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin' # Distribuição do OpenJDK
+          java-version: '21'      # Alterar para a versão do Java que você está usando
+
+      # Step 3: Criando cache das dependencias
+      - name: Cache Maven dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      # Step 4: Buildando o projeto com maven
+      - name: Build with Maven
+        run: mvn clean install -DskipTests
+
+      # Step 5: Rodando os testes da aplicação
+      - name: Run tests
+        run: mvn test
+
+      # Step 6: Gerando relatório de testes
+      - name: Upload test report
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-report
+          path: target/surefire-reports/*.xml

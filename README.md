@@ -69,3 +69,21 @@ Um arquivo com todas as requisições (Postman) foi adicionado na raiz do projet
 Acessar http://localhost:8080/swagger-ui/index.html#/ quando a aplicação estiver rodando.
 
 Postman: [Collection POSTMAN](fastfood-api%20-%20validation.postman_collection.json)
+
+
+### Aws Academy
+
+Para setar suas credenciais da aws, acesse o aws academy, clique em 'AWS Details' para pegar suas credenciais, depois
+jogue no arquivo: `C:/Users/gmeir/.aws/credentials`. (Elas duram 4 horas, depois é necessário repetir o passo a passo)
+
+Com isso, podemos executar os comandos `terraform init` e em seguida `terraform apply` na ordem abaixo:
+
+1° Execute os comandos do terraform no projeto: https://github.com/Zodh/fastfood-infra-configuration
+
+2° Execute os comandos do terraform no projeto: https://github.com/Zodh/fastfood-rds-configuration
+(Após subir o RDS, execute os scripts de `init.sql`, caso faça a conexão pelo Intellij clique com o botão direito
+em public > postgres > SQL Scripts > Run SQL Scripts...)
+
+3° Agora nesse projeto, abra o terminal em `./terraform/eks` e execute os comandos.
+
+4° Execute os comandos do terraform no projeto: https://github.com/Zodh/fastfood-authorizer-api

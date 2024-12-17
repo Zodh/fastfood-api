@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: fastfood-api
-          image: zodh/fastfood-api:1.0.0
+          image: zodh/fastfood-api:latest
           ports:
             - containerPort: 8080
           env:

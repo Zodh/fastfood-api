@@ -16,3 +16,25 @@ buildNumber.properties
 .project
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
+
+# Diretório de estado do Terraform
+.terraform/
+
+# Arquivos de estado do Terraform
+*.tfstate
+*.tfstate.backup
+
+# Logs e crash logs do Terraform
+crash.log
+*.log
+
+# Planos de execução
+*.tfplan
+
+# Arquivos de override e configurações locais
+override.tf
+override.tf.json
+*.override.tf
+*.override.tf.json
+.terraformrc
+terraform.rc
