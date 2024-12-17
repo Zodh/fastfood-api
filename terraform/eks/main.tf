@@ -60,7 +60,7 @@ resource "kubernetes_manifest" "fastfood_deployment" {
               },
               {
                 name  = "PAYMENT_API_URL"
-                value = "http://payment-api:8081/payments"
+                value = "https://${data.aws_api_gateway_rest_api.eks_api.id}.execute-api.us-east-1.amazonaws.com/prod/payments"
               },
               {
                 name  = "API_GATEWAY_URL"
