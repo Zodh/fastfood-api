@@ -1,10 +1,12 @@
-package br.com.fiap.fastfood.api.infrastructure.dao.web;
+package br.com.fiap.fastfood.api.infrastructure.web;
 
 import br.com.fiap.fastfood.api.adapters.controller.CustomerController;
 import br.com.fiap.fastfood.api.adapters.gateway.ActivationCodeLinkGeneratorGatewayImpl;
 import br.com.fiap.fastfood.api.adapters.gateway.ActivationCodeRepositoryAdapterImpl;
 import br.com.fiap.fastfood.api.adapters.gateway.CustomerRepositoryAdapterImpl;
 import br.com.fiap.fastfood.api.adapters.gateway.EmailSenderGatewayImpl;
+import br.com.fiap.fastfood.api.application.dto.customer.CustomerDTO;
+import br.com.fiap.fastfood.api.application.dto.customer.DocumentTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,14 +27,14 @@ public class CustomerApi {
 
 
     @PostMapping
-    public ResponseEntity<Void> register(@RequestBody br.com.fiap.fastfood.api.core.application.dto.customer.CustomerDTO customer) {
+    public ResponseEntity<Void> register(@RequestBody CustomerDTO customer) {
         customerController.register(customer);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping
-    public ResponseEntity<br.com.fiap.fastfood.api.core.application.dto.customer.CustomerDTO> identify(@RequestParam String documentNumber,
-                                                                                                       @RequestParam br.com.fiap.fastfood.api.core.application.dto.customer.DocumentTypeEnum documentType) {
+    public ResponseEntity<CustomerDTO> identify(@RequestParam String documentNumber,
+                                                                                                       @RequestParam DocumentTypeEnum documentType) {
         return ResponseEntity.status(HttpStatus.OK).body(customerController.identify(documentNumber, documentType));
     }
 }

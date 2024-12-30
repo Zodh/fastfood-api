@@ -1,12 +1,12 @@
 package br.com.fiap.fastfood.api.adapters.mapper;
 
+import br.com.fiap.fastfood.api.application.dto.collaborator.CollaboratorDTO;
+import br.com.fiap.fastfood.api.application.dto.customer.CustomerDTO;
+import br.com.fiap.fastfood.api.application.dto.order.OrderDTO;
 import br.com.fiap.fastfood.api.infrastructure.dao.entity.order.OrderEntity;
 import br.com.fiap.fastfood.api.infrastructure.dao.entity.person.CollaboratorEntity;
 import br.com.fiap.fastfood.api.infrastructure.dao.entity.person.CustomerEntity;
 import br.com.fiap.fastfood.api.infrastructure.dao.entity.product.OrderProductEntity;
-import br.com.fiap.fastfood.api.core.application.dto.collaborator.CollaboratorDTO;
-import br.com.fiap.fastfood.api.core.application.dto.customer.CustomerDTO;
-import br.com.fiap.fastfood.api.core.application.dto.order.OrderDTO;
 import br.com.fiap.fastfood.api.application.dto.product.OrderProductDTO;
 import java.util.ArrayList;
 import java.util.List;

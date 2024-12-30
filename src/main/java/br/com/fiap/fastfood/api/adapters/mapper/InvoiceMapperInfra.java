@@ -1,11 +1,11 @@
 package br.com.fiap.fastfood.api.adapters.mapper;
 
+import br.com.fiap.fastfood.api.application.dto.invoice.InvoiceDTO;
+import br.com.fiap.fastfood.api.application.dto.invoice.InvoiceVendorDTO;
+import br.com.fiap.fastfood.api.application.dto.order.OrderDTO;
 import br.com.fiap.fastfood.api.infrastructure.dao.entity.invoice.InvoiceEntity;
 import br.com.fiap.fastfood.api.infrastructure.dao.entity.invoice.InvoiceVendorEntity;
 import br.com.fiap.fastfood.api.infrastructure.dao.entity.order.OrderEntity;
-import br.com.fiap.fastfood.api.core.application.dto.invoice.InvoiceDTO;
-import br.com.fiap.fastfood.api.core.application.dto.invoice.InvoiceVendorDTO;
-import br.com.fiap.fastfood.api.core.application.dto.order.OrderDTO;
 import org.mapstruct.*;
 
 import java.util.List;

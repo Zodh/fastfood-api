@@ -1,7 +1,7 @@
 package br.com.fiap.fastfood.api.application.gateway.repository;
 
-import br.com.fiap.fastfood.api.core.application.dto.customer.CustomerDTO;
-import br.com.fiap.fastfood.api.core.application.dto.customer.DocumentTypeEnum;
+import br.com.fiap.fastfood.api.application.dto.customer.CustomerDTO;
+import br.com.fiap.fastfood.api.application.dto.customer.DocumentTypeEnum;
 import java.util.Optional;
 
 public interface CustomerRepositoryGateway extends BaseRepositoryGateway<CustomerDTO, Long> {

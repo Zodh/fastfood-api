@@ -1,8 +1,8 @@
 package br.com.fiap.fastfood.api.application.gateway.mapper;
 
-import br.com.fiap.fastfood.api.core.application.dto.followup.FollowUpDTO;
-import br.com.fiap.fastfood.api.core.application.dto.followup.FollowUpStateEnum;
-import br.com.fiap.fastfood.api.core.application.dto.order.OrderDTO;
+import br.com.fiap.fastfood.api.application.dto.followup.FollowUpDTO;
+import br.com.fiap.fastfood.api.application.dto.followup.FollowUpStateEnum;
+import br.com.fiap.fastfood.api.application.dto.order.OrderDTO;
 import br.com.fiap.fastfood.api.application.exception.ApplicationException;
 import br.com.fiap.fastfood.api.entities.followup.FollowUp;
 import br.com.fiap.fastfood.api.entities.followup.state.FollowUpState;

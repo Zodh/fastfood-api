@@ -1,7 +1,7 @@
 package br.com.fiap.fastfood.api.application.service.impl;
 
+import br.com.fiap.fastfood.api.application.dto.order.OrderDTO;
 import br.com.fiap.fastfood.api.application.gateway.mapper.OrderProductMapperAppImpl;
-import br.com.fiap.fastfood.api.core.application.dto.order.OrderDTO;
 import br.com.fiap.fastfood.api.application.dto.product.MenuProductDTO;
 import br.com.fiap.fastfood.api.application.dto.product.OrderProductDTO;
 import br.com.fiap.fastfood.api.application.exception.NotFoundException;

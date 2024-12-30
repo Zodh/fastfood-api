@@ -1,5 +1,10 @@
 package br.com.fiap.fastfood.api.application.usecase.impl;
 
+import br.com.fiap.fastfood.api.application.dto.collaborator.CollaboratorDTO;
+import br.com.fiap.fastfood.api.application.dto.customer.CustomerDTO;
+import br.com.fiap.fastfood.api.application.dto.followup.FollowUpStateEnum;
+import br.com.fiap.fastfood.api.application.dto.invoice.InvoiceDTO;
+import br.com.fiap.fastfood.api.application.dto.order.OrderDTO;
 import br.com.fiap.fastfood.api.application.dto.product.OrderProductDTO;
 import br.com.fiap.fastfood.api.application.gateway.mapper.CollaboratorMapperApp;
 import br.com.fiap.fastfood.api.application.gateway.mapper.CustomerMapperApp;
@@ -8,11 +13,6 @@ import br.com.fiap.fastfood.api.application.gateway.mapper.OrderMapperApp;
 import br.com.fiap.fastfood.api.application.gateway.mapper.OrderProductMapperApp;
 import br.com.fiap.fastfood.api.application.usecase.CustomerUseCase;
 import br.com.fiap.fastfood.api.application.usecase.OrderUseCase;
-import br.com.fiap.fastfood.api.core.application.dto.collaborator.CollaboratorDTO;
-import br.com.fiap.fastfood.api.core.application.dto.customer.CustomerDTO;
-import br.com.fiap.fastfood.api.core.application.dto.followup.FollowUpStateEnum;
-import br.com.fiap.fastfood.api.core.application.dto.invoice.InvoiceDTO;
-import br.com.fiap.fastfood.api.core.application.dto.order.OrderDTO;
 import br.com.fiap.fastfood.api.application.exception.ApplicationException;
 import br.com.fiap.fastfood.api.application.exception.NotFoundException;
 import br.com.fiap.fastfood.api.application.policy.FollowUpPolicy;

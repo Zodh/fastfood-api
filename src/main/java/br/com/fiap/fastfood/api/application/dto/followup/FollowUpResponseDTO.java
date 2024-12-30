@@ -1,9 +1,7 @@
-package br.com.fiap.fastfood.api.core.application.dto.followup;
+package br.com.fiap.fastfood.api.application.dto.followup;
 
 import java.util.List;
 
-import br.com.fiap.fastfood.api.core.application.dto.followup.FollowUpDTO;
-import br.com.fiap.fastfood.api.core.application.dto.followup.FollowUpStateEnum;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

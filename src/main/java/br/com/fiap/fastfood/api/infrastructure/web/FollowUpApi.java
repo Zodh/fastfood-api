@@ -1,7 +1,8 @@
-package br.com.fiap.fastfood.api.infrastructure.dao.web;
+package br.com.fiap.fastfood.api.infrastructure.web;
 
 import br.com.fiap.fastfood.api.adapters.controller.FollowUpController;
 import br.com.fiap.fastfood.api.adapters.gateway.FollowUpRepositoryAdapterImpl;
+import br.com.fiap.fastfood.api.application.dto.followup.FollowUpResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +23,7 @@ public class FollowUpApi {
     }
 
     @GetMapping
-    public ResponseEntity<List<br.com.fiap.fastfood.api.core.application.dto.followup.FollowUpResponseDTO>> getFollowUp() {
+    public ResponseEntity<List<FollowUpResponseDTO>> getFollowUp() {
         return ResponseEntity.ok(followUpController.getFollowUp());
     }
 }

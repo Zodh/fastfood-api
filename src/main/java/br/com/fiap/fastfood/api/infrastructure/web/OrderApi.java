@@ -1,74 +1,88 @@
-package br.com.fiap.fastfood.api.infrastructure.dao.web;
+package br.com.fiap.fastfood.api.infrastructure.web;
 
 import br.com.fiap.fastfood.api.adapters.controller.OrderController;
 import br.com.fiap.fastfood.api.adapters.gateway.*;
+import br.com.fiap.fastfood.api.adapters.gateway.link.ApplicationServerLinkGenerator;
+import br.com.fiap.fastfood.api.application.dto.invoice.InvoiceDTO;
+import br.com.fiap.fastfood.api.application.dto.order.CreateOrderRequestDTO;
+import br.com.fiap.fastfood.api.application.dto.order.OrderDTO;
+import br.com.fiap.fastfood.api.application.dto.order.PaidOrderResponseDTO;
 import br.com.fiap.fastfood.api.application.dto.product.OrderProductDTO;
+import br.com.fiap.fastfood.api.infrastructure.config.PaymentApiConfig;
+import java.awt.image.BufferedImage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import org.springframework.web.client.RestTemplate;
 
 @RestController
 @RequestMapping("/orders")
 public class OrderApi {
 
-
     private final OrderController orderController;
-
 
     @Autowired
     public OrderApi(
-                                 OrderRepositoryAdapterImpl orderRepositoryAdapter,
-                                 CustomerRepositoryAdapterImpl customerRepositoryAdapter,
-                                 EmailSenderGatewayImpl emailSenderGatewayImplAdapter,
-                                 ActivationCodeRepositoryAdapterImpl activationCodeRepositoryAdapter,
-                                 ActivationCodeLinkGeneratorGatewayImpl activationCodeLinkGeneratorGatewayImpl,
-                                 OrderProductRepositoryAdapterImpl orderProductRepositoryAdapter,
-                                 MenuProductRepositoryGatewayImpl menuProductRepositoryAdapter,
-                                 InvoiceRepositoryAdapterImpl invoiceRepositoryAdapter,
-                                 FollowUpRepositoryAdapterImpl followUpRepositoryAdapter) {
-        this.orderController = new OrderController(orderRepositoryAdapter, customerRepositoryAdapter, emailSenderGatewayImplAdapter, activationCodeRepositoryAdapter, activationCodeLinkGeneratorGatewayImpl
-        , orderProductRepositoryAdapter, menuProductRepositoryAdapter, invoiceRepositoryAdapter, followUpRepositoryAdapter);
+        OrderRepositoryAdapterImpl orderRepositoryAdapter,
+        CustomerRepositoryAdapterImpl customerRepositoryAdapter,
+        EmailSenderGatewayImpl emailSenderGatewayImplAdapter,
+        ActivationCodeRepositoryAdapterImpl activationCodeRepositoryAdapter,
+        ActivationCodeLinkGeneratorGatewayImpl activationCodeLinkGeneratorGatewayImpl,
+        OrderProductRepositoryAdapterImpl orderProductRepositoryAdapter,
+        MenuProductRepositoryGatewayImpl menuProductRepositoryAdapter,
+        InvoiceRepositoryAdapterImpl invoiceRepositoryAdapter,
+        FollowUpRepositoryAdapterImpl followUpRepositoryAdapter,
+        RestTemplate restTemplate,
+        PaymentApiConfig paymentApiConfig,
+        ApplicationServerLinkGenerator applicationServerLinkGenerator) {
+        this.orderController = new OrderController(orderRepositoryAdapter,
+            customerRepositoryAdapter, emailSenderGatewayImplAdapter,
+            activationCodeRepositoryAdapter, activationCodeLinkGeneratorGatewayImpl
+            , orderProductRepositoryAdapter, menuProductRepositoryAdapter, invoiceRepositoryAdapter,
+            followUpRepositoryAdapter, restTemplate, paymentApiConfig,
+            applicationServerLinkGenerator);
 
     }
 
     @GetMapping
-    public ResponseEntity<List<br.com.fiap.fastfood.api.core.application.dto.order.OrderDTO>> findAll() {
+    public ResponseEntity<List<OrderDTO>> findAll() {
         return ResponseEntity.ok(orderController.findAll());
     }
 
     @PostMapping
-    public ResponseEntity<br.com.fiap.fastfood.api.core.application.dto.order.OrderDTO> create(
-            @RequestBody(required = false) br.com.fiap.fastfood.api.core.application.dto.order.CreateOrderRequestDTO request) {
+    public ResponseEntity<OrderDTO> create(
+            @RequestBody(required = false) CreateOrderRequestDTO request) {
         return ResponseEntity.status(HttpStatus.OK).body(orderController.create(request));
     }
 
     @PostMapping("/{id}/products")
-    public ResponseEntity<br.com.fiap.fastfood.api.core.application.dto.order.OrderDTO> includeOrderProduct(@PathVariable Long id, @RequestBody
+    public ResponseEntity<OrderDTO> includeOrderProduct(@PathVariable Long id, @RequestBody
     OrderProductDTO orderProductDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(orderController.includeOrderProduct(id, orderProductDTO));
     }
 
     @DeleteMapping("/{id}/products/{orderProductId}")
-    public ResponseEntity<br.com.fiap.fastfood.api.core.application.dto.order.OrderDTO> removeOrderProduct(@PathVariable Long id,
+    public ResponseEntity<OrderDTO> removeOrderProduct(@PathVariable Long id,
                                                                                                            @PathVariable Long orderProductId) {
         return ResponseEntity.status(HttpStatus.OK).body(orderController.removeOrderProduct(id, orderProductId));
     }
 
-    @PatchMapping("/{id}/confirm")
-    public ResponseEntity<br.com.fiap.fastfood.api.core.application.dto.order.OrderDTO> confirmOrder(@PathVariable Long id) {
+    @PatchMapping(value = "/{id}/confirm", produces = MediaType.IMAGE_JPEG_VALUE)
+    public ResponseEntity<BufferedImage> confirmOrder(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(orderController.confirmOrder(id));
     }
 
-    @PatchMapping("/{id}/pay")
-    public ResponseEntity<br.com.fiap.fastfood.api.core.application.dto.order.PaidOrderResponseDTO> executeFakeCheckout(@PathVariable Long id) {
+    @GetMapping("/{id}/pay")
+    public ResponseEntity<PaidOrderResponseDTO> executeFakeCheckout(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(orderController.executeFakeCheckout(id));
     }
 
     @GetMapping("/{id}/invoice")
-    public ResponseEntity<br.com.fiap.fastfood.api.core.application.dto.invoice.InvoiceDTO> getOrderInvoice(@PathVariable Long id) {
+    public ResponseEntity<InvoiceDTO> getOrderInvoice(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(orderController.getOrderInvoice(id));
     }
 
@@ -97,7 +111,7 @@ public class OrderApi {
     }
 
     @PostMapping("/{id}/products/{orderProductId}/optionals")
-    public ResponseEntity<br.com.fiap.fastfood.api.core.application.dto.order.OrderDTO> includeOptional(
+    public ResponseEntity<OrderDTO> includeOptional(
             @PathVariable Long id,
             @PathVariable Long orderProductId,
             @RequestBody OrderProductDTO optionalDTO
@@ -106,7 +120,7 @@ public class OrderApi {
     }
 
     @DeleteMapping("/{id}/products/{orderProductId}/optionals/{optionalId}")
-    public ResponseEntity<br.com.fiap.fastfood.api.core.application.dto.order.OrderDTO> removeOptional(
+    public ResponseEntity<OrderDTO> removeOptional(
             @PathVariable Long id,
             @PathVariable Long orderProductId,
             @PathVariable Long optionalId
@@ -115,7 +129,7 @@ public class OrderApi {
     }
 
     @PatchMapping("/{id}/products/{orderProductId}/ingredients/{ingredientId}")
-    public ResponseEntity<br.com.fiap.fastfood.api.core.application.dto.order.OrderDTO> updateShouldRemove(
+    public ResponseEntity<OrderDTO> updateShouldRemove(
             @PathVariable Long id,
             @PathVariable Long orderProductId,
             @PathVariable Long ingredientId,

@@ -1,9 +1,9 @@
 package br.com.fiap.fastfood.api.adapters.gateway;
 
+import br.com.fiap.fastfood.api.application.dto.customer.activation.ActivationCodeDTO;
 import br.com.fiap.fastfood.api.infrastructure.dao.entity.person.activation.ActivationCodeEntity;
 import br.com.fiap.fastfood.api.adapters.mapper.ActivationCodeMapperInfra;
 import br.com.fiap.fastfood.api.infrastructure.dao.repository.person.activation.ActivationCodeRepository;
-import br.com.fiap.fastfood.api.core.application.dto.customer.activation.ActivationCodeDTO;
 import br.com.fiap.fastfood.api.application.gateway.repository.ActivationCodeRepositoryGateway;
 import java.util.Optional;
 import java.util.UUID;

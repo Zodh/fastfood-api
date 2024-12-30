@@ -1,10 +1,10 @@
 package br.com.fiap.fastfood.api.adapters.gateway;
 
+import br.com.fiap.fastfood.api.application.dto.followup.FollowUpDTO;
+import br.com.fiap.fastfood.api.application.dto.followup.FollowUpStateEnum;
 import br.com.fiap.fastfood.api.infrastructure.dao.entity.followup.FollowUpEntity;
 import br.com.fiap.fastfood.api.adapters.mapper.FollowUpMapperInfra;
 import br.com.fiap.fastfood.api.infrastructure.dao.repository.follow.up.FollowUpRepository;
-import br.com.fiap.fastfood.api.core.application.dto.followup.FollowUpDTO;
-import br.com.fiap.fastfood.api.core.application.dto.followup.FollowUpStateEnum;
 import br.com.fiap.fastfood.api.application.gateway.repository.FollowUpRepositoryGateway;
 import java.util.Collections;
 import java.util.List;

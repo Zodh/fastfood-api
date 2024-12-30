@@ -1,6 +1,6 @@
-package br.com.fiap.fastfood.api.core.application.dto.invoice;
+package br.com.fiap.fastfood.api.application.dto.invoice;
 
-import br.com.fiap.fastfood.api.core.application.dto.order.OrderDTO;
+import br.com.fiap.fastfood.api.application.dto.order.OrderDTO;
 import br.com.fiap.fastfood.api.entities.invoice.state.InvoiceStateEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.math.BigDecimal;

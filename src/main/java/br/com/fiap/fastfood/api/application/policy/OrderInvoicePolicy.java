@@ -1,6 +1,6 @@
 package br.com.fiap.fastfood.api.application.policy;
 
-import br.com.fiap.fastfood.api.core.application.dto.order.OrderDTO;
+import br.com.fiap.fastfood.api.application.dto.order.OrderDTO;
 
 public interface OrderInvoicePolicy {
 

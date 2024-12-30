@@ -1,8 +1,8 @@
 package br.com.fiap.fastfood.api.application.service.impl;
 
-import br.com.fiap.fastfood.api.core.application.dto.followup.FollowUpDTO;
-import br.com.fiap.fastfood.api.core.application.dto.followup.FollowUpResponseDTO;
-import br.com.fiap.fastfood.api.core.application.dto.followup.FollowUpStateEnum;
+import br.com.fiap.fastfood.api.application.dto.followup.FollowUpDTO;
+import br.com.fiap.fastfood.api.application.dto.followup.FollowUpResponseDTO;
+import br.com.fiap.fastfood.api.application.dto.followup.FollowUpStateEnum;
 import br.com.fiap.fastfood.api.application.service.FollowUpService;
 import br.com.fiap.fastfood.api.application.gateway.repository.FollowUpRepositoryGateway;
 import java.util.Comparator;

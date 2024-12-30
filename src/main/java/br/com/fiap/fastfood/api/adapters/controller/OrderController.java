@@ -13,6 +13,10 @@ import br.com.fiap.fastfood.api.adapters.gateway.link.ApplicationServerLinkGener
 import br.com.fiap.fastfood.api.adapters.gateway.payment.CreatePaymentRequest;
 import br.com.fiap.fastfood.api.adapters.gateway.payment.PaymentGeneratorGateway;
 import br.com.fiap.fastfood.api.adapters.gateway.payment.QrCodePaymentGeneratorGatewayImpl;
+import br.com.fiap.fastfood.api.application.dto.invoice.InvoiceDTO;
+import br.com.fiap.fastfood.api.application.dto.order.CreateOrderRequestDTO;
+import br.com.fiap.fastfood.api.application.dto.order.OrderDTO;
+import br.com.fiap.fastfood.api.application.dto.order.PaidOrderResponseDTO;
 import br.com.fiap.fastfood.api.application.gateway.mapper.ActivationCodeMapperAppImpl;
 import br.com.fiap.fastfood.api.application.gateway.mapper.CollaboratorMapperAppImpl;
 import br.com.fiap.fastfood.api.application.gateway.mapper.CustomerMapperApp;
@@ -28,10 +32,6 @@ import br.com.fiap.fastfood.api.application.gateway.mapper.OrderProductMapperApp
 import br.com.fiap.fastfood.api.application.gateway.mapper.OrderProductMapperAppImpl;
 import br.com.fiap.fastfood.api.application.usecase.impl.InvoiceUseCaseImpl;
 import br.com.fiap.fastfood.api.application.usecase.impl.OrderUseCaseImpl;
-import br.com.fiap.fastfood.api.core.application.dto.invoice.InvoiceDTO;
-import br.com.fiap.fastfood.api.core.application.dto.order.CreateOrderRequestDTO;
-import br.com.fiap.fastfood.api.core.application.dto.order.OrderDTO;
-import br.com.fiap.fastfood.api.core.application.dto.order.PaidOrderResponseDTO;
 import br.com.fiap.fastfood.api.application.dto.product.OrderProductDTO;
 import br.com.fiap.fastfood.api.application.policy.FollowUpPolicyImpl;
 import br.com.fiap.fastfood.api.application.policy.OrderInvoicePolicyImpl;
@@ -46,21 +46,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
-
 
 public class OrderController {
 
@@ -69,9 +56,6 @@ public class OrderController {
   private final PaymentGeneratorGateway<BufferedImage, CreatePaymentRequest>  paymentGenerator;
   private final PaymentApiConfig paymentApiConfig;
   private final ApplicationServerLinkGenerator applicationServerLinkGenerator;
-
-
-
 
   public OrderController(
       OrderRepositoryAdapterImpl orderRepositoryAdapter,
@@ -153,7 +137,6 @@ public class OrderController {
         .build();
     return result;
   }
-
 
   public InvoiceDTO getOrderInvoice(Long id) {
     InvoiceDTO orderInvoice = orderUseCase.getById(id).getInvoice();

@@ -1,4 +1,4 @@
-package br.com.fiap.fastfood.api.core.application.dto.collaborator;
+package br.com.fiap.fastfood.api.application.dto.collaborator;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

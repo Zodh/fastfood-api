@@ -1,9 +1,9 @@
 package br.com.fiap.fastfood.api.application.gateway.mapper;
 
-import br.com.fiap.fastfood.api.core.application.dto.collaborator.CollaboratorDTO;
-import br.com.fiap.fastfood.api.core.application.dto.customer.CustomerDTO;
-import br.com.fiap.fastfood.api.core.application.dto.invoice.InvoiceDTO;
-import br.com.fiap.fastfood.api.core.application.dto.order.OrderDTO;
+import br.com.fiap.fastfood.api.application.dto.collaborator.CollaboratorDTO;
+import br.com.fiap.fastfood.api.application.dto.customer.CustomerDTO;
+import br.com.fiap.fastfood.api.application.dto.invoice.InvoiceDTO;
+import br.com.fiap.fastfood.api.application.dto.order.OrderDTO;
 import br.com.fiap.fastfood.api.application.dto.product.OrderProductDTO;
 import br.com.fiap.fastfood.api.entities.invoice.Invoice;
 import br.com.fiap.fastfood.api.entities.invoice.state.impl.InvoicePendingState;

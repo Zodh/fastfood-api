@@ -1,9 +1,9 @@
 package br.com.fiap.fastfood.api.application.usecase.impl;
 
+import br.com.fiap.fastfood.api.application.dto.customer.CustomerDTO;
+import br.com.fiap.fastfood.api.application.dto.customer.DocumentTypeEnum;
 import br.com.fiap.fastfood.api.application.gateway.mapper.ActivationCodeMapperApp;
 import br.com.fiap.fastfood.api.application.usecase.CustomerUseCase;
-import br.com.fiap.fastfood.api.core.application.dto.customer.CustomerDTO;
-import br.com.fiap.fastfood.api.core.application.dto.customer.DocumentTypeEnum;
 import br.com.fiap.fastfood.api.application.exception.NotFoundException;
 import br.com.fiap.fastfood.api.application.gateway.mapper.CustomerMapperApp;
 import br.com.fiap.fastfood.api.application.gateway.ActivationCodeLinkGeneratorGateway;

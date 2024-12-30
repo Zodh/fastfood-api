@@ -1,4 +1,4 @@
-package br.com.fiap.fastfood.api.infrastructure.dao.web;
+package br.com.fiap.fastfood.api.infrastructure.web;
 
 import br.com.fiap.fastfood.api.adapters.controller.ActivationCodeController;
 import br.com.fiap.fastfood.api.adapters.gateway.ActivationCodeLinkGeneratorGatewayImpl;

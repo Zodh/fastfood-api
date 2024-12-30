@@ -1,9 +1,9 @@
 package br.com.fiap.fastfood.api.adapters.gateway;
 
+import br.com.fiap.fastfood.api.application.dto.invoice.InvoiceDTO;
 import br.com.fiap.fastfood.api.infrastructure.dao.entity.invoice.InvoiceEntity;
 import br.com.fiap.fastfood.api.adapters.mapper.InvoiceMapperInfra;
 import br.com.fiap.fastfood.api.infrastructure.dao.repository.invoice.InvoiceRepository;
-import br.com.fiap.fastfood.api.core.application.dto.invoice.InvoiceDTO;
 import br.com.fiap.fastfood.api.application.gateway.repository.InvoiceRepositoryGateway;
 import java.util.ArrayList;
 import java.util.List;

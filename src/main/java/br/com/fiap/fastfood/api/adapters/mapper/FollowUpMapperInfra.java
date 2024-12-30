@@ -1,7 +1,7 @@
 package br.com.fiap.fastfood.api.adapters.mapper;
 
+import br.com.fiap.fastfood.api.application.dto.followup.FollowUpDTO;
 import br.com.fiap.fastfood.api.infrastructure.dao.entity.followup.FollowUpEntity;
-import br.com.fiap.fastfood.api.core.application.dto.followup.FollowUpDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValueCheckStrategy;
 import org.mapstruct.ReportingPolicy;

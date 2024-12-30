@@ -1,10 +1,10 @@
 package br.com.fiap.fastfood.api.adapters.gateway;
 
+import br.com.fiap.fastfood.api.application.dto.customer.CustomerDTO;
+import br.com.fiap.fastfood.api.application.dto.customer.DocumentTypeEnum;
 import br.com.fiap.fastfood.api.infrastructure.dao.entity.person.CustomerEntity;
 import br.com.fiap.fastfood.api.adapters.mapper.CustomerMapperInfra;
-import br.com.fiap.fastfood.api.core.application.dto.customer.DocumentTypeEnum;
 import br.com.fiap.fastfood.api.infrastructure.dao.repository.person.CustomerRepository;
-import br.com.fiap.fastfood.api.core.application.dto.customer.CustomerDTO;
 import br.com.fiap.fastfood.api.application.gateway.repository.CustomerRepositoryGateway;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
