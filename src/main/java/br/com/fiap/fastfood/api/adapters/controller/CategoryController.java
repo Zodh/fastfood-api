@@ -11,27 +11,13 @@ import br.com.fiap.fastfood.api.application.service.CategoryService;
 import br.com.fiap.fastfood.api.application.service.MenuProductService;
 import br.com.fiap.fastfood.api.application.service.impl.CategoryServiceImpl;
 import br.com.fiap.fastfood.api.application.service.impl.MenuProductServiceImpl;
-import jakarta.validation.Valid;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@RequestMapping("/categories")
 public class CategoryController {
 
   private final CategoryService categoryService;
 
-  @Autowired
+
   public CategoryController(
       MenuProductRepositoryGatewayImpl menuProductRepositoryAdapter,
       CategoryRepositoryGatewayImpl categoryRepositoryAdapter) {
@@ -42,15 +28,15 @@ public class CategoryController {
         categoryRepositoryAdapter, new CategoryMapperAppImpl(), menuProductMapperApp);
   }
 
-  @GetMapping
-  public ResponseEntity<CategoryResponseDTO> getAll() {
+
+  public CategoryResponseDTO getAll() {
     List<CategoryDTO> allCategories = categoryService.getAll();
     CategoryResponseDTO response = new CategoryResponseDTO(allCategories);
-    return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    return response;
   }
 
-  @GetMapping("/{identifier}")
-  public ResponseEntity<CategoryDTO> getByIdOrName(@PathVariable String identifier) {
+
+  public CategoryDTO getByIdOrName(String identifier) {
     CategoryDTO categoryDTO;
     try {
       Long id = Long.parseLong(identifier);
@@ -58,25 +44,21 @@ public class CategoryController {
     } catch (NumberFormatException e) {
       categoryDTO = categoryService.getByName(identifier);
     }
-    return ResponseEntity.status(HttpStatus.CREATED).body(categoryDTO);
+    return categoryDTO;
   }
 
-  @PostMapping
-  public ResponseEntity<Void> create(@Valid @RequestBody CategoryDTO categoryDTO) {
+
+  public void create(CategoryDTO categoryDTO) {
     categoryService.create(categoryDTO);
-    return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
-  @PutMapping("/{id}")
-  public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody CategoryDTO categoryDTO) {
+
+  public void update(Long id, CategoryDTO categoryDTO) {
     categoryService.update(id, categoryDTO);
-    return ResponseEntity.status(HttpStatus.OK).build();
   }
 
-  @DeleteMapping("/{id}")
-  public ResponseEntity<Void> delete(@PathVariable Long id) {
+  public void delete(Long id) {
     categoryService.remove(id);
-    return ResponseEntity.status(HttpStatus.OK).build();
   }
 
 }

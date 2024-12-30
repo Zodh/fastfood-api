@@ -2,12 +2,12 @@ package br.com.fiap.fastfood.api.adapters.gateway;
 
 import br.com.fiap.fastfood.api.adapters.mapper.InvoiceMapperInfraImpl;
 import br.com.fiap.fastfood.api.adapters.mapper.OrderMapperInfraImpl;
+import br.com.fiap.fastfood.api.application.dto.invoice.InvoiceDTO;
+import br.com.fiap.fastfood.api.application.dto.order.OrderDTO;
 import br.com.fiap.fastfood.api.infrastructure.dao.entity.order.OrderEntity;
 import br.com.fiap.fastfood.api.adapters.mapper.InvoiceMapperInfra;
 import br.com.fiap.fastfood.api.adapters.mapper.OrderMapperInfra;
 import br.com.fiap.fastfood.api.infrastructure.dao.repository.order.OrderRepository;
-import br.com.fiap.fastfood.api.core.application.dto.invoice.InvoiceDTO;
-import br.com.fiap.fastfood.api.core.application.dto.order.OrderDTO;
 import br.com.fiap.fastfood.api.application.gateway.repository.OrderRepositoryGateway;
 import java.util.ArrayList;
 import java.util.List;

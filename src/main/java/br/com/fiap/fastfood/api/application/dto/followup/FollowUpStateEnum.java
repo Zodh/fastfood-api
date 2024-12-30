@@ -1,4 +1,4 @@
-package br.com.fiap.fastfood.api.core.application.dto.followup;
+package br.com.fiap.fastfood.api.application.dto.followup;
 
 public enum FollowUpStateEnum {
   RECEIVED,

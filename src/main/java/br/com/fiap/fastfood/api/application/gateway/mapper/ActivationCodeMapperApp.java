@@ -1,7 +1,7 @@
 package br.com.fiap.fastfood.api.application.gateway.mapper;
 
-import br.com.fiap.fastfood.api.core.application.dto.customer.CustomerDTO;
-import br.com.fiap.fastfood.api.core.application.dto.customer.activation.ActivationCodeDTO;
+import br.com.fiap.fastfood.api.application.dto.customer.CustomerDTO;
+import br.com.fiap.fastfood.api.application.dto.customer.activation.ActivationCodeDTO;
 import br.com.fiap.fastfood.api.entities.person.Customer;
 import br.com.fiap.fastfood.api.entities.person.activation.ActivationCode;
 import org.mapstruct.Mapper;

@@ -1,7 +1,7 @@
 package br.com.fiap.fastfood.api.application.gateway.repository;
 
-import br.com.fiap.fastfood.api.core.application.dto.followup.FollowUpDTO;
-import br.com.fiap.fastfood.api.core.application.dto.followup.FollowUpStateEnum;
+import br.com.fiap.fastfood.api.application.dto.followup.FollowUpDTO;
+import br.com.fiap.fastfood.api.application.dto.followup.FollowUpStateEnum;
 import java.util.List;
 import java.util.Optional;
 

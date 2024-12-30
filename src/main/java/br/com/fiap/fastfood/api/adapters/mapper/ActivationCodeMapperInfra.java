@@ -1,9 +1,9 @@
 package br.com.fiap.fastfood.api.adapters.mapper;
 
+import br.com.fiap.fastfood.api.application.dto.customer.CustomerDTO;
+import br.com.fiap.fastfood.api.application.dto.customer.activation.ActivationCodeDTO;
 import br.com.fiap.fastfood.api.infrastructure.dao.entity.person.CustomerEntity;
 import br.com.fiap.fastfood.api.infrastructure.dao.entity.person.activation.ActivationCodeEntity;
-import br.com.fiap.fastfood.api.core.application.dto.customer.CustomerDTO;
-import br.com.fiap.fastfood.api.core.application.dto.customer.activation.ActivationCodeDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;

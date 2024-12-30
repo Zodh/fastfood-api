@@ -13,6 +13,10 @@ import br.com.fiap.fastfood.api.adapters.gateway.link.ApplicationServerLinkGener
 import br.com.fiap.fastfood.api.adapters.gateway.payment.CreatePaymentRequest;
 import br.com.fiap.fastfood.api.adapters.gateway.payment.PaymentGeneratorGateway;
 import br.com.fiap.fastfood.api.adapters.gateway.payment.QrCodePaymentGeneratorGatewayImpl;
+import br.com.fiap.fastfood.api.application.dto.invoice.InvoiceDTO;
+import br.com.fiap.fastfood.api.application.dto.order.CreateOrderRequestDTO;
+import br.com.fiap.fastfood.api.application.dto.order.OrderDTO;
+import br.com.fiap.fastfood.api.application.dto.order.PaidOrderResponseDTO;
 import br.com.fiap.fastfood.api.application.gateway.mapper.ActivationCodeMapperAppImpl;
 import br.com.fiap.fastfood.api.application.gateway.mapper.CollaboratorMapperAppImpl;
 import br.com.fiap.fastfood.api.application.gateway.mapper.CustomerMapperApp;
@@ -28,10 +32,6 @@ import br.com.fiap.fastfood.api.application.gateway.mapper.OrderProductMapperApp
 import br.com.fiap.fastfood.api.application.gateway.mapper.OrderProductMapperAppImpl;
 import br.com.fiap.fastfood.api.application.usecase.impl.InvoiceUseCaseImpl;
 import br.com.fiap.fastfood.api.application.usecase.impl.OrderUseCaseImpl;
-import br.com.fiap.fastfood.api.core.application.dto.invoice.InvoiceDTO;
-import br.com.fiap.fastfood.api.core.application.dto.order.CreateOrderRequestDTO;
-import br.com.fiap.fastfood.api.core.application.dto.order.OrderDTO;
-import br.com.fiap.fastfood.api.core.application.dto.order.PaidOrderResponseDTO;
 import br.com.fiap.fastfood.api.application.dto.product.OrderProductDTO;
 import br.com.fiap.fastfood.api.application.policy.FollowUpPolicyImpl;
 import br.com.fiap.fastfood.api.application.policy.OrderInvoicePolicyImpl;
@@ -46,23 +46,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-@RestController
-@RequestMapping("/orders")
 public class OrderController {
 
   private final OrderUseCase orderUseCase;
@@ -71,7 +57,6 @@ public class OrderController {
   private final PaymentApiConfig paymentApiConfig;
   private final ApplicationServerLinkGenerator applicationServerLinkGenerator;
 
-  @Autowired
   public OrderController(
       OrderRepositoryAdapterImpl orderRepositoryAdapter,
       CustomerRepositoryAdapterImpl customerRepositoryAdapter,
@@ -111,34 +96,29 @@ public class OrderController {
     this.applicationServerLinkGenerator = applicationServerLinkGenerator;
   }
 
-  @GetMapping
-  public ResponseEntity<List<OrderDTO>> findAll() {
-    return ResponseEntity.ok(orderUseCase.findAll());
+
+  public List<OrderDTO> findAll() {
+    return orderUseCase.findAll();
   }
 
-  @PostMapping
-  public ResponseEntity<OrderDTO> create(
-      @RequestBody(required = false) CreateOrderRequestDTO request) {
+
+  public OrderDTO create(CreateOrderRequestDTO request) {
     OrderDTO orderDTO = orderUseCase.create(request.getCustomer(), request.getCollaborator());
-    return ResponseEntity.status(HttpStatus.OK).body(orderDTO);
+    return orderDTO;
   }
 
-  @PostMapping("/{id}/products")
-  public ResponseEntity<OrderDTO> includeOrderProduct(@PathVariable Long id, @RequestBody
-  OrderProductDTO orderProductDTO) {
+
+  public OrderDTO includeOrderProduct(Long id, OrderProductDTO orderProductDTO) {
     OrderDTO order = orderUseCase.includeOrderProduct(id, orderProductDTO);
-    return ResponseEntity.status(HttpStatus.CREATED).body(order);
+    return order;
   }
 
-  @DeleteMapping("/{id}/products/{orderProductId}")
-  public ResponseEntity<OrderDTO> removeOrderProduct(@PathVariable Long id,
-      @PathVariable Long orderProductId) {
+  public OrderDTO removeOrderProduct(Long id, Long orderProductId) {
     OrderDTO orderDTO = orderUseCase.removeOrderProduct(id, orderProductId);
-    return ResponseEntity.status(HttpStatus.OK).body(orderDTO);
+    return orderDTO;
   }
 
-  @PatchMapping(value = "/{id}/confirm", produces = MediaType.IMAGE_JPEG_VALUE)
-  public ResponseEntity<BufferedImage> confirmOrder(@PathVariable Long id) {
+  public BufferedImage confirmOrder(@PathVariable Long id) {
     OrderDTO confirmedOrder = orderUseCase.confirm(id);
     CreatePaymentRequest createPaymentRequest = new CreatePaymentRequest(
         confirmedOrder.getInvoice().getId(),
@@ -147,77 +127,56 @@ public class OrderController {
         "BRL",
         confirmedOrder.getProducts().stream().filter(co -> Objects.nonNull(co) && StringUtils.isNotBlank(co.getName())).map(co -> String.format("%dx - %s", co.getQuantity(), co.getName())).collect(
             Collectors.joining(", ")), applicationServerLinkGenerator.generate() + String.format("/orders/%d/pay", confirmedOrder.getId()), null);
-    return ResponseEntity.status(HttpStatus.OK).body(paymentGenerator.generate(createPaymentRequest, paymentApiConfig.getPaymentUrl()));
+    return paymentGenerator.generate(createPaymentRequest, paymentApiConfig.getPaymentUrl());
   }
-
-  @GetMapping("/{id}/pay")
-  public ResponseEntity<PaidOrderResponseDTO> executeFakeCheckout(@PathVariable Long id) {
+  
+  public PaidOrderResponseDTO executeFakeCheckout(Long id) {
     OrderDTO orderDTO = orderUseCase.getById(id);
     invoiceUseCase.executeFakeCheckout(orderDTO);
     PaidOrderResponseDTO result = PaidOrderResponseDTO.builder().orderNumber(orderDTO.getId())
         .build();
-    return ResponseEntity.status(HttpStatus.OK).body(result);
+    return result;
   }
 
-  @GetMapping("/{id}/invoice")
-  public ResponseEntity<InvoiceDTO> getOrderInvoice(@PathVariable Long id) {
+  public InvoiceDTO getOrderInvoice(Long id) {
     InvoiceDTO orderInvoice = orderUseCase.getById(id).getInvoice();
-    return ResponseEntity.status(HttpStatus.OK).body(orderInvoice);
+    return orderInvoice;
   }
 
-  @DeleteMapping("/{id}/cancel")
-  public ResponseEntity<Void> cancel(@PathVariable Long id) {
+
+  public void cancel(Long id) {
     orderUseCase.cancel(id);
-    return ResponseEntity.noContent().build();
   }
 
-  @PatchMapping("/{id}/prepare")
-  public ResponseEntity<Void> startOrderPreparation(@PathVariable Long id) {
+
+  public void startOrderPreparation( Long id) {
     orderUseCase.prepare(id);
-    return ResponseEntity.noContent().build();
   }
 
-  @PatchMapping("/{id}/ready")
-  public ResponseEntity<Void> turnOrderReadyToPick(@PathVariable Long id) {
+  public void turnOrderReadyToPick(Long id) {
     orderUseCase.turnReadyToPick(id);
-    return ResponseEntity.noContent().build();
   }
 
-  @PatchMapping("/{id}/finish")
-  public ResponseEntity<Void> finishOrder(@PathVariable Long id) {
+
+  public void finishOrder(Long id) {
     orderUseCase.finish(id);
-    return ResponseEntity.noContent().build();
   }
 
-  @PostMapping("/{id}/products/{orderProductId}/optionals")
-  public ResponseEntity<OrderDTO> includeOptional(
-      @PathVariable Long id,
-      @PathVariable Long orderProductId,
-      @RequestBody OrderProductDTO optionalDTO
-  ) {
+
+  public OrderDTO includeOptional(Long id, Long orderProductId, OrderProductDTO optionalDTO) {
     OrderDTO result = orderUseCase.includeOptional(id, orderProductId, optionalDTO);
-    return ResponseEntity.status(HttpStatus.CREATED).body(result);
+    return result;
   }
 
-  @DeleteMapping("/{id}/products/{orderProductId}/optionals/{optionalId}")
-  public ResponseEntity<OrderDTO> removeOptional(
-      @PathVariable Long id,
-      @PathVariable Long orderProductId,
-      @PathVariable Long optionalId
-  ) {
+  public OrderDTO removeOptional(Long id,Long orderProductId,Long optionalId) {
     OrderDTO orderDTO = orderUseCase.removeOptional(id, orderProductId, optionalId);
-    return ResponseEntity.status(HttpStatus.OK).body(orderDTO);
+    return orderDTO;
   }
 
-  @PatchMapping("/{id}/products/{orderProductId}/ingredients/{ingredientId}")
-  public ResponseEntity<OrderDTO> updateShouldRemove(
-      @PathVariable Long id,
-      @PathVariable Long orderProductId,
-      @PathVariable Long ingredientId,
-      @RequestParam boolean shouldRemove
-  ) {
+
+  public OrderDTO updateShouldRemove(Long id,Long orderProductId,Long ingredientId,boolean shouldRemove) {
     OrderDTO orderDTO = orderUseCase.updateShouldRemoveIngredient(id, orderProductId, ingredientId, shouldRemove);
-    return ResponseEntity.status(HttpStatus.OK).body(orderDTO);
+    return orderDTO;
   }
 
 }

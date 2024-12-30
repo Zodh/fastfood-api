@@ -1,4 +1,4 @@
-package br.com.fiap.fastfood.api.adapters.controller.advice;
+package br.com.fiap.fastfood.api.infrastructure.web.advice;
 
 import br.com.fiap.fastfood.api.application.dto.ErrorDetailDTO;
 import br.com.fiap.fastfood.api.application.dto.ErrorResponseDTO;

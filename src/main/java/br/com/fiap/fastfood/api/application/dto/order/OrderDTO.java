@@ -1,8 +1,8 @@
-package br.com.fiap.fastfood.api.core.application.dto.order;
+package br.com.fiap.fastfood.api.application.dto.order;
 
-import br.com.fiap.fastfood.api.core.application.dto.collaborator.CollaboratorDTO;
-import br.com.fiap.fastfood.api.core.application.dto.customer.CustomerDTO;
-import br.com.fiap.fastfood.api.core.application.dto.invoice.InvoiceDTO;
+import br.com.fiap.fastfood.api.application.dto.collaborator.CollaboratorDTO;
+import br.com.fiap.fastfood.api.application.dto.customer.CustomerDTO;
+import br.com.fiap.fastfood.api.application.dto.invoice.InvoiceDTO;
 import br.com.fiap.fastfood.api.application.dto.product.OrderProductDTO;
 import br.com.fiap.fastfood.api.entities.order.OrderStateEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;

@@ -1,4 +1,4 @@
-package br.com.fiap.fastfood.api.core.application.dto.order;
+package br.com.fiap.fastfood.api.application.dto.order;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

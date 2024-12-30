@@ -1,6 +1,6 @@
-package br.com.fiap.fastfood.api.core.application.dto.customer.activation;
+package br.com.fiap.fastfood.api.application.dto.customer.activation;
 
-import br.com.fiap.fastfood.api.core.application.dto.customer.CustomerDTO;
+import br.com.fiap.fastfood.api.application.dto.customer.CustomerDTO;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
