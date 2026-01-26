@@ -35,7 +35,7 @@
 		<maven.resources.plugin.version>3.1.0</maven.resources.plugin.version>
 		<org.projectlombok.version>1.18.34</org.projectlombok.version>
 		<org.junit.jupiter.version>5.10.3</org.junit.jupiter.version>
-		<org.assertj.version>3.26.3</org.assertj.version>
+		<org.assertj.version>3.27.7</org.assertj.version>
 		<org.projectlombok.mapstruct.binding.version>0.2.0</org.projectlombok.mapstruct.binding.version>
 		<springdoc-openapi-starter-webmvc-ui.version>2.6.0</springdoc-openapi-starter-webmvc-ui.version>
 	</properties>
